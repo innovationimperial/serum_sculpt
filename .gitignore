@@ -26,3 +26,7 @@ dist-ssr
 # Agent
 .agent/
 
+# Prompts and Documentation
+prompt*.md
+web dev updated.md
+
