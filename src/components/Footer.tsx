@@ -1,3 +1,5 @@
+import { Link } from 'react-router-dom';
+
 export default function Footer() {
     return (
         <footer className="w-full bg-white relative -mt-10 overflow-hidden z-20">
@@ -13,7 +15,7 @@ export default function Footer() {
                 <div className="border hover:border-moss/20 rounded-[var(--radius-std)] p-10 flex flex-col items-center text-center transition-colors">
                     <h3 className="font-serif text-2xl mb-4 text-moss">The Awakening</h3>
                     <p className="font-sans text-sm text-charcoal/60 mb-8 max-w-[200px]">Initial biological restoration and holistic nutrient balancing.</p>
-                    <button className="magnetic-button border border-charcoal/20 px-6 py-2 rounded-full font-sans uppercase tracking-widest text-xs mt-auto hover:bg-moss hover:text-white transition-colors">Discover</button>
+                    <Link to="/programs" className="magnetic-button border border-charcoal/20 px-6 py-2 rounded-full font-sans uppercase tracking-widest text-[10px] font-bold mt-auto hover:bg-moss hover:text-white transition-colors">Discover</Link>
                 </div>
 
                 {/* Tier 2 (Highlighted) */}
@@ -21,14 +23,14 @@ export default function Footer() {
                     <div className="absolute -top-4 bg-clay px-4 py-1 rounded-full text-[10px] font-mono tracking-widest uppercase text-white">Signature Journey</div>
                     <h3 className="font-serif text-3xl mb-4 text-white">The Vitality Retreat</h3>
                     <p className="font-sans text-sm text-stone/80 mb-8 max-w-[200px]">Subcellular optimization, energy system repair, and advanced holistic diagnostics.</p>
-                    <button className="magnetic-button bg-stone text-moss border-stone px-8 py-3 rounded-full font-sans uppercase tracking-widest text-sm mt-auto shadow-lg hover:bg-white transition-colors">Begin Your Journey</button>
+                    <Link to="/programs" className="magnetic-button bg-stone text-moss border-stone px-8 py-3 rounded-full font-sans uppercase tracking-widest text-[10px] font-bold mt-auto shadow-lg hover:bg-white transition-colors">Begin Your Journey</Link>
                 </div>
 
                 {/* Tier 3 */}
                 <div className="border hover:border-moss/20 rounded-[var(--radius-std)] p-10 flex flex-col items-center text-center transition-colors">
                     <h3 className="font-serif text-2xl mb-4 text-moss">The Equilibrium</h3>
                     <p className="font-sans text-sm text-charcoal/60 mb-8 max-w-[200px]">Deep endocrine recalibration and natural cortisol modulation.</p>
-                    <button className="magnetic-button border border-charcoal/20 px-6 py-2 rounded-full font-sans uppercase tracking-widest text-xs mt-auto hover:bg-moss hover:text-white transition-colors">Discover</button>
+                    <Link to="/programs" className="magnetic-button border border-charcoal/20 px-6 py-2 rounded-full font-sans uppercase tracking-widest text-[10px] font-bold mt-auto hover:bg-moss hover:text-white transition-colors">Discover</Link>
                 </div>
             </section>
 
@@ -37,7 +39,7 @@ export default function Footer() {
                 <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-12 font-sans">
 
                     <div className="md:col-span-2 flex flex-col justify-between">
-                        <h2 className="font-serif italic text-4xl mb-6">Serum & Sculpt</h2>
+                        <Link to="/" className="font-serif italic text-4xl mb-6 hover:opacity-80 transition-opacity">Serum & Sculpt</Link>
                         <p className="font-light text-white/80 text-sm max-w-sm mb-12 leading-relaxed">
                             A pharmacist-led clinical wellness authority empowering women through evidence-based care and holistic programs.
                         </p>
@@ -48,11 +50,11 @@ export default function Footer() {
 
                     <div>
                         <h4 className="font-mono text-xs text-sage tracking-widest uppercase mb-6">Explore</h4>
-                        <ul className="flex flex-col gap-4 text-sm font-light text-white/70">
-                            <li><a href="#" className="hover:text-white transition-colors">Book Consultation</a></li>
-                            <li><a href="#" className="hover:text-white transition-colors">Services & Programs</a></li>
-                            <li><a href="#" className="hover:text-white transition-colors">Curated Skincare</a></li>
-                            <li><a href="#" className="hover:text-white transition-colors">Our Pharmacist</a></li>
+                        <ul className="flex flex-col gap-4 text-xs tracking-widest uppercase font-bold text-white/70">
+                            <li><Link to="/contact" className="hover:text-white transition-colors">Book Consultation</Link></li>
+                            <li><Link to="/services" className="hover:text-white transition-colors">Services</Link></li>
+                            <li><Link to="/shop" className="hover:text-white transition-colors">Curated Skincare</Link></li>
+                            <li><Link to="/about" className="hover:text-white transition-colors">Our Pharmacist</Link></li>
                         </ul>
                     </div>
 
@@ -65,7 +67,7 @@ export default function Footer() {
                                 placeholder="Email address"
                                 className="bg-transparent border-none outline-none text-sm text-white placeholder-white/30 flex-grow"
                             />
-                            <button className="text-clay text-sm tracking-widest uppercase font-mono hover:text-white transition-colors">
+                            <button className="text-clay text-[10px] tracking-widest uppercase font-mono font-bold hover:text-white transition-colors">
                                 Subscribe
                             </button>
                         </div>
@@ -76,8 +78,8 @@ export default function Footer() {
                 <div className="max-w-7xl mx-auto border-t border-white/10 mt-24 pt-8 flex flex-col md:flex-row justify-between items-center text-xs font-light text-white/40 gap-4">
                     <span>&copy; {new Date().getFullYear()} Serum & Sculpt Wellness.</span>
                     <div className="flex gap-6">
-                        <a href="#" className="hover:text-white">Privacy Policy</a>
-                        <a href="#" className="hover:text-white">Terms of Experience</a>
+                        <Link to="/contact" className="hover:text-white">Privacy Policy</Link>
+                        <Link to="/contact" className="hover:text-white">Terms of Experience</Link>
                     </div>
                 </div>
             </div>
@@ -85,3 +87,4 @@ export default function Footer() {
         </footer>
     );
 }
+
