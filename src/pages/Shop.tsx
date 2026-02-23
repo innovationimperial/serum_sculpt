@@ -1,6 +1,6 @@
 import { useRef, useEffect } from 'react';
 import { gsap } from 'gsap';
-import CuratedSkincare from '../components/CuratedSkincare';
+import { StoreSection } from '../features/store/components/StoreSection';
 import PageHeader from '../components/PageHeader';
 
 export default function Shop() {
@@ -33,7 +33,7 @@ export default function Shop() {
             />
 
             <div className="border-t border-stone/20 shop-reveal">
-                <CuratedSkincare />
+                <StoreSection />
             </div>
 
             <div className="py-24 px-8 md:px-16 max-w-7xl mx-auto border-t border-stone/20 shop-reveal">

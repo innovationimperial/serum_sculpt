@@ -2,7 +2,8 @@ import { useEffect, useRef, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { Menu, X } from 'lucide-react';
+import { Menu, X, ShoppingBag } from 'lucide-react';
+import { useCart } from '../features/store/context/CartContext';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -11,6 +12,7 @@ export default function Navbar() {
     const [isScrolled, setIsScrolled] = useState(false);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const location = useLocation();
+    const { cartCount, openCart } = useCart();
 
     useEffect(() => {
         const handleScroll = () => {
@@ -83,6 +85,15 @@ export default function Navbar() {
                     </div>
 
                     <div className="flex items-center gap-4 z-50">
+                        <button onClick={openCart} className="relative p-2 text-current cursor-pointer hover:opacity-70 transition-opacity">
+                            <ShoppingBag size={20} />
+                            {cartCount > 0 && (
+                                <span className="absolute top-0 right-0 bg-moss text-stone text-[9px] w-4 h-4 flex items-center justify-center rounded-full font-bold">
+                                    {cartCount}
+                                </span>
+                            )}
+                        </button>
+
                         <Link to="/contact" className="hidden lg:grid magnetic-button whitespace-nowrap bg-moss text-white px-6 py-3 rounded-full text-[10px] font-sans tracking-[0.2em] font-bold uppercase hover:bg-charcoal transition-colors">
                             Book Consultation
                         </Link>

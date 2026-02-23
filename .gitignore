@@ -30,3 +30,10 @@ dist-ssr
 prompt*.md
 web dev updated.md
 
+#ignore images
+about_hero.png
+about_rest.png
+about_rest_fixed.png
+services_rest_fixed.png
+services_rest.png
+services_rest_fixed2.png
