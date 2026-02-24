@@ -1,0 +1,317 @@
+import type {
+    BlogPost,
+    AdminProduct,
+    StoreSettings,
+    Consultation,
+    WellnessProgram,
+    DashboardStats,
+    RecentActivity,
+} from '../types';
+
+// ─── Dashboard Stats ─────────────────────────────────────────
+export const DASHBOARD_STATS: DashboardStats = {
+    totalRevenue: 147_250,
+    revenueChange: 12.4,
+    activeConsultations: 23,
+    consultationsChange: 8.1,
+    blogViews: 14_820,
+    blogViewsChange: -2.3,
+    productOrders: 89,
+    ordersChange: 15.7,
+};
+
+export const RECENT_ACTIVITY: RecentActivity[] = [
+    { id: '1', type: 'order', message: 'New order: Clinical Radiance Serum × 2', timestamp: '12 min ago' },
+    { id: '2', type: 'booking', message: 'New booking: Skin Analysis — Thandi M.', timestamp: '34 min ago' },
+    { id: '3', type: 'blog', message: '"Understanding Menopause Skin" hit 500 views', timestamp: '1 hr ago' },
+    { id: '4', type: 'program', message: 'Sarah K. enrolled in Weight Wellness Program', timestamp: '2 hr ago' },
+    { id: '5', type: 'order', message: 'New order: Hemp Recovery Concentrate × 1', timestamp: '3 hr ago' },
+];
+
+export const REVENUE_TREND: number[] = [8200, 9400, 11200, 10800, 13500, 14100, 15200, 14700, 16800, 18200, 17500, 19100];
+
+// ─── Blog Posts ──────────────────────────────────────────────
+export const MOCK_BLOG_POSTS: BlogPost[] = [
+    {
+        id: 'b1',
+        title: 'Understanding How Menopause Changes Your Skin',
+        category: 'Menopause',
+        excerpt: 'A clinical deep-dive into the hormonal shifts that affect collagen production, hydration, and barrier function during perimenopause and menopause.',
+        content: '',
+        featuredImage: 'https://images.unsplash.com/photo-1559757175-5700dde675bc?q=80&w=1200&auto=format&fit=crop',
+        tags: ['menopause', 'collagen', 'hormones'],
+        status: 'published',
+        publishedDate: '2026-02-18',
+        views: 1243,
+        readTimeMin: 7,
+        engagement: 68,
+    },
+    {
+        id: 'b2',
+        title: 'The Science Behind Hemp in Skincare',
+        category: 'Skincare Education',
+        excerpt: 'Evidence-based analysis of hemp seed oil and CBD derivatives in dermatological applications.',
+        content: '',
+        featuredImage: 'https://images.unsplash.com/photo-1608248543803-ba4f8c70ae0b?q=80&w=1200&auto=format&fit=crop',
+        tags: ['hemp', 'cbd', 'anti-inflammatory'],
+        status: 'published',
+        publishedDate: '2026-02-10',
+        views: 892,
+        readTimeMin: 5,
+        engagement: 54,
+    },
+    {
+        id: 'b3',
+        title: "Weight Management Without Stimulants: A Pharmacist's Guide",
+        category: 'Weight Management',
+        excerpt: 'How to approach sustainable weight loss using clinical protocols, nutritional science, and holistic support.',
+        content: '',
+        featuredImage: 'https://images.unsplash.com/photo-1617897903246-719242758050?q=80&w=1200&auto=format&fit=crop',
+        tags: ['weight', 'nutrition', 'pharmacist'],
+        status: 'published',
+        publishedDate: '2026-02-01',
+        views: 2105,
+        readTimeMin: 9,
+        engagement: 72,
+    },
+    {
+        id: 'b4',
+        title: 'Building a Hormonal Wellness Routine',
+        category: 'Hormonal Wellness',
+        excerpt: 'A step-by-step framework for balancing hormonal health through lifestyle, supplements, and clinical support.',
+        content: '',
+        featuredImage: 'https://images.unsplash.com/photo-1506126613408-eca07ce68773?q=80&w=1200&auto=format&fit=crop',
+        tags: ['hormones', 'wellness', 'routine'],
+        status: 'draft',
+        publishedDate: '',
+        views: 0,
+        readTimeMin: 6,
+        engagement: 0,
+    },
+    {
+        id: 'b5',
+        title: "Why Vitamin C Serums Aren't All Created Equal",
+        category: 'Skin Health',
+        excerpt: 'Understanding L-ascorbic acid stability, pH requirements, and what makes a clinical-grade vitamin C serum effective.',
+        content: '',
+        featuredImage: 'https://images.unsplash.com/photo-1599305090598-fe179d501227?q=80&w=1200&auto=format&fit=crop',
+        tags: ['vitamin-c', 'serums', 'science'],
+        status: 'published',
+        publishedDate: '2026-01-22',
+        views: 1780,
+        readTimeMin: 8,
+        engagement: 61,
+    },
+];
+
+// ─── Products ────────────────────────────────────────────────
+export const MOCK_PRODUCTS: AdminProduct[] = [
+    {
+        id: 'p1',
+        name: 'House of Langa Selection',
+        category: 'Skincare',
+        price: 1250,
+        description: 'Elevate your routine with our curated selection of House of Langa. Premium cosmetics aligned with our rigorous clinical standards.',
+        image: 'https://images.unsplash.com/photo-1620916566398-39f1143ab7be?q=80&w=1500&auto=format&fit=crop',
+        clinicalGuidance: 'Ideal for mature skin types seeking deep hydration and barrier repair without heavy occlusion.',
+        usage: 'Apply 2-3 drops morning and evening after cleansing.',
+        ingredients: ['Retinol', 'Hyaluronic Acid', 'Niacinamide'],
+        status: 'active',
+        views: 342,
+        addToCartCount: 47,
+        conversionRate: 13.7,
+    },
+    {
+        id: 'p2',
+        name: 'Hemp Recovery Concentrate',
+        category: 'Hemp',
+        price: 850,
+        description: "Potent, science-backed hemp formulations selected to soothe inflammation and support your skin's natural recovery process.",
+        image: 'https://images.unsplash.com/photo-1608248543803-ba4f8c70ae0b?q=80&w=1500&auto=format&fit=crop',
+        clinicalGuidance: 'Excellent for reactive or compromised skin. Helps manage redness and irritation.',
+        usage: 'Use as a spot treatment or mix a drop with your daily moisturizer.',
+        ingredients: ['Hemp Seed Oil', 'CBD Extract', 'Vitamin E'],
+        status: 'active',
+        views: 289,
+        addToCartCount: 31,
+        conversionRate: 10.7,
+    },
+    {
+        id: 'p3',
+        name: 'Advanced Weight Wellness',
+        category: 'Wellness',
+        price: 2100,
+        description: 'Pharmacist-approved wellness and weight management solutions designed to safely and sustainably restore your vitality.',
+        image: 'https://images.unsplash.com/photo-1617897903246-719242758050?q=80&w=1500&auto=format&fit=crop',
+        clinicalGuidance: 'Supports healthy metabolism without stimulants. Best used in conjunction with our clinical consultation.',
+        usage: 'Take 1 scoop daily with water or your preferred non-dairy milk.',
+        ingredients: ['Green Tea Extract', 'Chromium', 'L-Carnitine'],
+        status: 'active',
+        views: 456,
+        addToCartCount: 62,
+        conversionRate: 13.6,
+    },
+    {
+        id: 'p4',
+        name: 'Clinical Radiance Serum',
+        category: 'Skincare',
+        price: 1800,
+        description: 'A highly concentrated vitamin C serum stabilized to provide maximum antioxidant protection and brightening over time.',
+        image: 'https://images.unsplash.com/photo-1599305090598-fe179d501227?q=80&w=1500&auto=format&fit=crop',
+        clinicalGuidance: 'Essential for photo-damage defense and collagen support.',
+        usage: 'Apply 4-5 drops in the morning before sunscreen.',
+        ingredients: ['L-Ascorbic Acid', 'Ferulic Acid', 'Vitamin E'],
+        status: 'active',
+        views: 521,
+        addToCartCount: 78,
+        conversionRate: 15.0,
+    },
+    {
+        id: 'p5',
+        name: 'Sculpting Gua Sha Set',
+        category: 'Tools',
+        price: 450,
+        description: 'Clinical-grade rose quartz sculpting tools designed for lymphatic drainage and facial tension relief.',
+        image: 'https://images.unsplash.com/photo-1643379855211-45b5a4ef44c4?q=80&w=1500&auto=format&fit=crop',
+        clinicalGuidance: 'Improves microcirculation and enhances product absorption.',
+        usage: 'Use 2-3 times a week with a facial oil for slip.',
+        ingredients: [],
+        status: 'active',
+        views: 198,
+        addToCartCount: 23,
+        conversionRate: 11.6,
+    },
+    {
+        id: 'p6',
+        name: 'Luminous Mineral Foundation',
+        category: 'Makeup',
+        price: 650,
+        description: 'Breathable, non-comedogenic coverage that protects while perfecting your complexion with a natural finish.',
+        image: 'https://images.unsplash.com/photo-1616683693504-3ea7e9ad6fec?q=80&w=1500&auto=format&fit=crop',
+        clinicalGuidance: 'Safe for post-procedure or acne-prone skin.',
+        usage: 'Buff into skin using a dense brush for buildable coverage.',
+        ingredients: ['Zinc Oxide', 'Titanium Dioxide', 'Iron Oxides'],
+        status: 'active',
+        views: 267,
+        addToCartCount: 35,
+        conversionRate: 13.1,
+    },
+];
+
+// ─── Store Settings ──────────────────────────────────────────
+export const MOCK_STORE_SETTINGS: StoreSettings = {
+    heroImage: 'https://images.unsplash.com/photo-1620916566398-39f1143ab7be?q=80&w=2000&auto=format&fit=crop',
+    tagline: 'Curated Clinical Skincare',
+    description: 'We stock select products that align with our clinical standards and skin philosophy.',
+    announcementBanner: 'Free shipping on orders over R1,500',
+    partnerBrands: [
+        { id: 'pb1', name: 'House of Langa', logoUrl: '' },
+        { id: 'pb2', name: 'Amway Wellness', logoUrl: '' },
+        { id: 'pb3', name: 'Hemp SA', logoUrl: '' },
+    ],
+};
+
+// ─── Consultations ───────────────────────────────────────────
+export const MOCK_CONSULTATIONS: Consultation[] = [
+    {
+        id: 'c1', clientName: 'Thandi Molefe', clientEmail: 'thandi.m@email.com', clientPhone: '082 456 7890',
+        date: '2026-02-25', time: '10:00', type: 'Initial Consultation', status: 'confirmed',
+        preConsultationNotes: 'Concerned about hormonal acne flare-ups since turning 40. Currently using no prescription skincare.',
+        notes: [
+            { id: 'n1', text: 'Client completed intake form. Hormonal acne since age 38, worsening in winter months.', timestamp: '2026-02-22 14:30', author: 'System' },
+            { id: 'n2', text: 'Recommend starting with gentle cleanser protocol before introducing active ingredients.', timestamp: '2026-02-23 09:15', author: 'Dr. Naidoo' },
+        ],
+    },
+    {
+        id: 'c2', clientName: 'Sarah Klein', clientEmail: 'sarah.k@email.com', clientPhone: '073 222 3344',
+        date: '2026-02-25', time: '14:00', type: 'Program Review', status: 'confirmed',
+        preConsultationNotes: 'Week 6 check-in for the Weight Wellness program. Reports increased energy levels.',
+        notes: [
+            { id: 'n3', text: 'Weight down 3.2kg since program start. Energy improved significantly.', timestamp: '2026-02-20 16:00', author: 'Dr. Naidoo' },
+        ],
+    },
+    {
+        id: 'c3', clientName: 'Nosipho Dlamini', clientEmail: 'nosipho.d@email.com', clientPhone: '061 987 6543',
+        date: '2026-02-26', time: '09:00', type: 'Skin Analysis', status: 'pending',
+        preConsultationNotes: 'New client referral. Interested in post-menopausal skincare routine.',
+        notes: [
+            { id: 'n4', text: 'Referred by existing client Grace Nkosi. First-time visit.', timestamp: '2026-02-24 10:00', author: 'System' },
+        ],
+    },
+    {
+        id: 'c4', clientName: 'Lisa van der Berg', clientEmail: 'lisa.vdb@email.com', clientPhone: '084 111 2233',
+        date: '2026-02-26', time: '11:30', type: 'Follow-up', status: 'pending',
+        preConsultationNotes: 'Follow-up after 3 months on the Clinical Radiance Serum protocol.',
+        notes: [],
+    },
+    {
+        id: 'c5', clientName: 'Ayesha Patel', clientEmail: 'ayesha.p@email.com', clientPhone: '076 555 8899',
+        date: '2026-02-27', time: '15:00', type: 'Initial Consultation', status: 'confirmed',
+        preConsultationNotes: 'Perimenopause symptoms — seeking holistic approach including supplements and skincare.',
+        notes: [
+            { id: 'n5', text: 'Client has existing prescription for HRT. Needs complementary skincare protocol.', timestamp: '2026-02-24 11:45', author: 'System' },
+            { id: 'n6', text: 'Pre-screening complete. No contraindications for retinoid introduction.', timestamp: '2026-02-24 15:30', author: 'Dr. Naidoo' },
+        ],
+    },
+    {
+        id: 'c6', clientName: 'Grace Nkosi', clientEmail: 'grace.n@email.com', clientPhone: '082 333 4455',
+        date: '2026-02-24', time: '10:00', type: 'Follow-up', status: 'completed',
+        preConsultationNotes: 'Completed Hemp Recovery protocol review. Skin inflammation reduced by 60%.',
+        notes: [
+            { id: 'n7', text: 'Inflammation markers significantly improved. Barrier function restored.', timestamp: '2026-02-24 10:30', author: 'Dr. Naidoo' },
+            { id: 'n8', text: 'Transitioning to maintenance phase. Reduced Hemp Recovery to 3x/week.', timestamp: '2026-02-24 10:45', author: 'Dr. Naidoo' },
+            { id: 'n9', text: 'Client very happy with results. Referred friend Nosipho Dlamini.', timestamp: '2026-02-24 11:00', author: 'Dr. Naidoo' },
+        ],
+    },
+    {
+        id: 'c7', clientName: 'Megan Botha', clientEmail: 'megan.b@email.com', clientPhone: '071 666 7788',
+        date: '2026-02-23', time: '16:00', type: 'Initial Consultation', status: 'cancelled',
+        preConsultationNotes: 'Cancelled — rescheduled for next week.',
+        notes: [
+            { id: 'n10', text: 'Client called to reschedule due to work conflict. New date TBD.', timestamp: '2026-02-23 12:00', author: 'System' },
+        ],
+    },
+];
+
+// ─── Wellness Programs ───────────────────────────────────────
+export const MOCK_PROGRAMS: WellnessProgram[] = [
+    {
+        id: 'pr1',
+        name: 'Weight Wellness Program',
+        description: 'A pharmacist-led, 12-week holistic weight management program combining nutrition, supplementation, and lifestyle coaching without stimulants.',
+        status: 'active',
+        enrolledCount: 18,
+        phases: [
+            { name: 'Assessment & Foundation', durationWeeks: 2, description: 'Full metabolic assessment, baseline measurements, and personalised plan creation.' },
+            { name: 'Active Transformation', durationWeeks: 8, description: 'Weekly check-ins, supplement protocol, nutritional guidance, and exercise recommendations.' },
+            { name: 'Maintenance & Support', durationWeeks: 2, description: 'Transition to sustainable habits with bi-weekly support calls.' },
+        ],
+        outcomes: ['Average 4-6kg loss', '87% completion rate', 'Improved energy reported by 92% of participants'],
+    },
+    {
+        id: 'pr2',
+        name: 'Hormonal Harmony Program',
+        description: 'Support for women navigating perimenopause and menopause through targeted supplementation, skincare adjustments, and wellness strategies.',
+        status: 'active',
+        enrolledCount: 12,
+        phases: [
+            { name: 'Hormone Mapping', durationWeeks: 1, description: 'Comprehensive symptom review and lifestyle audit.' },
+            { name: 'Targeted Support', durationWeeks: 6, description: 'Supplement protocol, skincare routine adjustment, and stress management techniques.' },
+            { name: 'Long-term Balance', durationWeeks: 3, description: 'Ongoing monitoring and optimisation of wellness routine.' },
+        ],
+        outcomes: ['Reduced hot flashes', 'Improved sleep quality', 'Skin barrier function improvement'],
+    },
+    {
+        id: 'pr3',
+        name: 'Clinical Skin Reset',
+        description: 'An intensive 8-week skincare transformation program guided by clinical expertise for concerns including acne, hyperpigmentation, and premature ageing.',
+        status: 'draft',
+        enrolledCount: 0,
+        phases: [
+            { name: 'Skin Assessment', durationWeeks: 1, description: 'AI skin analysis combined with clinical review.' },
+            { name: 'Active Treatment', durationWeeks: 6, description: 'Step-by-step product introduction with weekly check-ins.' },
+            { name: 'Results & Maintenance', durationWeeks: 1, description: 'Before/after documentation and long-term routine finalisation.' },
+        ],
+        outcomes: ['Visible improvement in 4 weeks', 'Personalised product protocol', 'Photo documentation of progress'],
+    },
+];

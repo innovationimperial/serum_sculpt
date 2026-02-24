@@ -56,7 +56,7 @@ const STORE_PRODUCTS: Product[] = [
         category: 'Tools',
         price: 450.00,
         desc: 'Clinical-grade rose quartz sculpting tools designed for lymphatic drainage and facial tension relief.',
-        image: 'https://images.unsplash.com/photo-1615397323625-f5d6ee2e1329?q=80&w=1500&auto=format&fit=crop',
+        image: 'https://images.unsplash.com/photo-1643379855211-45b5a4ef44c4?q=80&w=1500&auto=format&fit=crop',
         clinicalGuidance: 'Improves microcirculation and enhances product absorption.',
         usage: 'Use 2-3 times a week with a facial oil for slip.',
     },
@@ -66,7 +66,7 @@ const STORE_PRODUCTS: Product[] = [
         category: 'Makeup',
         price: 650.00,
         desc: 'Breathable, non-comedogenic coverage that protects while perfecting your complexion with a natural finish.',
-        image: 'https://images.unsplash.com/photo-1512496015851-a1c8ce00db2c?q=80&w=1500&auto=format&fit=crop',
+        image: 'https://images.unsplash.com/photo-1616683693504-3ea7e9ad6fec?q=80&w=1500&auto=format&fit=crop',
         clinicalGuidance: 'Safe for post-procedure or acne-prone skin.',
         usage: 'Buff into skin using a dense brush for buildable coverage.',
     }
