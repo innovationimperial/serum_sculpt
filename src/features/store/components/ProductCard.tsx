@@ -42,7 +42,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onClick }) =>
                         ZAR {product.price.toFixed(2)}
                     </span>
                     <button
-                        className="flex items-center gap-2 text-xs font-mono uppercase tracking-widest text-charcoal/60 group-hover:text-moss dark:text-stone/60 dark:group-hover:text-[#d9e2d5] transition-colors"
+                        className="magnetic-button flex items-center gap-2 text-xs font-mono uppercase tracking-widest text-charcoal/60 group-hover:text-moss dark:text-stone/60 dark:group-hover:text-[#d9e2d5] transition-colors bg-white/50 dark:bg-black/20 px-4 py-2 rounded-full border border-charcoal/10 dark:border-stone/10 hover:bg-white dark:hover:bg-black"
                         aria-label={`Explore ${product.name}`}
                     >
                         Explore <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />

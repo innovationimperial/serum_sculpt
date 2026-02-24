@@ -127,7 +127,7 @@ export const CheckoutModal: React.FC = () => {
                             <button
                                 type="submit"
                                 disabled={isSimulatingPayment || items.length === 0}
-                                className="w-full py-4 rounded-full bg-moss text-stone dark:bg-moss dark:text-stone font-bold tracking-widest uppercase text-sm hover:opacity-90 transition-opacity flex items-center justify-center gap-3 disabled:opacity-50"
+                                className="magnetic-button w-full py-4 rounded-full bg-moss text-stone dark:bg-moss dark:text-stone font-bold tracking-widest uppercase text-sm hover:opacity-90 transition-opacity flex items-center justify-center gap-3 disabled:opacity-50"
                             >
                                 {isSimulatingPayment ? (
                                     <span className="animate-pulse">Processing...</span>

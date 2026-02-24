@@ -33,11 +33,32 @@ export default function Services() {
 
     useEffect(() => {
         const ctx = gsap.context(() => {
-            // Animations for the section, title, and cards can be added here
-            // For example, a simple fade-in for the title:
-            // gsap.from(titleRef.current, { opacity: 0, y: 50, duration: 1, ease: "power3.out" });
-            // And for the cards:
-            // gsap.from(cardsRef.current.children, { opacity: 0, y: 50, stagger: 0.2, duration: 0.8, ease: "power3.out" });
+            // Animate title
+            gsap.from(titleRef.current, {
+                scrollTrigger: {
+                    trigger: sectionRef.current,
+                    start: 'top 80%',
+                },
+                opacity: 0,
+                y: 30,
+                duration: 1,
+                ease: "power3.out"
+            });
+
+            // Animate cards staggered
+            if (cardsRef.current) {
+                gsap.from(cardsRef.current.children, {
+                    scrollTrigger: {
+                        trigger: cardsRef.current,
+                        start: 'top 85%',
+                    },
+                    opacity: 0,
+                    y: 40,
+                    stagger: 0.15,
+                    duration: 1,
+                    ease: "power3.out"
+                });
+            }
         }, sectionRef);
 
         return () => ctx.revert();

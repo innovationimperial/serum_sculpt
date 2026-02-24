@@ -85,7 +85,7 @@ export default function Navbar() {
                     </div>
 
                     <div className="flex items-center gap-4 z-50">
-                        <button onClick={openCart} className="relative p-2 text-current cursor-pointer hover:opacity-70 transition-opacity">
+                        <button onClick={openCart} className="magnetic-button relative p-2 text-current cursor-pointer hover:opacity-70 transition-opacity">
                             <ShoppingBag size={20} />
                             {cartCount > 0 && (
                                 <span className="absolute top-0 right-0 bg-moss text-stone text-[9px] w-4 h-4 flex items-center justify-center rounded-full font-bold">

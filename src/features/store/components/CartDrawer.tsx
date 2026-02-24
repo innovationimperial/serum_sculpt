@@ -102,7 +102,7 @@ export const CartDrawer: React.FC = () => {
                         </div>
                         <button
                             onClick={openCheckout}
-                            className="w-full py-4 rounded-full bg-moss text-stone dark:bg-moss dark:text-stone font-bold tracking-widest uppercase text-xs hover:opacity-90 transition-opacity flex items-center justify-center gap-2"
+                            className="magnetic-button w-full py-4 rounded-full bg-moss text-stone dark:bg-moss dark:text-stone font-bold tracking-widest uppercase text-xs hover:opacity-90 transition-opacity flex items-center justify-center gap-2"
                         >
                             Proceed to Checkout
                         </button>
