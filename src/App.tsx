@@ -2,6 +2,7 @@ import { lazy, Suspense } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Layout from './components/Layout';
 import { CartProvider } from './features/store/context/CartContext';
+import { AuthProvider } from './features/auth/AuthContext';
 
 // Lazy load public pages
 const Home = lazy(() => import('./pages/Home'));
@@ -12,6 +13,8 @@ const Shop = lazy(() => import('./pages/Shop'));
 const Education = lazy(() => import('./pages/Education'));
 const Contact = lazy(() => import('./pages/Contact'));
 const SkinAnalysis = lazy(() => import('./pages/SkinAnalysis'));
+const Login = lazy(() => import('./pages/Login'));
+const Signup = lazy(() => import('./pages/Signup'));
 
 // Lazy load global modals
 const CartDrawer = lazy(() => import('./features/store/components/CartDrawer').then(m => ({ default: m.CartDrawer })));
@@ -38,43 +41,47 @@ const Loading = () => (
 
 function App() {
   return (
-    <CartProvider>
-      <Router>
-        <Suspense fallback={<Loading />}>
-          <Routes>
-            {/* Public site */}
-            <Route element={<Layout />}>
-              <Route path="/" element={<Home />} />
-              <Route path="/about" element={<About />} />
-              <Route path="/services" element={<ServicesPage />} />
-              <Route path="/programs" element={<Programs />} />
-              <Route path="/shop" element={<Shop />} />
-              <Route path="/education" element={<Education />} />
-              <Route path="/contact" element={<Contact />} />
-              <Route path="/skin-analysis" element={<SkinAnalysis />} />
-            </Route>
+    <AuthProvider>
+      <CartProvider>
+        <Router>
+          <Suspense fallback={<Loading />}>
+            <Routes>
+              {/* Public site */}
+              <Route element={<Layout />}>
+                <Route path="/" element={<Home />} />
+                <Route path="/about" element={<About />} />
+                <Route path="/services" element={<ServicesPage />} />
+                <Route path="/programs" element={<Programs />} />
+                <Route path="/shop" element={<Shop />} />
+                <Route path="/education" element={<Education />} />
+                <Route path="/contact" element={<Contact />} />
+                <Route path="/skin-analysis" element={<SkinAnalysis />} />
+                <Route path="/login" element={<Login />} />
+                <Route path="/signup" element={<Signup />} />
+              </Route>
 
-            {/* Admin portal — separate layout, no public Navbar/Footer */}
-            <Route path="/admin" element={<AdminLayout />}>
-              <Route index element={<DashboardPage />} />
-              <Route path="blog" element={<BlogListPage />} />
-              <Route path="blog/new" element={<BlogEditorPage />} />
-              <Route path="blog/:id" element={<BlogEditorPage />} />
-              <Route path="products" element={<ProductListPage />} />
-              <Route path="products/new" element={<ProductEditorPage />} />
-              <Route path="products/:id" element={<ProductEditorPage />} />
-              <Route path="store" element={<StoreSettingsPage />} />
-              <Route path="consultations" element={<ConsultationsPage />} />
-              <Route path="programs" element={<ProgramsPage />} />
-              <Route path="programs/new" element={<ProgramEditorPage />} />
-              <Route path="programs/:id" element={<ProgramEditorPage />} />
-            </Route>
-          </Routes>
-          <CartDrawer />
-          <CheckoutModal />
-        </Suspense>
-      </Router>
-    </CartProvider>
+              {/* Admin portal — separate layout, no public Navbar/Footer */}
+              <Route path="/admin" element={<AdminLayout />}>
+                <Route index element={<DashboardPage />} />
+                <Route path="blog" element={<BlogListPage />} />
+                <Route path="blog/new" element={<BlogEditorPage />} />
+                <Route path="blog/:id" element={<BlogEditorPage />} />
+                <Route path="products" element={<ProductListPage />} />
+                <Route path="products/new" element={<ProductEditorPage />} />
+                <Route path="products/:id" element={<ProductEditorPage />} />
+                <Route path="store" element={<StoreSettingsPage />} />
+                <Route path="consultations" element={<ConsultationsPage />} />
+                <Route path="programs" element={<ProgramsPage />} />
+                <Route path="programs/new" element={<ProgramEditorPage />} />
+                <Route path="programs/:id" element={<ProgramEditorPage />} />
+              </Route>
+            </Routes>
+            <CartDrawer />
+            <CheckoutModal />
+          </Suspense>
+        </Router>
+      </CartProvider>
+    </AuthProvider>
   );
 }
 

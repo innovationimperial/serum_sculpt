@@ -18,12 +18,14 @@ export interface BlogPost {
 }
 
 // ─── Product / Store Types ───────────────────────────────────
-export type ProductCategory = 'Skincare' | 'Makeup' | 'Wellness' | 'Hemp' | 'Tools';
+export type StoreName = 'House of Langa' | 'Amway' | 'Hemp wellness' | 'Weight Wellness Store' | 'Serum & Sculpt Clinical Skincare';
+export type ProductCategory = 'Skincare' | 'Makeup' | 'Wellness' | 'Hemp Range' | 'Tools';
 export type ProductStatus = 'active' | 'hidden' | 'out_of_stock';
 
 export interface AdminProduct {
     id: string;
     name: string;
+    store: StoreName;
     category: ProductCategory;
     price: number;
     description: string;

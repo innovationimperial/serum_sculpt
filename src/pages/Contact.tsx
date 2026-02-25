@@ -2,6 +2,7 @@ import { useRef, useEffect } from 'react';
 import { gsap } from 'gsap';
 import { Mail, MessageCircle, MapPin, ChevronRight, Send } from 'lucide-react';
 import PageHeader from '../components/PageHeader';
+import { useRequireAuth } from '../hooks/useRequireAuth';
 
 const CONTACT_CHANNELS = [
     {
@@ -41,6 +42,7 @@ const FAQS = [
 
 export default function Contact() {
     const containerRef = useRef<HTMLDivElement>(null);
+    const { requireAuth } = useRequireAuth();
 
     useEffect(() => {
         const ctx = gsap.context(() => {
@@ -87,7 +89,7 @@ export default function Contact() {
 
                     <div className="bg-stone/5 p-6 md:p-12 rounded-[3.5rem] border border-stone/10 contact-reveal">
                         <h2 className="font-serif text-3xl text-moss mb-8 italic">Administrative Inquiry</h2>
-                        <form className="space-y-6">
+                        <form className="space-y-6" onSubmit={(e) => { e.preventDefault(); requireAuth(() => { /* Add submit logic later */ }); }}>
                             <div className="grid sm:grid-cols-2 gap-6">
                                 <input type="text" placeholder="Full Name" className="w-full px-6 py-4 bg-white rounded-2xl border border-stone/20 focus:outline-none focus:border-moss transition-colors text-sm" />
                                 <input type="email" placeholder="Email Address" className="w-full px-6 py-4 bg-white rounded-2xl border border-stone/20 focus:outline-none focus:border-moss transition-colors text-sm" />
@@ -130,7 +132,7 @@ export default function Contact() {
                         <p className="text-stone/60 font-light mb-8 leading-relaxed">
                             For immediate clinical assessment scheduling, please use our simplified WhatsApp booking system.
                         </p>
-                        <button className="bg-white text-moss px-10 py-5 rounded-full font-mono text-[10px] tracking-widest uppercase font-bold hover:bg-stone transition-colors relative z-10">
+                        <button onClick={() => requireAuth(() => { /* Add whatsapp redirect logic */ })} className="bg-white text-moss px-10 py-5 rounded-full font-mono text-[10px] tracking-widest uppercase font-bold hover:bg-stone transition-colors relative z-10">
                             WhatsApp Booking
                         </button>
                     </div>

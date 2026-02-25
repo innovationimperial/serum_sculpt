@@ -8,7 +8,7 @@ import { CategoryManager } from '../components/CategoryManager';
 import { useToast } from '../components/Toast';
 import type { AdminProduct, ProductStatus } from '../types';
 
-const DEFAULT_CATEGORIES = ['All', 'Skincare', 'Makeup', 'Wellness', 'Hemp', 'Tools'];
+const DEFAULT_CATEGORIES = ['All', 'Skincare', 'Makeup', 'Wellness', 'Hemp Range', 'Tools'];
 
 const ProductListPage: React.FC = () => {
     const navigate = useNavigate();
@@ -84,7 +84,7 @@ const ProductListPage: React.FC = () => {
 
             <div className="p-5">
                 <Link to={`/admin/products/${product.id}`} className="block">
-                    <p className="text-[10px] font-sans uppercase tracking-[0.2em] text-charcoal/30 font-bold mb-1">{product.category}</p>
+                    <p className="text-[10px] font-sans uppercase tracking-[0.2em] text-charcoal/30 font-bold mb-1">{product.store} / {product.category}</p>
                     <h3 className="font-serif italic text-lg text-charcoal mb-1 group-hover:text-moss transition-colors">{product.name}</h3>
                     <p className="font-sans text-lg font-semibold text-charcoal">R{product.price.toLocaleString()}</p>
                 </Link>
@@ -154,7 +154,7 @@ const ProductListPage: React.FC = () => {
                             {product.status.replace('_', ' ')}
                         </span>
                     </div>
-                    <p className="text-[10px] font-sans text-charcoal/40 uppercase tracking-widest">{product.category} · R{product.price.toLocaleString()}</p>
+                    <p className="text-[10px] font-sans text-charcoal/40 uppercase tracking-widest">{product.store} · {product.category} · R{product.price.toLocaleString()}</p>
                 </div>
             </Link>
             <div className="hidden sm:flex items-center gap-6 text-sm font-sans flex-shrink-0">

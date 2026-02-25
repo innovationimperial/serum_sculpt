@@ -75,7 +75,7 @@ export default function Hero() {
                         Book Consultation
                     </button>
                     <button className="hero-cta magnetic-button border border-moss/30 bg-transparent text-moss px-8 py-4 rounded-full text-sm font-sans tracking-widest font-bold uppercase transition-all hover:bg-moss/5 hover:border-moss/50">
-                        Explore Curated Skincare
+                        Explore Featured Stores
                     </button>
                 </div>
             </div>

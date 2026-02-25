@@ -2,8 +2,9 @@ import { useEffect, useRef, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { Menu, X, ShoppingBag } from 'lucide-react';
+import { Menu, X, ShoppingBag, LogOut } from 'lucide-react';
 import { useCart } from '../features/store/context/CartContext';
+import { useAuth } from '../features/auth/AuthContext';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -11,8 +12,10 @@ export default function Navbar() {
     const navRef = useRef<HTMLElement>(null);
     const [isScrolled, setIsScrolled] = useState(false);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+    const [isAvatarMenuOpen, setIsAvatarMenuOpen] = useState(false);
     const location = useLocation();
     const { cartCount, openCart } = useCart();
+    const { isAuthenticated, user, logout } = useAuth();
 
     useEffect(() => {
         const handleScroll = () => {
@@ -25,6 +28,7 @@ export default function Navbar() {
 
     useEffect(() => {
         setIsMobileMenuOpen(false);
+        setIsAvatarMenuOpen(false);
     }, [location.pathname]);
 
     useEffect(() => {
@@ -79,7 +83,7 @@ export default function Navbar() {
                         <Link to="/about" className="nav-link hover:opacity-60 transition-opacity">About</Link>
                         <Link to="/services" className="nav-link hover:opacity-60 transition-opacity">Services</Link>
                         <Link to="/programs" className="nav-link hover:opacity-60 transition-opacity">Programs</Link>
-                        <Link to="/shop" className="nav-link hover:opacity-60 transition-opacity">Curated Skincare</Link>
+                        <Link to="/shop" className="nav-link hover:opacity-60 transition-opacity">Featured Stores</Link>
                         <Link to="/education" className="nav-link hover:opacity-60 transition-opacity">Education</Link>
                         <Link to="/skin-analysis" className="nav-link hover:opacity-60 transition-opacity">AI Skin Analysis</Link>
                         <Link to="/contact" className="nav-link hover:opacity-60 transition-opacity">Contact</Link>
@@ -98,6 +102,35 @@ export default function Navbar() {
                         <Link to="/contact" className="hidden lg:grid magnetic-button whitespace-nowrap bg-moss text-white px-6 py-3 rounded-full text-[10px] font-sans tracking-[0.2em] font-bold uppercase hover:bg-charcoal transition-colors">
                             Book Consultation
                         </Link>
+
+                        {isAuthenticated && user && (
+                            <div className="relative z-50">
+                                <button
+                                    onClick={() => setIsAvatarMenuOpen(!isAvatarMenuOpen)}
+                                    className="w-10 h-10 rounded-full border border-stone/20 overflow-hidden hover:opacity-80 transition-opacity"
+                                >
+                                    <img src={user.avatar} alt={user.name} className="w-full h-full object-cover" />
+                                </button>
+
+                                {isAvatarMenuOpen && (
+                                    <div className="absolute right-0 mt-2 w-48 bg-white rounded-2xl shadow-xl border border-stone/10 overflow-hidden text-charcoal flex flex-col pt-2 pb-2 z-50">
+                                        <div className="px-4 py-2 border-b border-stone/10 mb-2">
+                                            <p className="font-sans font-bold text-xs truncate">{user.name}</p>
+                                            <p className="font-sans text-[10px] opacity-60 truncate">{user.email}</p>
+                                        </div>
+                                        <button
+                                            onClick={() => {
+                                                logout();
+                                                setIsAvatarMenuOpen(false);
+                                            }}
+                                            className="w-full px-4 py-2 text-left font-sans text-xs hover:bg-stone/5 flex items-center gap-2 text-red-800 transition-colors"
+                                        >
+                                            <LogOut size={14} /> Log Out
+                                        </button>
+                                    </div>
+                                )}
+                            </div>
+                        )}
 
                         <button
                             className="lg:hidden p-2 text-current cursor-pointer hover:opacity-70 transition-opacity"
@@ -120,7 +153,7 @@ export default function Navbar() {
                     <Link to="/about" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-charcoal transition-colors">About</Link>
                     <Link to="/services" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-charcoal transition-colors">Services</Link>
                     <Link to="/programs" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-charcoal transition-colors">Programs</Link>
-                    <Link to="/shop" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-charcoal transition-colors">Curated Skincare</Link>
+                    <Link to="/shop" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-charcoal transition-colors">Featured Stores</Link>
                     <Link to="/education" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-charcoal transition-colors">Education</Link>
                     <Link to="/skin-analysis" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-charcoal transition-colors">AI Skin Analysis</Link>
                     <Link to="/contact" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-charcoal transition-colors">Contact</Link>
@@ -129,6 +162,18 @@ export default function Navbar() {
                 <Link to="/contact" onClick={() => setIsMobileMenuOpen(false)} className="mt-12 bg-charcoal text-white px-8 py-4 rounded-full text-[10px] font-sans tracking-[0.2em] font-bold uppercase hover:bg-moss transition-colors">
                     Book Consultation
                 </Link>
+
+                {isAuthenticated && user && (
+                    <button
+                        onClick={() => {
+                            logout();
+                            setIsMobileMenuOpen(false);
+                        }}
+                        className="mt-6 flex items-center gap-2 font-sans text-xs tracking-widest uppercase font-bold text-red-800"
+                    >
+                        <LogOut size={16} /> Log Out ({user.name})
+                    </button>
+                )}
             </div>
         </>
     );

@@ -4,10 +4,11 @@ import { ArrowLeft, Save, Trash2 } from 'lucide-react';
 import { MOCK_PRODUCTS } from '../data/mockData';
 import { ConfirmDialog } from '../components/ConfirmDialog';
 import { useToast } from '../components/Toast';
-import type { ProductCategory, ProductStatus } from '../types';
+import type { ProductCategory, ProductStatus, StoreName } from '../types';
 
-const CATEGORIES: ProductCategory[] = ['Skincare', 'Makeup', 'Wellness', 'Hemp', 'Tools'];
+const CATEGORIES: ProductCategory[] = ['Skincare', 'Makeup', 'Wellness', 'Hemp Range', 'Tools'];
 const STATUSES: ProductStatus[] = ['active', 'hidden', 'out_of_stock'];
+const STORES: StoreName[] = ['House of Langa', 'Amway', 'Hemp wellness', 'Weight Wellness Store', 'Serum & Sculpt Clinical Skincare'];
 
 const ProductEditorPage: React.FC = () => {
     const { id } = useParams();
@@ -17,6 +18,7 @@ const ProductEditorPage: React.FC = () => {
     const isNew = !id;
 
     const [name, setName] = useState(existing?.name || '');
+    const [store, setStore] = useState<StoreName>(existing?.store || 'House of Langa');
     const [category, setCategory] = useState<ProductCategory>(existing?.category || 'Skincare');
     const [price, setPrice] = useState(existing?.price?.toString() || '');
     const [description, setDescription] = useState(existing?.description || '');
@@ -167,6 +169,17 @@ const ProductEditorPage: React.FC = () => {
                                 placeholder="0.00"
                                 className="w-full px-4 py-3 rounded-xl border border-charcoal/10 font-sans text-lg font-semibold text-charcoal placeholder:text-charcoal/20 focus:outline-none focus:border-moss/40 transition-colors"
                             />
+                        </div>
+
+                        <div>
+                            <label className="block text-[10px] font-sans uppercase tracking-[0.2em] font-bold text-charcoal/40 mb-2">Store</label>
+                            <select
+                                value={store}
+                                onChange={e => setStore(e.target.value as StoreName)}
+                                className="w-full px-4 py-3 rounded-xl border border-charcoal/10 font-sans text-sm text-charcoal focus:outline-none focus:border-moss/40 transition-colors bg-transparent cursor-pointer"
+                            >
+                                {STORES.map(s => <option key={s} value={s}>{s}</option>)}
+                            </select>
                         </div>
 
                         <div>

@@ -1,8 +1,10 @@
-export type Category = 'Skincare' | 'Makeup' | 'Wellness' | 'Hemp' | 'Tools' | 'All';
+export type StoreName = 'All' | 'House of Langa' | 'Amway' | 'Hemp wellness' | 'Weight Wellness Store' | 'Serum & Sculpt Clinical Skincare';
+export type Category = 'Skincare' | 'Makeup' | 'Wellness' | 'Hemp Range' | 'Tools';
 
 export interface Product {
     id: string;
     name: string;
+    store: StoreName;
     category: Category;
     desc: string;
     price: number;

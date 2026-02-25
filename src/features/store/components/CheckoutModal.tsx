@@ -2,9 +2,11 @@ import React, { useState } from 'react';
 import { useCart } from '../context/CartContext';
 import { X, ShieldCheck, CreditCard } from 'lucide-react';
 import type { ShippingDetails } from '../types';
+import { useRequireAuth } from '../../../hooks/useRequireAuth';
 
 export const CheckoutModal: React.FC = () => {
     const { isCheckoutOpen, closeCheckout, items, cartTotal, clearCart } = useCart();
+    const { requireAuth } = useRequireAuth();
     const [isSimulatingPayment, setIsSimulatingPayment] = useState(false);
     const [isSuccess, setIsSuccess] = useState(false);
 
@@ -25,13 +27,15 @@ export const CheckoutModal: React.FC = () => {
 
     const handleMockPayment = (e: React.FormEvent) => {
         e.preventDefault();
-        setIsSimulatingPayment(true);
-        // Simulate a real PayFast redirect / modal delay
-        setTimeout(() => {
-            setIsSimulatingPayment(false);
-            setIsSuccess(true);
-            clearCart();
-        }, 2000);
+        requireAuth(() => {
+            setIsSimulatingPayment(true);
+            // Simulate a real PayFast redirect / modal delay
+            setTimeout(() => {
+                setIsSimulatingPayment(false);
+                setIsSuccess(true);
+                clearCart();
+            }, 2000);
+        });
     };
 
     if (isSuccess) {

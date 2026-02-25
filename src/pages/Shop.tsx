@@ -26,10 +26,10 @@ export default function Shop() {
     return (
         <div ref={containerRef} className="min-h-screen bg-stone">
             <PageHeader
-                id="SKN-004"
-                title="Clinical Skincare."
-                subtitle="The Curated Selection"
-                description="We prioritize clarity over trends. Every formula in this collection is science-backed and pharmacist-approved."
+                id="SHP-001"
+                title="Featured Stores."
+                subtitle="The Featured Selection"
+                description="Browse our curated index of premium clinical and wellness brands."
             />
 
             <div className="border-t border-stone/20 shop-reveal">

@@ -1,8 +1,8 @@
 import React, { useState, useRef, useEffect, lazy, Suspense } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import type { Category, Product } from '../types';
-import { CategoryFilter } from './CategoryFilter';
+import type { StoreName, Product } from '../types';
+import { CategoryFilter } from './CategoryFilter'; // It will act as StoreFilter visually
 import { ProductCard } from './ProductCard';
 
 gsap.registerPlugin(ScrollTrigger);
@@ -13,6 +13,7 @@ const STORE_PRODUCTS: Product[] = [
     {
         id: '1',
         name: 'House of Langa Selection',
+        store: 'House of Langa',
         category: 'Skincare',
         price: 1250.00,
         desc: 'Elevate your routine with our curated selection of House of Langa. Premium cosmetics aligned with our rigorous clinical standards.',
@@ -23,7 +24,8 @@ const STORE_PRODUCTS: Product[] = [
     {
         id: '2',
         name: 'Hemp Recovery Concentrate',
-        category: 'Hemp',
+        store: 'Hemp wellness',
+        category: 'Hemp Range',
         price: 850.00,
         desc: "Potent, science-backed hemp formulations selected to soothe inflammation and support your skin's natural recovery process.",
         image: 'https://images.unsplash.com/photo-1608248543803-ba4f8c70ae0b?q=80&w=1500&auto=format&fit=crop',
@@ -33,6 +35,7 @@ const STORE_PRODUCTS: Product[] = [
     {
         id: '3',
         name: 'Advanced Weight Wellness',
+        store: 'Weight Wellness Store',
         category: 'Wellness',
         price: 2100.00,
         desc: 'Pharmacist-approved wellness and weight management solutions designed to safely and sustainably restore your vitality.',
@@ -43,6 +46,7 @@ const STORE_PRODUCTS: Product[] = [
     {
         id: '4',
         name: 'Clinical Radiance Serum',
+        store: 'Serum & Sculpt Clinical Skincare',
         category: 'Skincare',
         price: 1800.00,
         desc: 'A highly concentrated vitamin C serum stabilized to provide maximum antioxidant protection and brightening over time.',
@@ -53,6 +57,7 @@ const STORE_PRODUCTS: Product[] = [
     {
         id: '5',
         name: 'Sculpting Gua Sha Set',
+        store: 'Serum & Sculpt Clinical Skincare',
         category: 'Tools',
         price: 450.00,
         desc: 'Clinical-grade rose quartz sculpting tools designed for lymphatic drainage and facial tension relief.',
@@ -63,6 +68,7 @@ const STORE_PRODUCTS: Product[] = [
     {
         id: '6',
         name: 'Luminous Mineral Foundation',
+        store: 'Amway',
         category: 'Makeup',
         price: 650.00,
         desc: 'Breathable, non-comedogenic coverage that protects while perfecting your complexion with a natural finish.',
@@ -72,15 +78,15 @@ const STORE_PRODUCTS: Product[] = [
     }
 ];
 
-const CATEGORIES: Category[] = ['All', 'Skincare', 'Makeup', 'Wellness', 'Hemp', 'Tools'];
+const STORES: StoreName[] = ['All', 'House of Langa', 'Amway', 'Hemp wellness', 'Weight Wellness Store', 'Serum & Sculpt Clinical Skincare'];
 
 export const StoreSection: React.FC = () => {
-    const [activeCategory, setActiveCategory] = useState<Category>('All');
+    const [activeStore, setActiveStore] = useState<StoreName>('All');
     const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
     const containerRef = useRef<HTMLDivElement>(null);
 
     const filteredProducts = STORE_PRODUCTS.filter(
-        product => activeCategory === 'All' || product.category === activeCategory
+        product => activeStore === 'All' || product.store === activeStore
     );
 
     useEffect(() => {
@@ -92,7 +98,7 @@ export const StoreSection: React.FC = () => {
                 { opacity: 1, y: 0, duration: 0.6, stagger: 0.1, ease: 'power2.out', clearProps: 'all' }
             );
         }
-    }, [activeCategory]);
+    }, [activeStore]);
 
     const handleProductClick = (product: Product) => {
         setSelectedProduct(product);
@@ -102,17 +108,17 @@ export const StoreSection: React.FC = () => {
         <section id="skincare" className="w-full bg-[#E5E3DB] dark:bg-[#111111] py-24 px-8 border-t border-charcoal/10 dark:border-stone/10">
             <div className="max-w-7xl mx-auto flex flex-col items-center">
                 <div className="text-center mb-16 max-w-2xl">
-                    <h2 className="text-sm font-mono tracking-widest text-[#8a9a7a] uppercase mb-4 font-bold">Curated Clinical Skincare</h2>
-                    <h3 className="font-serif italic text-4xl md:text-5xl text-charcoal dark:text-stone mb-6">Explore the Collection</h3>
+                    <h2 className="text-sm font-mono tracking-widest text-[#8a9a7a] uppercase mb-4 font-bold">Featured Stores</h2>
+                    <h3 className="font-serif italic text-4xl md:text-5xl text-charcoal dark:text-stone mb-6">Browse the collection of featured stores</h3>
                     <p className="font-sans text-charcoal/70 dark:text-stone/70 text-base leading-relaxed">
-                        We stock select products that align with our clinical standards and skin philosophy. Filter below to discover targeted solutions.
+                        Filter below to discover targeted solutions from our clinical partners.
                     </p>
                 </div>
 
                 <CategoryFilter
-                    categories={CATEGORIES}
-                    activeCategory={activeCategory}
-                    onSelectCategory={setActiveCategory}
+                    categories={STORES as unknown as import('../types').Category[]}
+                    activeCategory={activeStore as unknown as import('../types').Category}
+                    onSelectCategory={(s) => setActiveStore(s as unknown as StoreName)}
                 />
 
                 <div

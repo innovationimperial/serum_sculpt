@@ -52,9 +52,9 @@ export default function Footer() {
                         <h4 className="font-mono text-xs text-sage tracking-widest uppercase mb-6">Explore</h4>
                         <ul className="flex flex-col gap-4 text-xs tracking-widest uppercase font-bold text-white/70">
                             <li><Link to="/contact" className="hover:text-white transition-colors">Book Consultation</Link></li>
-                            <li><Link to="/services" className="hover:text-white transition-colors">Services</Link></li>
-                            <li><Link to="/shop" className="hover:text-white transition-colors">Curated Skincare</Link></li>
-                            <li><Link to="/about" className="hover:text-white transition-colors">Our Pharmacist</Link></li>
+                            <li><Link to="/programs" className="hover:text-white transition-colors">Clinical Programs</Link></li>
+                            <li><Link to="/shop" className="hover:text-white transition-colors">Featured Stores</Link></li>
+                            <li><Link to="/education" className="hover:text-white transition-colors">Education Portal</Link></li>
                         </ul>
                     </div>
 
