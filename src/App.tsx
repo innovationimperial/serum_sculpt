@@ -11,6 +11,7 @@ const Programs = lazy(() => import('./pages/Programs'));
 const Shop = lazy(() => import('./pages/Shop'));
 const Education = lazy(() => import('./pages/Education'));
 const Contact = lazy(() => import('./pages/Contact'));
+const SkinAnalysis = lazy(() => import('./pages/SkinAnalysis'));
 
 // Lazy load global modals
 const CartDrawer = lazy(() => import('./features/store/components/CartDrawer').then(m => ({ default: m.CartDrawer })));
@@ -50,6 +51,7 @@ function App() {
               <Route path="/shop" element={<Shop />} />
               <Route path="/education" element={<Education />} />
               <Route path="/contact" element={<Contact />} />
+              <Route path="/skin-analysis" element={<SkinAnalysis />} />
             </Route>
 
             {/* Admin portal — separate layout, no public Navbar/Footer */}

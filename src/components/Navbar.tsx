@@ -81,6 +81,7 @@ export default function Navbar() {
                         <Link to="/programs" className="nav-link hover:opacity-60 transition-opacity">Programs</Link>
                         <Link to="/shop" className="nav-link hover:opacity-60 transition-opacity">Curated Skincare</Link>
                         <Link to="/education" className="nav-link hover:opacity-60 transition-opacity">Education</Link>
+                        <Link to="/skin-analysis" className="nav-link hover:opacity-60 transition-opacity">AI Skin Analysis</Link>
                         <Link to="/contact" className="nav-link hover:opacity-60 transition-opacity">Contact</Link>
                     </div>
 
@@ -121,6 +122,7 @@ export default function Navbar() {
                     <Link to="/programs" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-charcoal transition-colors">Programs</Link>
                     <Link to="/shop" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-charcoal transition-colors">Curated Skincare</Link>
                     <Link to="/education" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-charcoal transition-colors">Education</Link>
+                    <Link to="/skin-analysis" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-charcoal transition-colors">AI Skin Analysis</Link>
                     <Link to="/contact" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-charcoal transition-colors">Contact</Link>
                 </div>
 
