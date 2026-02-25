@@ -10,17 +10,21 @@ export default function Credibility() {
 
     useEffect(() => {
         const ctx = gsap.context(() => {
-            gsap.from('.cred-item', {
-                opacity: 0,
-                y: 30,
-                stagger: 0.2,
-                duration: 1,
-                ease: "power3.out",
-                scrollTrigger: {
-                    trigger: containerRef.current,
-                    start: "top 80%",
+            gsap.fromTo('.cred-item',
+                { opacity: 0, y: 30 },
+                {
+                    opacity: 1,
+                    y: 0,
+                    stagger: 0.2,
+                    duration: 1,
+                    ease: "power3.out",
+                    scrollTrigger: {
+                        trigger: containerRef.current,
+                        start: "top 80%",
+                    },
+                    clearProps: 'all'
                 }
-            });
+            );
         }, containerRef);
         return () => ctx.revert();
     }, []);

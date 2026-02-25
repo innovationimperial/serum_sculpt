@@ -1,6 +1,9 @@
 import { FileHeart, Flower2, Leaf } from 'lucide-react';
 import { useRef, useEffect } from 'react';
 import { gsap } from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+gsap.registerPlugin(ScrollTrigger);
 
 const SERVICES_DATA = [
     {
@@ -34,30 +37,38 @@ export default function Services() {
     useEffect(() => {
         const ctx = gsap.context(() => {
             // Animate title
-            gsap.from(titleRef.current, {
-                scrollTrigger: {
-                    trigger: sectionRef.current,
-                    start: 'top 80%',
-                },
-                opacity: 0,
-                y: 30,
-                duration: 1,
-                ease: "power3.out"
-            });
+            gsap.fromTo(titleRef.current,
+                { opacity: 0, y: 30 },
+                {
+                    scrollTrigger: {
+                        trigger: sectionRef.current,
+                        start: 'top 80%',
+                    },
+                    opacity: 1,
+                    y: 0,
+                    duration: 1,
+                    ease: 'power3.out',
+                    clearProps: 'all'
+                }
+            );
 
             // Animate cards staggered
             if (cardsRef.current) {
-                gsap.from(cardsRef.current.children, {
-                    scrollTrigger: {
-                        trigger: cardsRef.current,
-                        start: 'top 85%',
-                    },
-                    opacity: 0,
-                    y: 40,
-                    stagger: 0.15,
-                    duration: 1,
-                    ease: "power3.out"
-                });
+                gsap.fromTo(cardsRef.current.children,
+                    { opacity: 0, y: 40 },
+                    {
+                        scrollTrigger: {
+                            trigger: cardsRef.current,
+                            start: 'top 85%',
+                        },
+                        opacity: 1,
+                        y: 0,
+                        stagger: 0.15,
+                        duration: 1,
+                        ease: 'power3.out',
+                        clearProps: 'all'
+                    }
+                );
             }
         }, sectionRef);
 

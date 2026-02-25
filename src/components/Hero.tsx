@@ -7,23 +7,31 @@ export default function Hero() {
     useEffect(() => {
         const ctx = gsap.context(() => {
             // Staggered fade-up for hero text
-            gsap.from('.hero-text', {
-                y: 50,
-                opacity: 0,
-                duration: 1.2,
-                stagger: 0.2,
-                ease: 'power3.out',
-                delay: 0.2
-            });
+            gsap.fromTo('.hero-text',
+                { y: 50, opacity: 0 },
+                {
+                    y: 0,
+                    opacity: 1,
+                    duration: 1.2,
+                    stagger: 0.2,
+                    ease: 'power3.out',
+                    delay: 0.2,
+                    clearProps: 'all'
+                }
+            );
 
             // Animate the CTA button
-            gsap.from('.hero-cta', {
-                y: 20,
-                opacity: 0,
-                duration: 1,
-                ease: 'power3.out',
-                delay: 1.2
-            });
+            gsap.fromTo('.hero-cta',
+                { y: 20, opacity: 0 },
+                {
+                    y: 0,
+                    opacity: 1,
+                    duration: 1,
+                    ease: 'power3.out',
+                    delay: 1.2,
+                    clearProps: 'all'
+                }
+            );
         }, containerRef);
 
         return () => ctx.revert();

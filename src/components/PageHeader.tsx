@@ -14,13 +14,17 @@ export default function PageHeader({ title, subtitle, description, id, className
 
     useEffect(() => {
         const ctx = gsap.context(() => {
-            gsap.from('.header-reveal', {
-                opacity: 0,
-                y: 20,
-                stagger: 0.1,
-                duration: 0.8,
-                ease: 'power3.out'
-            });
+            gsap.fromTo('.header-reveal',
+                { opacity: 0, y: 20 },
+                {
+                    opacity: 1,
+                    y: 0,
+                    stagger: 0.1,
+                    duration: 0.8,
+                    ease: 'power3.out',
+                    clearProps: 'all'
+                }
+            );
         }, headerRef);
         return () => ctx.revert();
     }, []);
