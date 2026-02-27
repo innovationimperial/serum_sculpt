@@ -34,14 +34,15 @@ export default function Login() {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setIsLoading(true);
-        // Simulate network delay
-        await new Promise(resolve => setTimeout(resolve, 800));
-        await login(email);
-        setIsLoading(false);
-
-        // Redirect back where they came from or to home
-        const redirectUrl = searchParams.get('redirect') || '/';
-        navigate(redirectUrl);
+        try {
+            await login(email, password);
+            const redirectUrl = searchParams.get('redirect') || '/';
+            navigate(redirectUrl);
+        } catch (err: any) {
+            alert(err.message || 'Login failed');
+        } finally {
+            setIsLoading(false);
+        }
     };
 
     return (

@@ -1,196 +1,143 @@
 import React, { useState, useMemo } from 'react';
-import { CalendarCheck, Clock, Users, AlertCircle } from 'lucide-react';
+import { Mail, MessageSquare, AlertCircle, X, Tag } from 'lucide-react';
 import { DataTable } from '../components/DataTable';
 import { StatCard } from '../components/StatCard';
-import { ConsultationDetail } from '../components/ConsultationDetail';
-import { MOCK_CONSULTATIONS } from '../data/mockData';
-import type { Consultation, ConsultationNote, ConsultationStatus } from '../types';
-
-type TabFilter = 'all' | 'upcoming' | 'completed' | 'cancelled';
+import { useQuery } from 'convex/react';
+import { api } from '../../../../convex/_generated/api';
 
 const ConsultationsPage: React.FC = () => {
-    const [consultations, setConsultations] = useState<Consultation[]>(MOCK_CONSULTATIONS);
-    const [activeTab, setActiveTab] = useState<TabFilter>('all');
-    const [selectedConsultation, setSelectedConsultation] = useState<Consultation | null>(null);
+    const inquiries = useQuery(api.contactInquiries.list, {});
+    const [selectedId, setSelectedId] = useState<string | null>(null);
 
-    // Counts
-    const confirmed = consultations.filter(c => c.status === 'confirmed').length;
-    const pending = consultations.filter(c => c.status === 'pending').length;
-    const completed = consultations.filter(c => c.status === 'completed').length;
-    const thisWeek = consultations.filter(c =>
-        c.status === 'confirmed' || c.status === 'pending'
-    ).length;
+    if (!inquiries) {
+        return (
+            <div className="flex items-center justify-center h-64">
+                <div className="font-serif italic text-moss text-xl animate-pulse">Loading inquiries...</div>
+            </div>
+        );
+    }
 
-    // Filtered data based on tab
-    const filtered = useMemo(() => {
-        switch (activeTab) {
-            case 'upcoming':
-                return consultations.filter(c => c.status === 'confirmed' || c.status === 'pending');
-            case 'completed':
-                return consultations.filter(c => c.status === 'completed');
-            case 'cancelled':
-                return consultations.filter(c => c.status === 'cancelled');
-            default:
-                return consultations;
-        }
-    }, [consultations, activeTab]);
-
-    const statusColors: Record<string, string> = {
-        confirmed: 'bg-moss/10 text-moss',
-        pending: 'bg-amber-50 text-amber-600',
-        completed: 'bg-blue-50 text-blue-600',
-        cancelled: 'bg-charcoal/5 text-charcoal/30 line-through',
-    };
-
-    const tabs: { key: TabFilter; label: string; count: number }[] = [
-        { key: 'all', label: 'All', count: consultations.length },
-        { key: 'upcoming', label: 'Upcoming', count: thisWeek },
-        { key: 'completed', label: 'Completed', count: completed },
-        { key: 'cancelled', label: 'Cancelled', count: consultations.filter(c => c.status === 'cancelled').length },
-    ];
-
-    const handleUpdateNotes = (id: string, notes: ConsultationNote[]) => {
-        setConsultations(prev => prev.map(c => c.id === id ? { ...c, notes } : c));
-        // Also update the selected consultation if it's still open
-        setSelectedConsultation(prev => prev && prev.id === id ? { ...prev, notes } : prev);
-    };
-
-    const handleUpdateStatus = (id: string, status: ConsultationStatus) => {
-        setConsultations(prev => prev.map(c => c.id === id ? { ...c, status } : c));
-        setSelectedConsultation(prev => prev && prev.id === id ? { ...prev, status } : prev);
-    };
+    const selected = selectedId ? inquiries.find(c => c._id === selectedId) : null;
 
     const columns = [
         {
-            key: 'clientName' as keyof Consultation,
-            label: 'Client',
+            key: 'fullName' as const,
+            label: 'Client Name',
             sortable: true,
-            render: (_: Consultation[keyof Consultation], row: Consultation) => (
+            render: (_: unknown, row: typeof inquiries[0]) => (
                 <div>
-                    <p className="font-semibold text-charcoal">{row.clientName}</p>
-                    <p className="text-[10px] text-charcoal/40">{row.clientEmail}</p>
+                    <p className="font-semibold text-charcoal">{row.fullName}</p>
+                    <p className="text-[10px] text-charcoal/40">{row.email}</p>
                 </div>
             ),
         },
         {
-            key: 'date' as keyof Consultation,
-            label: 'Date & Time',
+            key: 'purpose' as const,
+            label: 'Purpose (Reason)',
             sortable: true,
-            width: '150px',
-            render: (_: Consultation[keyof Consultation], row: Consultation) => (
-                <div>
-                    <p className="text-charcoal/80">{row.date}</p>
-                    <p className="text-[10px] text-charcoal/40">{row.time}</p>
-                </div>
-            ),
-        },
-        {
-            key: 'type' as keyof Consultation,
-            label: 'Type',
-            sortable: true,
-            width: '160px',
-        },
-        {
-            key: 'status' as keyof Consultation,
-            label: 'Status',
-            sortable: true,
-            width: '120px',
-            render: (val: Consultation[keyof Consultation]) => (
-                <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider ${statusColors[String(val)]}`}>
-                    {String(val)}
+            width: '200px',
+            render: (_: unknown, row: typeof inquiries[0]) => (
+                <span className="inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider bg-moss/10 text-moss">
+                    {row.purpose}
                 </span>
             ),
         },
         {
-            key: 'notes' as keyof Consultation,
-            label: 'Notes',
-            width: '80px',
-            render: (_: Consultation[keyof Consultation], row: Consultation) => (
-                <span className={`text-sm font-sans font-medium ${row.notes.length > 0 ? 'text-moss' : 'text-charcoal/20'}`}>
-                    {row.notes.length} {row.notes.length === 1 ? 'note' : 'notes'}
-                </span>
+            key: 'message' as const,
+            label: 'Message Preview',
+            render: (_: unknown, row: typeof inquiries[0]) => (
+                <p className="text-sm font-sans text-charcoal/70 truncate max-w-xs">
+                    {row.message}
+                </p>
             ),
         },
+        {
+            key: 'created' as const,
+            label: 'Time',
+            render: (_: unknown, row: typeof inquiries[0]) => (
+                <p className="text-xs text-charcoal/50">
+                    {new Date(row._creationTime).toLocaleDateString()} {new Date(row._creationTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                </p>
+            ),
+        }
     ];
 
     return (
         <div className="space-y-6">
-            {/* Stats row */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-5">
-                <StatCard
-                    label="This Week"
-                    value={String(thisWeek)}
-                    change={8.1}
-                    icon={<CalendarCheck size={20} />}
-                />
-                <StatCard
-                    label="Confirmed"
-                    value={String(confirmed)}
-                    change={12.0}
-                    icon={<Clock size={20} />}
-                />
-                <StatCard
-                    label="Pending"
-                    value={String(pending)}
-                    change={-5.0}
-                    icon={<AlertCircle size={20} />}
-                />
-                <StatCard
-                    label="Completed"
-                    value={String(completed)}
-                    change={20.0}
-                    icon={<Users size={20} />}
-                />
+            <div className="flex items-end justify-between">
+                <div>
+                    <h1 className="text-3xl font-serif italic text-moss">Consultations / Inquiries</h1>
+                    <p className="text-sm font-sans text-charcoal/60 mt-1">Review inquiries submitted from the public contact form.</p>
+                </div>
             </div>
 
-            {/* Tab filters */}
-            <div className="flex items-center gap-1 bg-white rounded-xl border border-charcoal/5 p-1 w-fit">
-                {tabs.map(tab => (
-                    <button
-                        key={tab.key}
-                        onClick={() => setActiveTab(tab.key)}
-                        className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-sans font-medium transition-all duration-200 cursor-pointer ${activeTab === tab.key
-                                ? 'bg-moss text-white shadow-sm'
-                                : 'text-charcoal/40 hover:text-charcoal/60'
-                            }`}
-                    >
-                        {tab.label}
-                        <span className={`text-[10px] px-1.5 py-0.5 rounded-full font-bold ${activeTab === tab.key
-                                ? 'bg-white/20'
-                                : 'bg-charcoal/5'
-                            }`}>
-                            {tab.count}
-                        </span>
-                    </button>
-                ))}
+            {/* Stats */}
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <StatCard label="Total Inquiries" value={String(inquiries.length)} icon={<AlertCircle size={18} />} change="+0%" />
+                <StatCard label="Clinical Consultations" value={String(inquiries.filter(i => i.purpose === 'Clinical Consultation').length)} icon={<AlertCircle size={18} />} change="+0%" />
+                <StatCard label="Program Applications" value={String(inquiries.filter(i => i.purpose === 'Program Application').length)} icon={<Tag size={18} />} change="+0%" />
             </div>
 
             {/* Table */}
             <DataTable
-                columns={columns}
-                data={filtered}
-                onRowClick={(row) => setSelectedConsultation(row)}
-                emptyMessage={
-                    activeTab === 'all'
-                        ? 'No consultations booked yet.'
-                        : `No ${activeTab} consultations.`
-                }
+                columns={columns as any}
+                data={inquiries.map(c => ({ ...c, id: c._id })) as any}
+                onRowClick={(row: any) => setSelectedId(row._id)}
+                emptyMessage="No inquiries found."
             />
 
-            {/* Hint */}
-            {filtered.length > 0 && (
-                <p className="text-xs font-sans text-charcoal/25 text-center">
-                    Click any row to view details, manage notes, or update status.
-                </p>
+            {/* Simple Detail Panel */}
+            {selected && (
+                <>
+                    <div className="fixed inset-0 z-[80] bg-charcoal/30 backdrop-blur-sm" onClick={() => setSelectedId(null)} />
+                    <div className="fixed top-0 right-0 z-[85] h-full w-full max-w-lg bg-white shadow-2xl animate-[slideIn_0.3s_ease-out] overflow-y-auto">
+                        <div className="sticky top-0 bg-white/95 backdrop-blur-sm border-b border-charcoal/5 p-6 flex items-start justify-between z-10">
+                            <div>
+                                <h2 className="font-serif italic text-2xl text-charcoal mb-1">{selected.fullName}</h2>
+                                <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider bg-moss/10 text-moss`}>
+                                    {selected.purpose}
+                                </span>
+                            </div>
+                            <button onClick={() => setSelectedId(null)} className="p-1 text-charcoal/30 hover:text-charcoal transition-colors cursor-pointer">
+                                <X size={20} />
+                            </button>
+                        </div>
+
+                        <div className="p-6 space-y-6">
+                            <div className="bg-stone rounded-xl p-5 space-y-3">
+                                <div className="flex items-center gap-3 text-sm font-sans">
+                                    <Mail size={14} className="text-charcoal/30" />
+                                    <span className="text-charcoal/70">{selected.email}</span>
+                                </div>
+                                <div className="flex items-center gap-3 text-sm font-sans">
+                                    <Tag size={14} className="text-charcoal/30" />
+                                    <span className="text-charcoal/70">Reason: {selected.purpose}</span>
+                                </div>
+                                <div className="flex items-center gap-3 text-sm font-sans">
+                                    <AlertCircle size={14} className="text-charcoal/30" />
+                                    <span className="text-charcoal/70">Submitted: {new Date(selected._creationTime).toLocaleString()}</span>
+                                </div>
+                            </div>
+
+                            <div>
+                                <h4 className="text-[10px] font-sans uppercase tracking-[0.2em] font-bold text-charcoal/40 mb-3 flex items-center gap-2">
+                                    <MessageSquare size={12} /> Inquiry Message
+                                </h4>
+                                <div className="text-sm font-sans text-charcoal/70 leading-relaxed bg-sage/10 rounded-xl p-4 border-l-4 border-moss/30 whitespace-pre-wrap">
+                                    {selected.message}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </>
             )}
 
-            {/* Detail slide-over */}
-            <ConsultationDetail
-                consultation={selectedConsultation}
-                onClose={() => setSelectedConsultation(null)}
-                onUpdateNotes={handleUpdateNotes}
-                onUpdateStatus={handleUpdateStatus}
-            />
+            <style>{`
+            @keyframes slideIn {
+                from { transform: translateX(100%); }
+                to { transform: translateX(0); }
+            }
+            `}</style>
         </div>
     );
 };

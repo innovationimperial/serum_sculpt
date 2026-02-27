@@ -29,7 +29,7 @@ export interface AdminProduct {
     category: ProductCategory;
     price: number;
     description: string;
-    image: string;
+    images: string[];
     clinicalGuidance: string;
     usage: string;
     ingredients: string[];

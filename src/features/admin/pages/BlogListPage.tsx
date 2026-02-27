@@ -2,20 +2,45 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Plus, Eye, Clock, TrendingUp } from 'lucide-react';
 import { DataTable } from '../components/DataTable';
-import { MOCK_BLOG_POSTS } from '../data/mockData';
-import type { BlogPost } from '../types';
+import { useQuery } from 'convex/react';
+import { api } from '../../../../convex/_generated/api';
+
+interface BlogRow {
+    _id: string;
+    title: string;
+    category: string;
+    excerpt: string;
+    content: string;
+    featuredImage: string;
+    tags: string[];
+    status: 'published' | 'draft';
+    publishedDate: string;
+    views: number;
+    readTimeMin: number;
+    engagement: number;
+}
 
 const BlogListPage: React.FC = () => {
-    const publishedCount = MOCK_BLOG_POSTS.filter(p => p.status === 'published').length;
-    const draftCount = MOCK_BLOG_POSTS.filter(p => p.status === 'draft').length;
-    const totalViews = MOCK_BLOG_POSTS.reduce((sum, p) => sum + p.views, 0);
+    const posts = useQuery(api.blogPosts.list, {});
+
+    if (!posts) {
+        return (
+            <div className="flex items-center justify-center h-64">
+                <div className="font-serif italic text-moss text-xl animate-pulse">Loading posts...</div>
+            </div>
+        );
+    }
+
+    const publishedCount = posts.filter(p => p.status === 'published').length;
+    const draftCount = posts.filter(p => p.status === 'draft').length;
+    const totalViews = posts.reduce((sum, p) => sum + p.views, 0);
 
     const columns = [
         {
-            key: 'title' as keyof BlogPost,
+            key: 'title' as keyof BlogRow,
             label: 'Title',
             sortable: true,
-            render: (_: BlogPost[keyof BlogPost], row: BlogPost) => (
+            render: (_: BlogRow[keyof BlogRow], row: BlogRow) => (
                 <div className="flex items-center gap-3">
                     <img src={row.featuredImage} alt="" className="w-10 h-10 rounded-lg object-cover flex-shrink-0" />
                     <div className="min-w-0">
@@ -26,34 +51,34 @@ const BlogListPage: React.FC = () => {
             ),
         },
         {
-            key: 'status' as keyof BlogPost,
+            key: 'status' as keyof BlogRow,
             label: 'Status',
             sortable: true,
             width: '100px',
-            render: (val: BlogPost[keyof BlogPost]) => (
+            render: (val: BlogRow[keyof BlogRow]) => (
                 <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider ${val === 'published'
-                        ? 'bg-moss/10 text-moss'
-                        : 'bg-charcoal/5 text-charcoal/40'
+                    ? 'bg-moss/10 text-moss'
+                    : 'bg-charcoal/5 text-charcoal/40'
                     }`}>
                     {String(val)}
                 </span>
             ),
         },
         {
-            key: 'publishedDate' as keyof BlogPost,
+            key: 'publishedDate' as keyof BlogRow,
             label: 'Date',
             sortable: true,
             width: '120px',
-            render: (val: BlogPost[keyof BlogPost]) => (
+            render: (val: BlogRow[keyof BlogRow]) => (
                 <span className="text-charcoal/50">{val ? String(val) : '—'}</span>
             ),
         },
         {
-            key: 'views' as keyof BlogPost,
+            key: 'views' as keyof BlogRow,
             label: 'Views',
             sortable: true,
             width: '80px',
-            render: (val: BlogPost[keyof BlogPost]) => (
+            render: (val: BlogRow[keyof BlogRow]) => (
                 <span className="flex items-center gap-1 text-charcoal/60">
                     <Eye size={12} />
                     {Number(val).toLocaleString()}
@@ -61,10 +86,10 @@ const BlogListPage: React.FC = () => {
             ),
         },
         {
-            key: 'readTimeMin' as keyof BlogPost,
+            key: 'readTimeMin' as keyof BlogRow,
             label: 'Read',
             width: '80px',
-            render: (val: BlogPost[keyof BlogPost]) => (
+            render: (val: BlogRow[keyof BlogRow]) => (
                 <span className="flex items-center gap-1 text-charcoal/50">
                     <Clock size={12} />
                     {String(val)}m
@@ -72,11 +97,11 @@ const BlogListPage: React.FC = () => {
             ),
         },
         {
-            key: 'engagement' as keyof BlogPost,
+            key: 'engagement' as keyof BlogRow,
             label: 'Engage',
             sortable: true,
             width: '90px',
-            render: (val: BlogPost[keyof BlogPost]) => {
+            render: (val: BlogRow[keyof BlogRow]) => {
                 const num = Number(val);
                 return (
                     <div className="flex items-center gap-2">
@@ -92,6 +117,9 @@ const BlogListPage: React.FC = () => {
             },
         },
     ];
+
+    // Map Convex docs to match DataTable expectations (id → _id)
+    const tableData = posts.map(p => ({ ...p, id: p._id }));
 
     return (
         <div className="space-y-6">
@@ -123,10 +151,9 @@ const BlogListPage: React.FC = () => {
             {/* Table */}
             <DataTable
                 columns={columns}
-                data={MOCK_BLOG_POSTS}
+                data={tableData as unknown as BlogRow[]}
                 onRowClick={(row) => {
-                    // In real app, navigate to edit page
-                    window.location.href = `/admin/blog/${row.id}`;
+                    window.location.href = `/admin/blog/${(row as unknown as { _id: string })._id}`;
                 }}
                 emptyMessage="No blog posts yet. Start writing!"
             />

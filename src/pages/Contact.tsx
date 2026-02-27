@@ -1,8 +1,10 @@
-import { useRef, useEffect } from 'react';
+import { useRef, useEffect, useState } from 'react';
 import { gsap } from 'gsap';
 import { Mail, MessageCircle, MapPin, ChevronRight, Send } from 'lucide-react';
 import PageHeader from '../components/PageHeader';
 import { useRequireAuth } from '../hooks/useRequireAuth';
+import { useMutation } from 'convex/react';
+import { api } from '../../convex/_generated/api';
 
 const CONTACT_CHANNELS = [
     {
@@ -43,6 +45,10 @@ const FAQS = [
 export default function Contact() {
     const containerRef = useRef<HTMLDivElement>(null);
     const { requireAuth } = useRequireAuth();
+    const submitInquiry = useMutation(api.contactInquiries.create);
+
+    const [formData, setFormData] = useState({ fullName: '', email: '', purpose: 'General Support', message: '' });
+    const [submitted, setSubmitted] = useState(false);
 
     useEffect(() => {
         const ctx = gsap.context(() => {
@@ -89,23 +95,38 @@ export default function Contact() {
 
                     <div className="bg-stone/5 p-6 md:p-12 rounded-[3.5rem] border border-stone/10 contact-reveal">
                         <h2 className="font-serif text-3xl text-moss mb-8 italic">Administrative Inquiry</h2>
-                        <form className="space-y-6" onSubmit={(e) => { e.preventDefault(); requireAuth(() => { /* Add submit logic later */ }); }}>
-                            <div className="grid sm:grid-cols-2 gap-6">
-                                <input type="text" placeholder="Full Name" className="w-full px-6 py-4 bg-white rounded-2xl border border-stone/20 focus:outline-none focus:border-moss transition-colors text-sm" />
-                                <input type="email" placeholder="Email Address" className="w-full px-6 py-4 bg-white rounded-2xl border border-stone/20 focus:outline-none focus:border-moss transition-colors text-sm" />
+                        {submitted ? (
+                            <div className="text-center py-8 space-y-3">
+                                <div className="w-16 h-16 bg-moss/10 rounded-full flex items-center justify-center mx-auto text-moss mb-4">
+                                    <Send size={24} />
+                                </div>
+                                <h3 className="font-serif italic text-xl text-charcoal">Inquiry Submitted!</h3>
+                                <p className="text-sm text-charcoal/60">We'll get back to you shortly.</p>
                             </div>
-                            <select className="w-full px-6 py-4 bg-white rounded-2xl border border-stone/20 focus:outline-none focus:border-moss transition-colors text-sm text-charcoal/60 appearance-none">
-                                <option>Purpose of Inquiry</option>
-                                <option>Clinical Consultation</option>
-                                <option>Program Application</option>
-                                <option>Product Guidance</option>
-                                <option>General Support</option>
-                            </select>
-                            <textarea rows={4} placeholder="How can we support your wellness today?" className="w-full px-6 py-4 bg-white rounded-2xl border border-stone/20 focus:outline-none focus:border-moss transition-colors text-sm"></textarea>
-                            <button className="w-full bg-moss text-white py-4 rounded-2xl font-mono text-[10px] tracking-widest uppercase font-bold flex items-center justify-center gap-4 hover:bg-charcoal transition-colors">
-                                Submit Inquiry <Send size={14} />
-                            </button>
-                        </form>
+                        ) : (
+                            <form className="space-y-6" onSubmit={(e) => {
+                                e.preventDefault(); requireAuth(async () => {
+                                    await submitInquiry(formData);
+                                    setSubmitted(true);
+                                });
+                            }}>
+                                <div className="grid sm:grid-cols-2 gap-6">
+                                    <input type="text" placeholder="Full Name" value={formData.fullName} onChange={e => setFormData(p => ({ ...p, fullName: e.target.value }))} className="w-full px-6 py-4 bg-white rounded-2xl border border-stone/20 focus:outline-none focus:border-moss transition-colors text-sm" required />
+                                    <input type="email" placeholder="Email Address" value={formData.email} onChange={e => setFormData(p => ({ ...p, email: e.target.value }))} className="w-full px-6 py-4 bg-white rounded-2xl border border-stone/20 focus:outline-none focus:border-moss transition-colors text-sm" required />
+                                </div>
+                                <select value={formData.purpose} onChange={e => setFormData(p => ({ ...p, purpose: e.target.value }))} className="w-full px-6 py-4 bg-white rounded-2xl border border-stone/20 focus:outline-none focus:border-moss transition-colors text-sm text-charcoal/60 appearance-none">
+                                    <option>Purpose of Inquiry</option>
+                                    <option>Clinical Consultation</option>
+                                    <option>Program Application</option>
+                                    <option>Product Guidance</option>
+                                    <option>General Support</option>
+                                </select>
+                                <textarea rows={4} placeholder="How can we support your wellness today?" value={formData.message} onChange={e => setFormData(p => ({ ...p, message: e.target.value }))} className="w-full px-6 py-4 bg-white rounded-2xl border border-stone/20 focus:outline-none focus:border-moss transition-colors text-sm" required></textarea>
+                                <button className="w-full bg-moss text-white py-4 rounded-2xl font-mono text-[10px] tracking-widest uppercase font-bold flex items-center justify-center gap-4 hover:bg-charcoal transition-colors">
+                                    Submit Inquiry <Send size={14} />
+                                </button>
+                            </form>
+                        )}
                     </div>
                 </div >
 

@@ -10,7 +10,7 @@ export interface Product {
     price: number;
     bg?: string;
     text?: string;
-    image: string;
+    images: string[];
     clinicalGuidance?: string;
     ingredients?: string[];
     usage?: string;

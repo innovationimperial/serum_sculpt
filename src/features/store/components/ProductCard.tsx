@@ -1,25 +1,34 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import type { Product } from '../types';
 import { ArrowRight } from 'lucide-react';
 
 interface ProductCardProps {
     product: Product;
-    onClick: (product: Product) => void;
 }
 
-export const ProductCard: React.FC<ProductCardProps> = ({ product, onClick }) => {
+export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
+    const navigate = useNavigate();
+    const firstImage = product.images?.[0];
+
     return (
         <div
             className="group cursor-pointer flex flex-col items-start text-left"
-            onClick={() => onClick(product)}
+            onClick={() => navigate(`/product/${product.id}`)}
         >
             <div className="relative w-full aspect-[4/5] rounded-2xl overflow-hidden mb-6 bg-charcoal/5 dark:bg-stone/5 border border-black/5 dark:border-white/5">
-                <img
-                    src={product.image}
-                    alt={product.name}
-                    className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
-                    loading="lazy"
-                />
+                {firstImage ? (
+                    <img
+                        src={firstImage}
+                        alt={product.name}
+                        className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+                        loading="lazy"
+                    />
+                ) : (
+                    <div className="absolute inset-0 flex items-center justify-center text-charcoal/20 dark:text-stone/20">
+                        <span className="font-sans text-sm">No image</span>
+                    </div>
+                )}
                 <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300" />
             </div>
 
@@ -35,7 +44,6 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onClick }) =>
                         {product.desc}
                     </p>
                 </div>
-
 
                 <div className="w-full flex items-center justify-between mt-auto">
                     <span className="font-sans text-sm tracking-widest text-charcoal dark:text-stone">

@@ -45,11 +45,15 @@ export const CartDrawer: React.FC = () => {
                     ) : (
                         items.map((item) => (
                             <div key={item.product.id} className="flex gap-4 p-4 rounded-2xl bg-white dark:bg-white/5 border border-black/5 dark:border-white/5">
-                                <img
-                                    src={item.product.image}
-                                    alt={item.product.name}
-                                    className="w-20 h-24 object-cover rounded-xl bg-charcoal/5"
-                                />
+                                {item.product.images?.[0] ? (
+                                    <img
+                                        src={item.product.images[0]}
+                                        alt={item.product.name}
+                                        className="w-20 h-24 object-cover rounded-xl bg-charcoal/5"
+                                    />
+                                ) : (
+                                    <div className="w-20 h-24 rounded-xl bg-charcoal/5 flex items-center justify-center text-charcoal/20 text-[10px]">No img</div>
+                                )}
                                 <div className="flex-1 flex flex-col justify-between">
                                     <div>
                                         <h3 className="font-sans font-bold text-sm text-charcoal dark:text-stone line-clamp-1">

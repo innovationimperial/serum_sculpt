@@ -3,10 +3,14 @@ import { useCart } from '../context/CartContext';
 import { X, ShieldCheck, CreditCard } from 'lucide-react';
 import type { ShippingDetails } from '../types';
 import { useRequireAuth } from '../../../hooks/useRequireAuth';
+import { useMutation } from 'convex/react';
+import { api } from '../../../../convex/_generated/api';
+import type { Id } from '../../../../convex/_generated/dataModel';
 
 export const CheckoutModal: React.FC = () => {
     const { isCheckoutOpen, closeCheckout, items, cartTotal, clearCart } = useCart();
     const { requireAuth } = useRequireAuth();
+    const createOrder = useMutation(api.orders.create);
     const [isSimulatingPayment, setIsSimulatingPayment] = useState(false);
     const [isSuccess, setIsSuccess] = useState(false);
 
@@ -27,8 +31,22 @@ export const CheckoutModal: React.FC = () => {
 
     const handleMockPayment = (e: React.FormEvent) => {
         e.preventDefault();
-        requireAuth(() => {
+        requireAuth(async () => {
             setIsSimulatingPayment(true);
+            try {
+                await createOrder({
+                    items: items.map(item => ({
+                        productId: item.product.id as Id<"products">,
+                        productName: item.product.name,
+                        price: item.product.price,
+                        quantity: item.quantity,
+                    })),
+                    shippingDetails: form,
+                    total: cartTotal,
+                });
+            } catch (err) {
+                console.error('Order creation failed:', err);
+            }
             // Simulate a real PayFast redirect / modal delay
             setTimeout(() => {
                 setIsSimulatingPayment(false);
@@ -80,7 +98,11 @@ export const CheckoutModal: React.FC = () => {
                         {items.map((item) => (
                             <div key={item.product.id} className="flex gap-4 items-center">
                                 <div className="relative w-16 h-16 rounded-lg overflow-hidden bg-charcoal/5">
-                                    <img src={item.product.image} className="w-full h-full object-cover" alt="" />
+                                    {item.product.images?.[0] ? (
+                                        <img src={item.product.images[0]} className="w-full h-full object-cover" alt={item.product.name} />
+                                    ) : (
+                                        <div className="w-full h-full flex items-center justify-center text-charcoal/20 text-[8px]">No img</div>
+                                    )}
                                     <span className="absolute -top-2 -right-2 bg-charcoal text-stone text-[10px] w-5 h-5 flex items-center justify-center rounded-full font-bold">
                                         {item.quantity}
                                     </span>
@@ -109,7 +131,7 @@ export const CheckoutModal: React.FC = () => {
                 </div>
 
                 {/* Right: Checkout Form */}
-                <div className="w-full md:w-[60%] p-8 md:p-12">
+                <div className="w-full md:w-[60%] p-8 md:p-12 bg-[#f8f7f5] dark:bg-[#222222]">
                     <div className="mb-8">
                         <h2 className="font-serif italic text-3xl text-charcoal dark:text-stone mb-2">Shipping Details</h2>
                         <p className="font-sans text-sm text-charcoal/60 dark:text-stone/60">Enter your details to proceed to secure payment.</p>
@@ -117,14 +139,14 @@ export const CheckoutModal: React.FC = () => {
 
                     <form onSubmit={handleMockPayment} className="space-y-4">
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <input required name="fullName" placeholder="Full Name" onChange={handleInputChange} className="w-full px-4 py-3 rounded-xl bg-white dark:bg-black/20 border border-charcoal/10 dark:border-stone/10 font-sans text-sm focus:outline-none focus:border-moss" />
-                            <input required type="email" name="email" placeholder="Email Address" onChange={handleInputChange} className="w-full px-4 py-3 rounded-xl bg-white dark:bg-black/20 border border-charcoal/10 dark:border-stone/10 font-sans text-sm focus:outline-none focus:border-moss" />
+                            <input required name="fullName" placeholder="Full Name" onChange={handleInputChange} className="w-full px-4 py-3 rounded-xl bg-white dark:bg-white/10 border border-charcoal/10 dark:border-white/20 font-sans text-sm text-charcoal dark:text-stone placeholder:text-charcoal/40 dark:placeholder:text-stone/50 focus:outline-none focus:border-moss focus:ring-1 focus:ring-moss/30" />
+                            <input required type="email" name="email" placeholder="Email Address" onChange={handleInputChange} className="w-full px-4 py-3 rounded-xl bg-white dark:bg-white/10 border border-charcoal/10 dark:border-white/20 font-sans text-sm text-charcoal dark:text-stone placeholder:text-charcoal/40 dark:placeholder:text-stone/50 focus:outline-none focus:border-moss focus:ring-1 focus:ring-moss/30" />
                         </div>
-                        <input required name="address" placeholder="Shipping Address" onChange={handleInputChange} className="w-full px-4 py-3 rounded-xl bg-white dark:bg-black/20 border border-charcoal/10 dark:border-stone/10 font-sans text-sm focus:outline-none focus:border-moss" />
+                        <input required name="address" placeholder="Shipping Address" onChange={handleInputChange} className="w-full px-4 py-3 rounded-xl bg-white dark:bg-white/10 border border-charcoal/10 dark:border-white/20 font-sans text-sm text-charcoal dark:text-stone placeholder:text-charcoal/40 dark:placeholder:text-stone/50 focus:outline-none focus:border-moss focus:ring-1 focus:ring-moss/30" />
                         <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                            <input required name="city" placeholder="City" onChange={handleInputChange} className="col-span-1 md:col-span-1 border border-charcoal/10 dark:border-stone/10 px-4 py-3 rounded-xl bg-white dark:bg-black/20 font-sans text-sm focus:outline-none focus:border-moss" />
-                            <input required name="province" placeholder="Province / State" onChange={handleInputChange} className="col-span-1 md:col-span-1 border border-charcoal/10 dark:border-stone/10 px-4 py-3 rounded-xl bg-white dark:bg-black/20 font-sans text-sm focus:outline-none focus:border-moss" />
-                            <input required name="zipCode" placeholder="Postal Code" onChange={handleInputChange} className="col-span-2 md:col-span-1 border border-charcoal/10 dark:border-stone/10 px-4 py-3 rounded-xl bg-white dark:bg-black/20 font-sans text-sm focus:outline-none focus:border-moss" />
+                            <input required name="city" placeholder="City" onChange={handleInputChange} className="col-span-1 md:col-span-1 px-4 py-3 rounded-xl bg-white dark:bg-white/10 border border-charcoal/10 dark:border-white/20 font-sans text-sm text-charcoal dark:text-stone placeholder:text-charcoal/40 dark:placeholder:text-stone/50 focus:outline-none focus:border-moss focus:ring-1 focus:ring-moss/30" />
+                            <input required name="province" placeholder="Province / State" onChange={handleInputChange} className="col-span-1 md:col-span-1 px-4 py-3 rounded-xl bg-white dark:bg-white/10 border border-charcoal/10 dark:border-white/20 font-sans text-sm text-charcoal dark:text-stone placeholder:text-charcoal/40 dark:placeholder:text-stone/50 focus:outline-none focus:border-moss focus:ring-1 focus:ring-moss/30" />
+                            <input required name="zipCode" placeholder="Postal Code" onChange={handleInputChange} className="col-span-2 md:col-span-1 px-4 py-3 rounded-xl bg-white dark:bg-white/10 border border-charcoal/10 dark:border-white/20 font-sans text-sm text-charcoal dark:text-stone placeholder:text-charcoal/40 dark:placeholder:text-stone/50 focus:outline-none focus:border-moss focus:ring-1 focus:ring-moss/30" />
                         </div>
 
                         <div className="pt-8">

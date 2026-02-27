@@ -1,5 +1,6 @@
 import { ClipboardCheck, Activity, HeartPulse } from 'lucide-react';
 import { useRef, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { gsap } from 'gsap';
 import PageHeader from '../components/PageHeader';
 
@@ -16,7 +17,8 @@ const SERVICES_LIST = [
             "Personalized health roadmap"
         ],
         outcomes: "A clear, medically-sound path to your wellness goals.",
-        cta: "Book Assessment"
+        cta: "Book Assessment",
+        link: "/contact"
     },
     {
         title: "Wellness Programs",
@@ -30,7 +32,8 @@ const SERVICES_LIST = [
             "Continuous monitoring"
         ],
         outcomes: "Restored energy, balanced systems, and sustainable results.",
-        cta: "Explore Programs"
+        cta: "Explore Programs",
+        link: "/programs"
     },
     {
         title: "Support Plans",
@@ -44,7 +47,8 @@ const SERVICES_LIST = [
             "Quarterly skin health reviews"
         ],
         outcomes: "Maintained baseline and long-term vitality through clinical support.",
-        cta: "View Plans"
+        cta: "View Plans",
+        link: "/education"
     }
 ];
 
@@ -109,9 +113,9 @@ export default function ServicesPage() {
 
                                     <div className="pt-6 border-t border-stone/30">
                                         <p className="italic text-moss font-serif mb-8 text-base">"{service.outcomes}"</p>
-                                        <button className="w-full bg-moss text-white px-6 py-4 rounded-full uppercase tracking-widest text-[10px] font-bold shadow-lg hover:bg-charcoal transition-colors">
+                                        <Link to={service.link} className="block text-center w-full bg-moss text-white px-6 py-4 rounded-full uppercase tracking-widest text-[10px] font-bold shadow-lg hover:bg-charcoal transition-colors">
                                             {service.cta}
-                                        </button>
+                                        </Link>
                                     </div>
                                 </div>
                             </div>

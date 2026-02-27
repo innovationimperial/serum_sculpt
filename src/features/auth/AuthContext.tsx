@@ -1,61 +1,82 @@
-import React, { createContext, useContext, useState, type ReactNode } from 'react';
+import React, { createContext, useContext, useState, useEffect, useMemo, useCallback, type ReactNode } from 'react';
+import { useConvex } from 'convex/react';
+import { api } from '../../../convex/_generated/api';
+import type { Id } from '../../../convex/_generated/dataModel';
 
-export interface User {
-    id: string;
+interface User {
+    _id: Id<"users">;
     name: string;
     email: string;
     avatar: string;
+    role: string;
 }
 
 interface AuthContextType {
     user: User | null;
     isAuthenticated: boolean;
-    login: (email: string) => Promise<void>;
-    register: (name: string, email: string) => Promise<void>;
+    login: (email: string, password: string) => Promise<void>;
+    register: (name: string, email: string, password: string) => Promise<void>;
     logout: () => void;
+    isLoading: boolean;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
+const USER_ID_KEY = 'serum_sculpt_user_id';
+
 export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
+    const convex = useConvex();
     const [user, setUser] = useState<User | null>(null);
+    const [isLoading, setIsLoading] = useState(true);
 
-    const login = async (email: string) => {
-        // Dummy login, just use the email name part as the name
-        const nameFallback = email.split('@')[0];
-        setUser({
-            id: Math.random().toString(36).substr(2, 9),
-            name: nameFallback.charAt(0).toUpperCase() + nameFallback.slice(1),
-            email,
-            avatar: `https://ui-avatars.com/api/?name=${encodeURIComponent(nameFallback)}&background=2e4036&color=fff`,
-        });
-    };
+    // Restore session on mount
+    useEffect(() => {
+        const storedId = localStorage.getItem(USER_ID_KEY);
+        if (storedId) {
+            convex.query(api.auth.getUser, { id: storedId as Id<"users"> })
+                .then((u) => {
+                    if (u) setUser(u as User);
+                    else localStorage.removeItem(USER_ID_KEY);
+                })
+                .catch(() => localStorage.removeItem(USER_ID_KEY))
+                .finally(() => setIsLoading(false));
+        } else {
+            setIsLoading(false);
+        }
+    }, [convex]);
 
-    const register = async (name: string, email: string) => {
-        // Dummy register
-        setUser({
-            id: Math.random().toString(36).substr(2, 9),
-            name,
-            email,
-            avatar: `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=2e4036&color=fff`,
-        });
-    };
+    const login = useCallback(async (email: string, password: string) => {
+        const result = await convex.query(api.auth.login, { email, password });
+        setUser(result as User);
+        localStorage.setItem(USER_ID_KEY, result._id);
+    }, [convex]);
 
-    const logout = () => {
+    const register = useCallback(async (name: string, email: string, password: string) => {
+        const result = await convex.mutation(api.auth.register, { name, email, password });
+        if (result) {
+            setUser(result as User);
+            localStorage.setItem(USER_ID_KEY, result._id);
+        }
+    }, [convex]);
+
+    const logout = useCallback(() => {
         setUser(null);
-    };
+        localStorage.removeItem(USER_ID_KEY);
+    }, []);
 
-    return (
-        <AuthContext.Provider value={{
+    const value = useMemo(
+        () => ({
             user,
             isAuthenticated: !!user,
             login,
             register,
-            logout
-        }}>
-            {children}
-        </AuthContext.Provider>
+            logout,
+            isLoading,
+        }),
+        [user, login, register, logout, isLoading]
     );
+
+    return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
 
 export const useAuth = () => {

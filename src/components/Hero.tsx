@@ -49,8 +49,8 @@ export default function Hero() {
                 style={{ backgroundImage: "url('/Brightened Brand Interior.png')" }}
             />
             {/* Legibility overlays */}
-            <div className="absolute inset-0 z-0 bg-stone/80" />
-            <div className="absolute inset-0 z-0 bg-gradient-to-r from-stone flex to-transparent opacity-90" />
+            <div className="absolute inset-0 z-0 bg-stone/20" />
+            <div className="absolute inset-0 z-0 bg-gradient-to-r from-stone/90 via-stone/50 to-transparent" />
 
             {/* Content - Left Aligned */}
             <div className="max-w-4xl text-charcoal relative z-10 mt-20">

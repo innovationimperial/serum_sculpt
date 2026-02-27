@@ -2,11 +2,22 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { DollarSign, CalendarCheck, Eye, ShoppingCart, FileText, Package, CalendarPlus, Activity } from 'lucide-react';
 import { StatCard } from '../components/StatCard';
-import { DASHBOARD_STATS, RECENT_ACTIVITY, REVENUE_TREND } from '../data/mockData';
+import { useQuery } from 'convex/react';
+import { api } from '../../../../convex/_generated/api';
 
 const DashboardPage: React.FC = () => {
-    const stats = DASHBOARD_STATS;
-    const maxRevenue = Math.max(...REVENUE_TREND);
+    const data = useQuery(api.dashboard.getStats);
+
+    if (!data) {
+        return (
+            <div className="flex items-center justify-center h-64">
+                <div className="font-serif italic text-moss text-xl animate-pulse">Loading dashboard...</div>
+            </div>
+        );
+    }
+
+    const { stats, recentActivity, revenueTrend } = data;
+    const maxRevenue = Math.max(...revenueTrend);
     const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
     const activityIcons: Record<string, React.ReactNode> = {
@@ -64,7 +75,7 @@ const DashboardPage: React.FC = () => {
                     </div>
 
                     <div className="flex items-end gap-2 h-40">
-                        {REVENUE_TREND.map((val, i) => (
+                        {revenueTrend.map((val: number, i: number) => (
                             <div key={i} className="flex-1 flex flex-col items-center gap-2">
                                 <div
                                     className="w-full bg-sage/60 rounded-t-lg hover:bg-moss/60 transition-colors duration-200 cursor-default min-h-[4px]"
@@ -81,9 +92,9 @@ const DashboardPage: React.FC = () => {
                 <div className="bg-white rounded-2xl border border-charcoal/5 p-6">
                     <h3 className="font-serif italic text-lg text-charcoal mb-5">Recent Activity</h3>
                     <div className="space-y-4">
-                        {RECENT_ACTIVITY.map(item => (
+                        {recentActivity.map((item: { id: string; type: string; message: string; timestamp: string }) => (
                             <div key={item.id} className="flex items-start gap-3">
-                                <div className={`w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 ${activityColors[item.type]}`}>
+                                <div className={`w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 ${activityColors[item.type] || 'bg-charcoal/5 text-charcoal'}`}>
                                     {activityIcons[item.type]}
                                 </div>
                                 <div className="min-w-0">

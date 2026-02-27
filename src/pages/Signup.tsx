@@ -35,14 +35,15 @@ export default function Signup() {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setIsLoading(true);
-        // Simulate network delay
-        await new Promise(resolve => setTimeout(resolve, 800));
-        await register(name, email);
-        setIsLoading(false);
-
-        // Redirect back where they came from or to home
-        const redirectUrl = searchParams.get('redirect') || '/';
-        navigate(redirectUrl);
+        try {
+            await register(name, email, password);
+            const redirectUrl = searchParams.get('redirect') || '/';
+            navigate(redirectUrl);
+        } catch (err: any) {
+            alert(err.message || 'Registration failed');
+        } finally {
+            setIsLoading(false);
+        }
     };
 
     return (
