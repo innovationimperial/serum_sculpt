@@ -9,6 +9,19 @@ export default defineSchema({
         passwordHash: v.string(),
         avatar: v.string(),
         role: v.union(v.literal("admin"), v.literal("client")),
+        // Customer Intelligence fields (optional for backwards compat)
+        phone: v.optional(v.string()),
+        billingAddress: v.optional(v.string()),
+        shippingAddress: v.optional(v.string()),
+        country: v.optional(v.string()),
+        customerType: v.optional(
+            v.union(
+                v.literal("guest"),
+                v.literal("registered"),
+                v.literal("wholesale"),
+                v.literal("vip")
+            )
+        ),
     }).index("by_email", ["email"]),
 
     // ─── Products ─────────────────────────────────────────────────
@@ -124,6 +137,7 @@ export default defineSchema({
                 productName: v.string(),
                 price: v.number(),
                 quantity: v.number(),
+                discount: v.optional(v.number()),
             })
         ),
         shippingDetails: v.object({
@@ -139,9 +153,27 @@ export default defineSchema({
             v.literal("pending"),
             v.literal("confirmed"),
             v.literal("shipped"),
-            v.literal("delivered")
+            v.literal("delivered"),
+            v.literal("cancelled"),
+            v.literal("refunded")
         ),
-    }).index("by_status", ["status"]),
+        // Order Intelligence fields (optional for backwards compat)
+        paymentMethod: v.optional(v.string()),
+        paymentStatus: v.optional(
+            v.union(
+                v.literal("paid"),
+                v.literal("failed"),
+                v.literal("refunded"),
+                v.literal("partially_refunded")
+            )
+        ),
+        discountCode: v.optional(v.string()),
+        discountAmount: v.optional(v.number()),
+        shippingCost: v.optional(v.number()),
+        tax: v.optional(v.number()),
+        currency: v.optional(v.string()),
+    }).index("by_status", ["status"])
+        .index("by_userId", ["userId"]),
 
     // ─── Contact Inquiries ────────────────────────────────────────
     contactInquiries: defineTable({

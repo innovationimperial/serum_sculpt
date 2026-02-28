@@ -13,6 +13,7 @@ import type * as blogPosts from "../blogPosts.js";
 import type * as consultations from "../consultations.js";
 import type * as contactInquiries from "../contactInquiries.js";
 import type * as dashboard from "../dashboard.js";
+import type * as files from "../files.js";
 import type * as orders from "../orders.js";
 import type * as products from "../products.js";
 import type * as programs from "../programs.js";
@@ -32,6 +33,7 @@ declare const fullApi: ApiFromModules<{
   consultations: typeof consultations;
   contactInquiries: typeof contactInquiries;
   dashboard: typeof dashboard;
+  files: typeof files;
   orders: typeof orders;
   products: typeof products;
   programs: typeof programs;

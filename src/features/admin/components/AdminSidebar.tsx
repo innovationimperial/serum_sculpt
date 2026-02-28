@@ -5,6 +5,7 @@ import {
     FileText,
     Package,
     Store,
+    ShoppingCart,
     CalendarCheck,
     Dumbbell,
     ArrowLeft,
@@ -15,6 +16,7 @@ const NAV_ITEMS = [
     { label: 'Blog Posts', path: '/admin/blog', icon: <FileText size={18} /> },
     { label: 'Products', path: '/admin/products', icon: <Package size={18} /> },
     { label: 'Store Settings', path: '/admin/store', icon: <Store size={18} /> },
+    { label: 'Orders', path: '/admin/orders', icon: <ShoppingCart size={18} /> },
     { label: 'Consultations', path: '/admin/consultations', icon: <CalendarCheck size={18} /> },
     { label: 'Programs', path: '/admin/programs', icon: <Dumbbell size={18} /> },
 ];
