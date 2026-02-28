@@ -30,14 +30,23 @@ export const list = query({
         } else {
             products = await ctx.db.query("products").collect();
         }
-        return products;
+        // Rewrite any stored HTTP image URLs to the public HTTPS origin
+        return products.map((p) => ({
+            ...p,
+            images: (p.images ?? []).map(rewriteStorageUrl),
+        }));
     },
 });
 
 export const get = query({
     args: { id: v.id("products") },
     handler: async (ctx, args) => {
-        return await ctx.db.get(args.id);
+        const product = await ctx.db.get(args.id);
+        if (!product) return null;
+        return {
+            ...product,
+            images: (product.images ?? []).map(rewriteStorageUrl),
+        };
     },
 });
 

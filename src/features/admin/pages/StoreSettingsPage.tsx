@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Save, Plus, X, UploadCloud, Loader2 } from 'lucide-react';
 import { useQuery, useMutation } from 'convex/react';
 import { api } from '../../../../convex/_generated/api';
+import { rewriteStorageUrl } from '../../../lib/rewriteStorageUrl';
 
 const StoreSettingsPage: React.FC = () => {
     const settings = useQuery(api.storeSettings.get);
@@ -46,7 +47,7 @@ const StoreSettingsPage: React.FC = () => {
 
         try {
             setIsUploading(true);
-            const postUrl = await generateUploadUrl();
+            const postUrl = rewriteStorageUrl(await generateUploadUrl());
             const result = await fetch(postUrl, {
                 method: "POST",
                 headers: { "Content-Type": file.type },
@@ -57,7 +58,7 @@ const StoreSettingsPage: React.FC = () => {
             const url = await getImageUrl({ storageId });
 
             if (url) {
-                setHeroImage(url);
+                setHeroImage(rewriteStorageUrl(url));
             }
         } catch (error) {
             console.error("Failed to upload image:", error);

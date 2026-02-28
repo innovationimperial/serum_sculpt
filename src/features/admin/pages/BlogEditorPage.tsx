@@ -4,6 +4,7 @@ import { ArrowLeft, Save, Eye, UploadCloud, Loader2 } from 'lucide-react';
 import { useQuery, useMutation } from 'convex/react';
 import { api } from '../../../../convex/_generated/api';
 import type { Id } from '../../../../convex/_generated/dataModel';
+import { rewriteStorageUrl } from '../../../lib/rewriteStorageUrl';
 
 type BlogCategory = 'Menopause' | 'Skin Health' | 'Weight Management' | 'Hormonal Wellness' | 'Skincare Education';
 const CATEGORIES: BlogCategory[] = ['Menopause', 'Skin Health', 'Weight Management', 'Hormonal Wellness', 'Skincare Education'];
@@ -48,7 +49,7 @@ const BlogEditorPage: React.FC = () => {
 
         try {
             setIsUploading(true);
-            const postUrl = await generateUploadUrl();
+            const postUrl = rewriteStorageUrl(await generateUploadUrl());
             const result = await fetch(postUrl, {
                 method: "POST",
                 headers: { "Content-Type": file.type },
@@ -59,7 +60,7 @@ const BlogEditorPage: React.FC = () => {
             const url = await getImageUrl({ storageId });
 
             if (url) {
-                setFeaturedImage(url);
+                setFeaturedImage(rewriteStorageUrl(url));
             }
         } catch (error) {
             console.error("Failed to upload image:", error);

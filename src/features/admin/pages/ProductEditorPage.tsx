@@ -6,6 +6,7 @@ import { api } from '../../../../convex/_generated/api';
 import type { Id } from '../../../../convex/_generated/dataModel';
 import { ConfirmDialog } from '../components/ConfirmDialog';
 import { useToast } from '../components/Toast';
+import { rewriteStorageUrl } from '../../../lib/rewriteStorageUrl';
 
 type ProductStatus = 'active' | 'hidden' | 'out_of_stock';
 type StoreName = 'House of Langa' | 'Amway' | 'Hemp wellness' | 'Weight Wellness Store' | 'Serum & Sculpt Clinical Skincare';
@@ -159,7 +160,7 @@ const ProductEditorPage: React.FC = () => {
             // Upload any pending files to Convex storage and resolve to serving URLs
             const uploadedUrls: string[] = [];
             for (const file of pendingFiles) {
-                const uploadUrl = await generateUploadUrl();
+                const uploadUrl = rewriteStorageUrl(await generateUploadUrl());
                 const result = await fetch(uploadUrl, {
                     method: 'POST',
                     headers: { 'Content-Type': file.type },
@@ -170,11 +171,11 @@ const ProductEditorPage: React.FC = () => {
                 }
                 const { storageId } = await result.json();
                 // Resolve storage ID to a serving URL
-                const servingUrl = await getImageUrl({ storageId });
-                if (!servingUrl) {
+                const rawServingUrl = await getImageUrl({ storageId });
+                if (!rawServingUrl) {
                     throw new Error(`Failed to resolve URL for ${file.name}`);
                 }
-                uploadedUrls.push(servingUrl);
+                uploadedUrls.push(rewriteStorageUrl(rawServingUrl));
             }
 
             const allImages = [...existingImages, ...uploadedUrls];

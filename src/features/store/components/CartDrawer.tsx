@@ -1,6 +1,7 @@
 import React from 'react';
 import { X, Trash2, Plus, Minus, ShoppingBag } from 'lucide-react';
 import { useCart } from '../context/CartContext';
+import { rewriteStorageUrl } from '../../../lib/rewriteStorageUrl';
 
 export const CartDrawer: React.FC = () => {
     const { items, isCartOpen, closeCart, updateQuantity, removeItem, openCheckout, cartTotal } = useCart();
@@ -47,7 +48,7 @@ export const CartDrawer: React.FC = () => {
                             <div key={item.product.id} className="flex gap-4 p-4 rounded-2xl bg-white dark:bg-white/5 border border-black/5 dark:border-white/5">
                                 {item.product.images?.[0] ? (
                                     <img
-                                        src={item.product.images[0]}
+                                        src={rewriteStorageUrl(item.product.images[0])}
                                         alt={item.product.name}
                                         className="w-20 h-24 object-cover rounded-xl bg-charcoal/5"
                                     />

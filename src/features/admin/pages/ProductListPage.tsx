@@ -7,6 +7,7 @@ import { useToast } from '../components/Toast';
 import { useQuery, useMutation } from 'convex/react';
 import { api } from '../../../../convex/_generated/api';
 import type { Id } from '../../../../convex/_generated/dataModel';
+import { rewriteStorageUrl } from '../../../lib/rewriteStorageUrl';
 
 const DEFAULT_CATEGORIES = ['All', 'Skincare', 'Makeup', 'Wellness', 'Hemp Range', 'Tools'];
 
@@ -78,7 +79,7 @@ const ProductListPage: React.FC = () => {
         <div key={product._id} className="bg-white rounded-2xl border border-charcoal/5 overflow-hidden group hover:shadow-lg hover:border-moss/20 transition-all duration-200">
             <div className="relative h-48 overflow-hidden">
                 {(product.images ?? [])[0] ? (
-                    <img src={product.images[0]} alt={product.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                    <img src={rewriteStorageUrl(product.images[0])} alt={product.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
                 ) : (
                     <div className="w-full h-full flex items-center justify-center text-charcoal/20 font-sans text-xs">No image</div>
                 )}
@@ -119,7 +120,7 @@ const ProductListPage: React.FC = () => {
     const renderProductRow = (product: ProductRow) => (
         <div key={product._id} className="flex items-center gap-4 bg-white rounded-xl border border-charcoal/5 p-4 hover:shadow-md hover:border-moss/20 transition-all duration-200 group">
             {(product.images ?? [])[0] ? (
-                <img src={product.images[0]} alt={product.name} className="w-14 h-14 rounded-xl object-cover flex-shrink-0" />
+                <img src={rewriteStorageUrl(product.images[0])} alt={product.name} className="w-14 h-14 rounded-xl object-cover flex-shrink-0" />
             ) : (
                 <div className="w-14 h-14 rounded-xl bg-charcoal/5 flex items-center justify-center text-charcoal/20 text-[8px]">No img</div>
             )}

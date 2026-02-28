@@ -6,6 +6,7 @@ import { useRequireAuth } from '../../../hooks/useRequireAuth';
 import { useMutation } from 'convex/react';
 import { api } from '../../../../convex/_generated/api';
 import type { Id } from '../../../../convex/_generated/dataModel';
+import { rewriteStorageUrl } from '../../../lib/rewriteStorageUrl';
 
 export const CheckoutModal: React.FC = () => {
     const { isCheckoutOpen, closeCheckout, items, cartTotal, clearCart } = useCart();
@@ -99,7 +100,7 @@ export const CheckoutModal: React.FC = () => {
                             <div key={item.product.id} className="flex gap-4 items-center">
                                 <div className="relative w-16 h-16 rounded-lg overflow-hidden bg-charcoal/5">
                                     {item.product.images?.[0] ? (
-                                        <img src={item.product.images[0]} className="w-full h-full object-cover" alt={item.product.name} />
+                                        <img src={rewriteStorageUrl(item.product.images[0])} className="w-full h-full object-cover" alt={item.product.name} />
                                     ) : (
                                         <div className="w-full h-full flex items-center justify-center text-charcoal/20 text-[8px]">No img</div>
                                     )}

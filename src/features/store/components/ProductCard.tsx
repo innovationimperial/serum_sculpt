@@ -2,6 +2,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import type { Product } from '../types';
 import { ArrowRight } from 'lucide-react';
+import { rewriteStorageUrl } from '../../../lib/rewriteStorageUrl';
 
 interface ProductCardProps {
     product: Product;
@@ -9,7 +10,7 @@ interface ProductCardProps {
 
 export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
     const navigate = useNavigate();
-    const firstImage = product.images?.[0];
+    const firstImage = product.images?.[0] ? rewriteStorageUrl(product.images[0]) : undefined;
 
     return (
         <div
