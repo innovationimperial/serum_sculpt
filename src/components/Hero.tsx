@@ -54,9 +54,6 @@ export default function Hero() {
 
             {/* Content - Left Aligned */}
             <div className="max-w-4xl text-charcoal relative z-10 mt-32 md:mt-20">
-                <span className="hero-text inline-block font-mono tracking-widest text-[#c58361] uppercase mb-4 text-sm font-bold">
-                    Pharmacist-Led Wellness Ecosystem
-                </span>
                 <h1 className="flex flex-col gap-2 mb-6">
                     <span className="hero-text font-serif text-5xl md:text-7xl text-moss leading-tight">
                         Clinical Authority.

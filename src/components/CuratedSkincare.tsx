@@ -69,11 +69,6 @@ export default function CuratedSkincare() {
 
     return (
         <section id="skincare" ref={sectionRef} className="relative w-full bg-stone">
-            {/* Introduction text */}
-            <div className="absolute top-12 left-0 w-full z-50 px-8 text-center pointer-events-none">
-                <h2 className="text-sm font-mono tracking-widest text-moss uppercase mix-blend-multiply opacity-80 mb-2 font-bold">Curated Clinical Skincare</h2>
-                <p className="font-sans text-charcoal/70 text-sm max-w-md mx-auto">We stock select products that align with our clinical standards and skin philosophy.</p>
-            </div>
 
             {SKINCARE_PRODUCTS.map((project, index) => (
                 <div
