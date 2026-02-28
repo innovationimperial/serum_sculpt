@@ -1,5 +1,6 @@
 import { query, mutation } from "./_generated/server";
 import { v } from "convex/values";
+import { rewriteStorageUrl } from "./storageUrlUtils";
 
 export const list = query({
     args: {
@@ -44,7 +45,8 @@ export const get = query({
 export const generateUploadUrl = mutation({
     args: {},
     handler: async (ctx) => {
-        return await ctx.storage.generateUploadUrl();
+        const url = await ctx.storage.generateUploadUrl();
+        return rewriteStorageUrl(url);
     },
 });
 
@@ -52,7 +54,8 @@ export const generateUploadUrl = mutation({
 export const getImageUrl = mutation({
     args: { storageId: v.id("_storage") },
     handler: async (ctx, args) => {
-        return await ctx.storage.getUrl(args.storageId);
+        const url = await ctx.storage.getUrl(args.storageId);
+        return url ? rewriteStorageUrl(url) : null;
     },
 });
 
