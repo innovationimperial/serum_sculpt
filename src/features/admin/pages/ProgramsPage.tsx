@@ -91,7 +91,7 @@ const ProgramsPage: React.FC = () => {
 
             {/* Search + New */}
             <div className="flex items-center justify-between gap-4">
-                <SearchFilter value={search} onChange={setSearch} placeholder="Search programs..." categories={['All', 'Active', 'Draft', 'Archived']} activeCategory={filterStatus} onCategoryChange={setFilterStatus} />
+                <SearchFilter searchValue={search} onSearchChange={setSearch} searchPlaceholder="Search programs..." filterValue={filterStatus} onFilterChange={setFilterStatus} filterOptions={[{ value: 'All', label: 'All' }, { value: 'Active', label: 'Active' }, { value: 'Draft', label: 'Draft' }, { value: 'Archived', label: 'Archived' }]} filterLabel="Status" />
                 <button onClick={() => navigate('/admin/programs/new')} className="flex items-center gap-2 bg-moss text-white px-5 py-2.5 rounded-xl text-sm font-sans font-semibold hover:bg-charcoal transition-colors duration-200 cursor-pointer">
                     <Plus size={16} /> New Program
                 </button>

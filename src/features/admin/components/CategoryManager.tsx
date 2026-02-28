@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { X, Plus } from 'lucide-react';
 import type { ProductCategory } from '../types';
 
-const DEFAULT_CATEGORIES: ProductCategory[] = ['Skincare', 'Makeup', 'Wellness', 'Hemp', 'Tools'];
+const DEFAULT_CATEGORIES: ProductCategory[] = ['Skincare', 'Makeup', 'Wellness', 'Hemp Range', 'Tools'];
 
 interface CategoryManagerProps {
     isOpen: boolean;
@@ -68,8 +68,8 @@ export const CategoryManager: React.FC<CategoryManagerProps> = ({
                             <button
                                 onClick={() => handleRemove(cat)}
                                 className={`transition-all cursor-pointer ${DEFAULT_CATEGORIES.includes(cat as ProductCategory)
-                                        ? 'text-charcoal/10 cursor-not-allowed'
-                                        : 'text-charcoal/20 hover:text-red-500 opacity-0 group-hover:opacity-100'
+                                    ? 'text-charcoal/10 cursor-not-allowed'
+                                    : 'text-charcoal/20 hover:text-red-500 opacity-0 group-hover:opacity-100'
                                     }`}
                             >
                                 <X size={14} />

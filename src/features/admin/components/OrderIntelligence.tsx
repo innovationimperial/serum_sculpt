@@ -8,7 +8,7 @@ import { ConfirmDialog } from './ConfirmDialog';
 import type { Id } from '../../../../convex/_generated/dataModel';
 import {
     ShoppingCart, Clock, Package, X, Mail, MapPin,
-    Tag, CreditCard, DollarSign, CheckCircle, XCircle, Truck, AlertCircle, RotateCcw
+    CreditCard, DollarSign, CheckCircle, XCircle, Truck, RotateCcw
 } from 'lucide-react';
 
 type OrderStatus = 'pending' | 'confirmed' | 'shipped' | 'delivered' | 'cancelled' | 'refunded';
@@ -192,8 +192,8 @@ export const OrderIntelligence: React.FC = () => {
                                     <CreditCard size={14} className="text-charcoal/30" />
                                     <span className="text-charcoal/70">Payment: {selected.paymentMethod ?? 'Card'}</span>
                                     <span className={`inline-flex px-2 py-0.5 rounded-full text-[9px] font-bold uppercase ${selected.paymentStatus === 'paid' ? 'bg-emerald-50 text-emerald-600' :
-                                            selected.paymentStatus === 'failed' ? 'bg-red-50 text-red-500' :
-                                                'bg-charcoal/5 text-charcoal/40'
+                                        selected.paymentStatus === 'failed' ? 'bg-red-50 text-red-500' :
+                                            'bg-charcoal/5 text-charcoal/40'
                                         }`}>{selected.paymentStatus ?? 'paid'}</span>
                                 </div>
                             </div>

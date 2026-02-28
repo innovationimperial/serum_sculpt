@@ -141,7 +141,7 @@ const ProductListPage: React.FC = () => {
         <div className="space-y-6">
             {/* Header + controls */}
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-                <SearchFilter value={search} onChange={setSearch} placeholder="Search products..." categories={DEFAULT_CATEGORIES} activeCategory={filterCategory} onCategoryChange={setFilterCategory} />
+                <SearchFilter searchValue={search} onSearchChange={setSearch} searchPlaceholder="Search products..." filterValue={filterCategory} onFilterChange={setFilterCategory} filterOptions={DEFAULT_CATEGORIES.map(c => ({ value: c, label: c }))} filterLabel="Category" />
                 <div className="flex items-center gap-3">
                     <div className="flex rounded-lg border border-charcoal/10 overflow-hidden">
                         <button onClick={() => setViewMode('grid')} className={`p-2 ${viewMode === 'grid' ? 'bg-moss/10 text-moss' : 'text-charcoal/30 hover:text-charcoal/60'} transition-colors cursor-pointer`}><LayoutGrid size={16} /></button>

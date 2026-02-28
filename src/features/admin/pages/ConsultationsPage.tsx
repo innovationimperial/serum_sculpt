@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState } from 'react';
 import { Mail, MessageSquare, AlertCircle, X, Tag } from 'lucide-react';
 import { DataTable } from '../components/DataTable';
 import { StatCard } from '../components/StatCard';
@@ -73,9 +73,9 @@ const ConsultationsPage: React.FC = () => {
 
             {/* Stats */}
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                <StatCard label="Total Inquiries" value={String(inquiries.length)} icon={<AlertCircle size={18} />} change="+0%" />
-                <StatCard label="Clinical Consultations" value={String(inquiries.filter(i => i.purpose === 'Clinical Consultation').length)} icon={<AlertCircle size={18} />} change="+0%" />
-                <StatCard label="Program Applications" value={String(inquiries.filter(i => i.purpose === 'Program Application').length)} icon={<Tag size={18} />} change="+0%" />
+                <StatCard label="Total Inquiries" value={String(inquiries.length)} icon={<AlertCircle size={18} />} change={0} />
+                <StatCard label="Clinical Consultations" value={String(inquiries.filter(i => i.purpose === 'Clinical Consultation').length)} icon={<AlertCircle size={18} />} change={0} />
+                <StatCard label="Program Applications" value={String(inquiries.filter(i => i.purpose === 'Program Application').length)} icon={<Tag size={18} />} change={0} />
             </div>
 
             {/* Table */}

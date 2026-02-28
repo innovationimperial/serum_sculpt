@@ -150,8 +150,8 @@ const BlogListPage: React.FC = () => {
 
             {/* Table */}
             <DataTable
-                columns={columns}
-                data={tableData as unknown as BlogRow[]}
+                columns={columns as any}
+                data={tableData as any}
                 onRowClick={(row) => {
                     window.location.href = `/admin/blog/${(row as unknown as { _id: string })._id}`;
                 }}
