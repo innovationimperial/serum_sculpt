@@ -78,7 +78,7 @@ export default function CuratedSkincare() {
             {SKINCARE_PRODUCTS.map((project, index) => (
                 <div
                     key={project.id}
-                    className={`skincare-card relative w-full h-[100dvh] flex flex-col items-center justify-center p-8 ${project.bg} ${project.text} overflow-hidden`}
+                    className={`skincare-card relative w-full h-[100dvh] flex flex-col items-center justify-center pt-32 pb-8 px-8 md:p-8 ${project.bg} ${project.text} overflow-hidden`}
                     style={{ zIndex: index }}
                 >
                     <div className="relative z-10 flex flex-col md:flex-row items-center justify-between max-w-6xl w-full gap-16">

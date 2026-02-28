@@ -53,7 +53,7 @@ export default function Hero() {
             <div className="absolute inset-0 z-0 bg-gradient-to-r from-stone/90 via-stone/50 to-transparent" />
 
             {/* Content - Left Aligned */}
-            <div className="max-w-4xl text-charcoal relative z-10 mt-20">
+            <div className="max-w-4xl text-charcoal relative z-10 mt-32 md:mt-20">
                 <span className="hero-text inline-block font-mono tracking-widest text-[#c58361] uppercase mb-4 text-sm font-bold">
                     Pharmacist-Led Wellness Ecosystem
                 </span>
