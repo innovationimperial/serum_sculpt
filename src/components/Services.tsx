@@ -1,4 +1,4 @@
-import { FileHeart, Flower2, Leaf } from 'lucide-react';
+import { ConsultationIcon, WellnessIcon, SupportIcon } from './AnimatedServiceIcons';
 import { useRef, useEffect } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
@@ -9,21 +9,21 @@ const SERVICES_DATA = [
     {
         id: 1,
         title: 'Consultation Services',
-        icon: FileHeart,
+        icon: ConsultationIcon,
         desc: 'Pharmacist-led clinical consultations to establish your baseline and design your personalized holistic wellness journey.',
         features: ['In-Depth Health Assessment', 'Clinical Guidance', 'Personalized Roadmap']
     },
     {
         id: 2,
         title: 'Wellness Programs',
-        icon: Leaf,
+        icon: WellnessIcon,
         desc: 'Evidence-based, multi-week programs focusing on natural weight management, hormonal wellness, and cellular vitality for women.',
         features: ['Weight Management', 'Hormonal Wellness', 'Sustainable Vitality']
     },
     {
         id: 3,
         title: 'Support Plans',
-        icon: Flower2,
+        icon: SupportIcon,
         desc: 'Ongoing clinical guidance and education to ensure your sustained health and adapt to your evolving wellness needs.',
         features: ['Clinical Monitoring', 'Educational Resources', 'Priority Support']
     }
@@ -97,8 +97,8 @@ export default function Services() {
                                 className="bg-white rounded-[2rem] p-10 flex flex-col items-center text-center shadow-sm hover:shadow-xl transition-all duration-500 border border-sage/20 group"
                                 style={{ transform: `translateY(${index % 2 !== 0 ? '2rem' : '0'})` }}
                             >
-                                <div className="w-16 h-16 rounded-full bg-sage/20 flex items-center justify-center mb-8 text-moss group-hover:scale-110 group-hover:bg-sage/40 transition-all duration-500">
-                                    <Icon className="w-8 h-8 font-light" strokeWidth={1.5} />
+                                <div className="w-full h-48 mb-6 flex items-center justify-center overflow-hidden rounded-2xl bg-[#f0fdf4]/50 group-hover:bg-[#f0fdf4] transition-colors duration-500">
+                                    <Icon className="w-full h-full p-2 group-hover:scale-105 transition-transform duration-700 ease-in-out" />
                                 </div>
                                 <h3 className="font-serif text-3xl mb-4 text-charcoal group-hover:text-moss transition-colors">
                                     {service.title}
