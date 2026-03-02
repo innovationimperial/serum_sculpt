@@ -1,6 +1,7 @@
 import { lazy, Suspense } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Layout from './components/Layout';
+import ScrollToTop from './components/ScrollToTop';
 import { CartProvider } from './features/store/context/CartContext';
 import { AuthProvider } from './features/auth/AuthContext';
 
@@ -47,6 +48,7 @@ function App() {
     <AuthProvider>
       <CartProvider>
         <Router>
+          <ScrollToTop />
           <Suspense fallback={<Loading />}>
             <Routes>
               {/* Public site */}
