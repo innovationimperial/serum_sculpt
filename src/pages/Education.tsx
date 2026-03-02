@@ -1,33 +1,10 @@
 import { useRef, useEffect } from 'react';
 import { gsap } from 'gsap';
-import { Heart, Activity, Sparkles, Shield, Clock, ArrowRight } from 'lucide-react';
+import { Heart, Sparkles, Clock, ArrowRight } from 'lucide-react';
 import PageHeader from '../components/PageHeader';
 import { useQuery } from 'convex/react';
 import { api } from '../../convex/_generated/api';
 import { Link } from 'react-router-dom';
-
-const CATEGORIES = [
-    {
-        title: 'Menopause Support',
-        icon: Heart,
-        desc: 'Hormonal navigation and physiological adaptation strategies.'
-    },
-    {
-        title: 'Skin Health',
-        icon: Sparkles,
-        desc: 'Evidence-based dermatology and clinical skincare science.'
-    },
-    {
-        title: 'Weight Wellness',
-        icon: Activity,
-        desc: 'Metabolic efficiency and sustainable weight architecture.'
-    },
-    {
-        title: 'Hormonal Alignment',
-        icon: Shield,
-        desc: 'Understanding biological rhythms and endocrine balance.'
-    }
-];
 
 export default function Education() {
     const containerRef = useRef<HTMLDivElement>(null);
@@ -55,27 +32,25 @@ export default function Education() {
 
     return (
         <div ref={containerRef} className="bg-white min-h-screen">
+            {/* Hero Image Section */}
+            <div className="w-full h-[35vh] md:h-[45vh] relative overflow-hidden edu-reveal mb-8">
+                <img
+                    src="/elasticcomputefarm-library-1147815_1920.jpg"
+                    alt="Education Library Hero Section"
+                    className="absolute inset-0 w-full h-full object-cover object-[center_30%]"
+                />
+                <div className="absolute inset-0 bg-stone/20 mix-blend-multiply" />
+            </div>
+
             <PageHeader
                 id="EDU-005"
                 title="Rediscover Wellness."
                 subtitle="The Knowledge Hub"
                 description="Clinical insights, skin education, and evidence-based strategies for your biological evolution."
+                withTopPadding={false}
             />
 
             <div className="pb-24 px-8 md:px-16 max-w-7xl mx-auto">
-                {/* Categories */}
-                <div className="grid md:grid-cols-4 gap-8 mb-24 edu-reveal">
-                    {CATEGORIES.map((cat, i) => (
-                        <div key={i} className="p-8 bg-stone/5 rounded-3xl border border-stone/10 hover:bg-moss/5 hover:border-moss/20 transition-all group cursor-pointer">
-                            <div className="w-12 h-12 bg-moss/10 rounded-2xl flex items-center justify-center text-moss mb-6 group-hover:scale-110 transition-transform">
-                                <cat.icon size={24} strokeWidth={1.5} />
-                            </div>
-                            <h3 className="font-serif text-xl text-moss mb-3 italic">{cat.title}</h3>
-                            <p className="text-charcoal/60 text-xs leading-relaxed">{cat.desc}</p>
-                        </div>
-                    ))}
-                </div>
-
                 {/* Loading State or Posts Area */}
                 {!posts ? (
                     <div className="h-64 flex flex-col items-center justify-center text-charcoal/60 edu-reveal">

@@ -25,11 +25,22 @@ export default function Shop() {
 
     return (
         <div ref={containerRef} className="min-h-screen bg-stone">
+            {/* Hero Image Section */}
+            <div className="w-full h-[35vh] md:h-[45vh] relative overflow-hidden shop-reveal mb-8">
+                <img
+                    src="/serum%20and%20scultpt.png"
+                    alt="Serum and Sculpt Hero Section"
+                    className="absolute inset-0 w-full h-full object-cover object-[center_30%]"
+                />
+                <div className="absolute inset-0 bg-stone/20 mix-blend-multiply" />
+            </div>
+
             <PageHeader
                 id="SHP-001"
                 title="Featured Stores."
                 subtitle="The Featured Selection"
                 description="Browse our curated index of premium clinical and wellness brands."
+                withTopPadding={false}
             />
 
             <div className="border-t border-stone/20 shop-reveal">

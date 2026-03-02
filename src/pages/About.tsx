@@ -28,11 +28,22 @@ export default function About() {
 
     return (
         <div ref={containerRef} className="bg-white min-h-screen">
+            {/* Hero Image Section */}
+            <div className="w-full h-[35vh] md:h-[45vh] relative overflow-hidden reveal mb-8">
+                <img
+                    src="/clinical%20authority%20servuces.png"
+                    alt="Clinical Authority Services Hero Section"
+                    className="absolute inset-0 w-full h-full object-cover object-[center_30%]"
+                />
+                <div className="absolute inset-0 bg-stone/20 mix-blend-multiply" />
+            </div>
+
             <PageHeader
                 id="DOC-001"
                 title="Clinical Responsibility."
                 subtitle="The Philosophy"
                 description="Establishing clinical wellness authority through transparency, education, and pharmacist-led curation."
+                withTopPadding={false}
             />
 
             <div className="pb-24 px-8 md:px-16 max-w-7xl mx-auto">

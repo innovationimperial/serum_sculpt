@@ -7,9 +7,10 @@ interface PageHeaderProps {
     description?: string;
     id?: string;
     className?: string;
+    withTopPadding?: boolean;
 }
 
-export default function PageHeader({ title, subtitle, description, id, className = "" }: PageHeaderProps) {
+export default function PageHeader({ title, subtitle, description, id, className = "", withTopPadding = true }: PageHeaderProps) {
     const headerRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
@@ -30,7 +31,7 @@ export default function PageHeader({ title, subtitle, description, id, className
     }, []);
 
     return (
-        <div ref={headerRef} className={`relative pt-40 pb-24 overflow-hidden ${className}`}>
+        <div ref={headerRef} className={`relative ${withTopPadding ? 'pt-40' : 'pt-12 md:pt-20'} pb-24 overflow-hidden ${className}`}>
             {/* Background Motif */}
             <div className="absolute inset-0 -z-10 bg-stone/30 opacity-40" />
             <div className="absolute top-0 right-0 w-1/3 h-full -z-10 bg-moss/5 rounded-bl-[10rem]" />

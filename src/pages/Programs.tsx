@@ -50,21 +50,52 @@ export default function Programs() {
 
     return (
         <div ref={containerRef} className="bg-white min-h-screen">
+            {/* Hero Image Section */}
+            <div className="w-full h-[35vh] md:h-[45vh] relative overflow-hidden prog-reveal mb-8">
+                <img
+                    src="/wellness%20hero%20section.png"
+                    alt="Wellness Hero Section"
+                    className="absolute inset-0 w-full h-full object-cover object-center"
+                />
+                <div className="absolute inset-0 bg-stone/20 mix-blend-multiply" />
+            </div>
+
             <PageHeader
                 id="PRG-003"
                 title="Wellness Architectures."
                 subtitle="Flagship Journeys"
                 description="Structured, evidence-based journeys designed for deep physiological realignment and long-term vitality."
+                withTopPadding={false}
             />
 
-            <div className="pb-24 px-8 md:px-16 max-w-7xl mx-auto">
+            <div className="pb-12 px-8 md:px-16 max-w-7xl mx-auto">
                 {PROGRAMS_DATA.map((prog, idx) => (
                     <div key={prog.id} className={`prog-reveal grid md:grid-cols-2 gap-16 items-center ${idx % 2 !== 0 ? 'md:flex-row-reverse' : ''}`}>
                         <div className={idx % 2 !== 0 ? 'md:order-2' : ''}>
                             <div className="aspect-[16/10] bg-stone/20 rounded-[3rem] overflow-hidden">
-                                <div className="w-full h-full bg-moss/5 border border-stone/30 flex items-center justify-center text-moss/20 italic font-serif text-2xl">
-                                    Program Visual
-                                </div>
+                                {prog.id === 'weight-wellness' ? (
+                                    <video
+                                        src="/media%20video/lunges%20video.mp4"
+                                        autoPlay
+                                        loop
+                                        muted
+                                        playsInline
+                                        className="w-full h-full object-cover"
+                                    />
+                                ) : prog.id === 'metabolic-reset' ? (
+                                    <video
+                                        src="/media%20video/medical%20video.mp4"
+                                        autoPlay
+                                        loop
+                                        muted
+                                        playsInline
+                                        className="w-full h-full object-cover"
+                                    />
+                                ) : (
+                                    <div className="w-full h-full bg-moss/5 border border-stone/30 flex items-center justify-center text-moss/20 italic font-serif text-2xl">
+                                        Program Visual
+                                    </div>
+                                )}
                             </div>
                         </div>
 
@@ -99,7 +130,7 @@ export default function Programs() {
                 ))}
             </div>
 
-            <div className="mt-48 pt-32 border-t border-stone/20 prog-reveal">
+            <div className="mt-8 pt-8 border-t border-stone/20 prog-reveal">
                 <h2 className="font-serif text-4xl text-moss mb-12 italic text-center">Frequently Asked Inquiries</h2>
                 <div className="max-w-2xl mx-auto space-y-4">
                     {FAQS.map((faq, i) => (
@@ -116,7 +147,7 @@ export default function Programs() {
                 </div>
             </div>
 
-            <div className="mt-32 bg-moss rounded-[3rem] p-8 md:p-16 text-center text-white prog-reveal shadow-2xl overflow-hidden relative">
+            <div className="mt-24 bg-moss rounded-[3rem] p-8 md:p-16 text-center text-white prog-reveal shadow-2xl overflow-hidden relative">
                 <div className="absolute inset-0 bg-stone/5 mix-blend-overlay opacity-20" />
                 <h2 className="font-serif text-4xl md:text-5xl mb-6 relative z-10 italic">Begin Your Alignment.</h2>
                 <p className="text-stone/60 max-w-xl mx-auto mb-12 relative z-10 font-light">
