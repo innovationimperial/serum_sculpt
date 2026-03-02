@@ -147,12 +147,12 @@ export default function Navbar() {
 
             {/* Top-Right Drawer Button for when Navbar is hidden */}
             <button
-                className={`fixed top-6 right-6 lg:top-8 lg:right-8 w-14 h-14 md:w-16 md:h-16 rounded-full overflow-hidden shadow-[0_8px_30px_rgb(0,0,0,0.12)] transition-all duration-700 pointer-events-auto hover:scale-105 border border-white/20 flex items-center justify-center bg-white/90 backdrop-blur-sm z-[70] ${isScrolled ? 'opacity-0 translate-y-[-100px] pointer-events-none' : 'opacity-100 translate-y-0'
+                className={`fixed top-6 right-6 lg:top-8 lg:right-8 w-14 h-14 md:w-16 md:h-16 rounded-full overflow-hidden shadow-[0_8px_30px_rgb(0,0,0,0.12)] transition-all duration-700 pointer-events-auto hover:scale-105 flex items-center justify-center z-[70] ${isScrolled ? 'opacity-0 translate-y-[-100px] pointer-events-none' : 'opacity-100 translate-y-0'
                     }`}
                 onClick={() => setIsMobileMenuOpen(true)}
                 aria-label="Open menu"
             >
-                <img src="/logo2.png" alt="Logo Drawer" className="w-[70%] h-[70%] object-contain" />
+                <img src="/logo2.png" alt="Logo Drawer" className="w-full h-full object-cover" />
             </button>
 
             {/* Full-Screen Menu Overlay */}
