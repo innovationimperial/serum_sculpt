@@ -1,5 +1,6 @@
 import { useEffect, useRef } from 'react';
 import { gsap } from 'gsap';
+import { Link } from 'react-router-dom';
 
 export default function Hero() {
     const containerRef = useRef<HTMLElement>(null);
@@ -68,12 +69,16 @@ export default function Hero() {
                 </p>
 
                 <div className="flex flex-col sm:flex-row gap-6">
-                    <button className="hero-cta magnetic-button bg-moss text-white px-8 py-4 rounded-full text-sm font-sans tracking-widest font-bold uppercase transition-all hover:bg-moss/90 shadow-lg">
-                        Book Consultation
-                    </button>
-                    <button className="hero-cta magnetic-button border border-moss/30 bg-transparent text-moss px-8 py-4 rounded-full text-sm font-sans tracking-widest font-bold uppercase transition-all hover:bg-moss/5 hover:border-moss/50">
-                        Explore Featured Stores
-                    </button>
+                    <Link to="/contact">
+                        <button className="hero-cta magnetic-button bg-moss text-white px-8 py-4 rounded-full text-sm font-sans tracking-widest font-bold uppercase transition-all hover:bg-moss/90 shadow-lg w-full sm:w-auto">
+                            Book Consultation
+                        </button>
+                    </Link>
+                    <Link to="/shop">
+                        <button className="hero-cta magnetic-button border border-moss/30 bg-transparent text-moss px-8 py-4 rounded-full text-sm font-sans tracking-widest font-bold uppercase transition-all hover:bg-moss/5 hover:border-moss/50 w-full sm:w-auto">
+                            Explore Featured Stores
+                        </button>
+                    </Link>
                 </div>
             </div>
         </section>

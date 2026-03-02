@@ -69,11 +69,22 @@ export default function Contact() {
 
     return (
         <div ref={containerRef} className="bg-white min-h-screen">
+            {/* Hero Image Section */}
+            <div className="w-full h-[35vh] md:h-[45vh] relative overflow-hidden contact-reveal mb-8">
+                <img
+                    src="/contact us.png"
+                    alt="Contact Us Hero Section"
+                    className="absolute inset-0 w-full h-full object-cover object-[center_30%]"
+                />
+                <div className="absolute inset-0 bg-stone/20 mix-blend-multiply" />
+            </div>
+
             <PageHeader
                 id="CON-006"
                 title="Clinical Portal."
                 subtitle="Connect with Serum & Sculpt"
                 description="Secure your consultation or reach out with specific wellness inquiries through our direct portal."
+                withTopPadding={false}
             />
 
             <div className="pb-24 px-8 md:px-16 max-w-7xl mx-auto">
