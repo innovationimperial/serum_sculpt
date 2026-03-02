@@ -19,9 +19,10 @@ export default function Navbar() {
 
     useEffect(() => {
         const handleScroll = () => {
-            setIsScrolled(window.scrollY > 50);
+            setIsScrolled(window.scrollY > window.innerHeight * 0.8);
         };
 
+        handleScroll();
         window.addEventListener('scroll', handleScroll);
         return () => window.removeEventListener('scroll', handleScroll);
     }, []);
@@ -69,7 +70,8 @@ export default function Navbar() {
 
     return (
         <>
-            <header className="fixed top-0 left-0 w-full flex justify-center z-[60] pt-6 px-4 pointer-events-none">
+            <header className={`fixed top-0 left-0 w-full flex justify-center z-[60] pt-6 px-4 transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] ${isScrolled ? 'translate-y-0 pointer-events-none' : '-translate-y-[150%] pointer-events-none'
+                }`}>
                 <nav
                     ref={navRef}
                     className="pointer-events-auto flex items-center justify-between w-full max-w-7xl px-6 md:px-8 py-4 rounded-[ambient] transition-all border border-transparent"
@@ -143,12 +145,30 @@ export default function Navbar() {
                 </nav>
             </header>
 
-            {/* Mobile Menu Overlay */}
+            {/* Top-Right Drawer Button for when Navbar is hidden */}
+            <button
+                className={`fixed top-6 right-6 lg:top-8 lg:right-8 w-14 h-14 md:w-16 md:h-16 rounded-full overflow-hidden shadow-[0_8px_30px_rgb(0,0,0,0.12)] transition-all duration-700 pointer-events-auto hover:scale-105 border border-white/20 flex items-center justify-center bg-white/90 backdrop-blur-sm z-[70] ${isScrolled ? 'opacity-0 translate-y-[-100px] pointer-events-none' : 'opacity-100 translate-y-0'
+                    }`}
+                onClick={() => setIsMobileMenuOpen(true)}
+                aria-label="Open menu"
+            >
+                <img src="/logo2.png" alt="Logo Drawer" className="w-[70%] h-[70%] object-contain" />
+            </button>
+
+            {/* Full-Screen Menu Overlay */}
             <div
-                className={`fixed inset-0 bg-stone/95 backdrop-blur-md z-50 flex flex-col items-center justify-center transition-all duration-500 lg:hidden ${isMobileMenuOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
+                className={`fixed inset-0 bg-stone/98 backdrop-blur-md z-[80] flex flex-col items-center justify-center transition-all duration-500 ${isMobileMenuOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
                     }`}
             >
-                <div className="flex flex-col items-center gap-8 font-serif text-3xl italic text-moss">
+                <button
+                    className="absolute top-6 right-6 lg:top-8 lg:right-8 w-14 h-14 md:w-16 md:h-16 rounded-full bg-white/50 backdrop-blur-md flex items-center justify-center text-moss hover:bg-white/80 transition-colors shadow-sm z-[90]"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    aria-label="Close menu"
+                >
+                    <X size={28} />
+                </button>
+
+                <div className="flex flex-col items-center gap-8 font-serif text-3xl md:text-5xl italic text-moss">
                     <Link to="/" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-charcoal transition-colors">Home</Link>
                     <Link to="/about" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-charcoal transition-colors">About</Link>
                     <Link to="/services" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-charcoal transition-colors">Services</Link>
