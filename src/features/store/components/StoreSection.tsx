@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { useLocation } from 'react-router-dom';
 import type { StoreName, Product, Category } from '../types';
 import { CategoryFilter } from './CategoryFilter';
 import { ProductCard } from './ProductCard';
@@ -12,8 +13,29 @@ gsap.registerPlugin(ScrollTrigger);
 const STORES: StoreName[] = ['All', 'House of Langa', 'Amway', 'Hemp wellness', 'Weight Wellness Store', 'Serum & Sculpt Clinical Skincare'];
 
 export const StoreSection: React.FC = () => {
-    const [activeStore, setActiveStore] = useState<StoreName>('All');
+    const location = useLocation();
+
+    const getInitialStore = (): StoreName => {
+        const queryParams = new URLSearchParams(location.search);
+        const storeFromUrl = queryParams.get('store') as StoreName;
+        if (storeFromUrl && STORES.includes(storeFromUrl)) {
+            return storeFromUrl;
+        }
+        return 'All';
+    };
+
+    const [activeStore, setActiveStore] = useState<StoreName>(getInitialStore());
     const containerRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        const queryParams = new URLSearchParams(location.search);
+        const storeFromUrl = queryParams.get('store') as StoreName;
+        if (storeFromUrl && STORES.includes(storeFromUrl)) {
+            setActiveStore(storeFromUrl);
+        } else if (!storeFromUrl) {
+            setActiveStore('All');
+        }
+    }, [location.search]);
 
     // Fetch active products from the database
     const dbProducts = useQuery(api.products.list, { status: "active" });

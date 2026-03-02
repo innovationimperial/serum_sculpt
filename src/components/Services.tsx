@@ -1,5 +1,6 @@
 import { ConsultationIcon, WellnessIcon, SupportIcon } from './AnimatedServiceIcons';
 import { useRef, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
@@ -11,21 +12,24 @@ const SERVICES_DATA = [
         title: 'Consultation Services',
         icon: ConsultationIcon,
         desc: 'Pharmacist-led clinical consultations to establish your baseline and design your personalized holistic wellness journey.',
-        features: ['In-Depth Health Assessment', 'Clinical Guidance', 'Personalized Roadmap']
+        features: ['In-Depth Health Assessment', 'Clinical Guidance', 'Personalized Roadmap'],
+        link: '/services'
     },
     {
         id: 2,
         title: 'Wellness Programs',
         icon: WellnessIcon,
         desc: 'Evidence-based, multi-week programs focusing on natural weight management, hormonal wellness, and cellular vitality for women.',
-        features: ['Weight Management', 'Hormonal Wellness', 'Sustainable Vitality']
+        features: ['Weight Management', 'Hormonal Wellness', 'Sustainable Vitality'],
+        link: '/programs'
     },
     {
         id: 3,
         title: 'Support Plans',
         icon: SupportIcon,
         desc: 'Ongoing clinical guidance and education to ensure your sustained health and adapt to your evolving wellness needs.',
-        features: ['Clinical Monitoring', 'Educational Resources', 'Priority Support']
+        features: ['Clinical Monitoring', 'Educational Resources', 'Priority Support'],
+        link: '/contact'
     }
 ];
 
@@ -113,9 +117,13 @@ export default function Services() {
                                         </li>
                                     ))}
                                 </ul>
-                                <button className="magnetic-button border border-moss/20 text-moss px-8 py-3 rounded-full text-xs font-sans tracking-widest uppercase hover:bg-moss hover:text-white transition-colors w-full">
+                                <Link
+                                    to={service.link}
+                                    onClick={() => window.scrollTo(0, 0)}
+                                    className="magnetic-button inline-block text-center border border-moss/20 text-moss px-8 py-3 rounded-full text-xs font-sans tracking-widest uppercase hover:bg-moss hover:text-white transition-colors w-full"
+                                >
                                     Explore Plan
-                                </button>
+                                </Link>
                             </div>
                         );
                     })}

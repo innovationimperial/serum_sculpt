@@ -1,6 +1,7 @@
 ﻿import { useEffect, useRef } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { Link } from 'react-router-dom';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -12,6 +13,7 @@ const SKINCARE_PRODUCTS = [
         desc: 'Elevate your routine with our curated selection of House of Langa. Premium cosmetics aligned with our rigorous clinical standards.',
         bg: 'bg-stone',
         text: 'text-moss',
+        store: 'House of Langa',
         image: 'https://images.unsplash.com/photo-1620916566398-39f1143ab7be?q=80&w=1500&auto=format&fit=crop'
     },
     {
@@ -21,6 +23,7 @@ const SKINCARE_PRODUCTS = [
         desc: 'Potent, science-backed hemp formulations selected to soothe inflammation and support your skin\'s natural recovery process.',
         bg: 'bg-[#d9e2d5]', // sage
         text: 'text-charcoal',
+        store: 'Hemp wellness',
         // Minimalist, earthy hemp/botanical dropper aesthetic (Verified working link)
         image: 'https://images.unsplash.com/photo-1608248543803-ba4f8c70ae0b?q=80&w=1500&auto=format&fit=crop'
     },
@@ -31,6 +34,7 @@ const SKINCARE_PRODUCTS = [
         desc: 'Pharmacist-approved wellness and weight management solutions designed to safely and sustainably restore your vitality.',
         bg: 'bg-white',
         text: 'text-charcoal',
+        store: 'Weight Wellness Store',
         // Premium, sustainable wellness jar/elixir aesthetic (no pills)
         image: 'https://images.unsplash.com/photo-1617897903246-719242758050?q=80&w=1500&auto=format&fit=crop'
     }
@@ -73,14 +77,14 @@ export default function CuratedSkincare() {
             {SKINCARE_PRODUCTS.map((project, index) => (
                 <div
                     key={project.id}
-                    className={`skincare-card relative w-full h-[100dvh] flex flex-col items-center justify-center pt-32 pb-8 px-8 md:p-8 ${project.bg} ${project.text} overflow-hidden`}
+                    className={`skincare-card relative w-full min-h-[100dvh] md:h-[100dvh] flex flex-col items-center justify-center pt-24 pb-12 px-8 md:p-8 ${project.bg} ${project.text} md:overflow-hidden`}
                     style={{ zIndex: index }}
                 >
-                    <div className="relative z-10 flex flex-col md:flex-row items-center justify-between max-w-6xl w-full gap-16">
+                    <div className="relative z-10 flex flex-col md:flex-row items-center justify-between max-w-6xl w-full gap-8 md:gap-16">
 
                         {/* Visual Image / Animation side */}
                         <div className="flex-1 flex justify-center items-center">
-                            <div className="relative w-64 h-80 md:w-96 md:h-[30rem] rounded-2xl overflow-hidden shadow-2xl border border-black/5 transform -rotate-2 hover:rotate-0 transition-transform duration-700 ease-out">
+                            <div className="relative w-56 h-72 md:w-96 md:h-[30rem] rounded-2xl overflow-hidden shadow-2xl border border-black/5 transform -rotate-2 hover:rotate-0 transition-transform duration-700 ease-out">
                                 <img src={project.image} alt={project.name} className="absolute inset-0 w-full h-full object-cover" />
                             </div>
                         </div>
@@ -97,9 +101,13 @@ export default function CuratedSkincare() {
                                 {project.desc}
                             </p>
 
-                            <button className="magnetic-button border border-current px-8 py-3 rounded-full text-sm font-sans tracking-wide uppercase hover:bg-current hover:text-stone transition-colors mix-blend-normal">
+                            <Link
+                                to={`/shop?store=${encodeURIComponent(project.store)}`}
+                                onClick={() => window.scrollTo(0, 0)}
+                                className="magnetic-button inline-block text-center border border-current px-8 py-3 rounded-full text-sm font-sans tracking-wide uppercase hover:bg-current hover:text-stone transition-colors mix-blend-normal"
+                            >
                                 Explore
-                            </button>
+                            </Link>
                         </div>
 
                     </div>
