@@ -24,6 +24,7 @@ const CartDrawer = lazy(() => import('./features/store/components/CartDrawer').t
 const CheckoutModal = lazy(() => import('./features/store/components/CheckoutModal').then(m => ({ default: m.CheckoutModal })));
 
 // Lazy load admin
+const AdminLoginGate = lazy(() => import('./features/admin/components/AdminLoginGate').then(m => ({ default: m.AdminLoginGate })));
 const AdminLayout = lazy(() => import('./features/admin/components/AdminLayout').then(m => ({ default: m.AdminLayout })));
 const DashboardPage = lazy(() => import('./features/admin/pages/DashboardPage'));
 const BlogListPage = lazy(() => import('./features/admin/pages/BlogListPage'));
@@ -67,21 +68,23 @@ function App() {
                 <Route path="/product/:id" element={<ProductPage />} />
               </Route>
 
-              {/* Admin portal — separate layout, no public Navbar/Footer */}
-              <Route path="/admin" element={<AdminLayout />}>
-                <Route index element={<DashboardPage />} />
-                <Route path="blog" element={<BlogListPage />} />
-                <Route path="blog/new" element={<BlogEditorPage />} />
-                <Route path="blog/:id" element={<BlogEditorPage />} />
-                <Route path="products" element={<ProductListPage />} />
-                <Route path="products/new" element={<ProductEditorPage />} />
-                <Route path="products/:id" element={<ProductEditorPage />} />
-                <Route path="store" element={<StoreSettingsPage />} />
-                <Route path="consultations" element={<ConsultationsPage />} />
-                <Route path="orders" element={<OrdersPage />} />
-                <Route path="programs" element={<ProgramsPage />} />
-                <Route path="programs/new" element={<ProgramEditorPage />} />
-                <Route path="programs/:id" element={<ProgramEditorPage />} />
+              {/* Admin portal — login gate + separate layout, no public Navbar/Footer */}
+              <Route path="/admin" element={<AdminLoginGate />}>
+                <Route element={<AdminLayout />}>
+                  <Route index element={<DashboardPage />} />
+                  <Route path="blog" element={<BlogListPage />} />
+                  <Route path="blog/new" element={<BlogEditorPage />} />
+                  <Route path="blog/:id" element={<BlogEditorPage />} />
+                  <Route path="products" element={<ProductListPage />} />
+                  <Route path="products/new" element={<ProductEditorPage />} />
+                  <Route path="products/:id" element={<ProductEditorPage />} />
+                  <Route path="store" element={<StoreSettingsPage />} />
+                  <Route path="consultations" element={<ConsultationsPage />} />
+                  <Route path="orders" element={<OrdersPage />} />
+                  <Route path="programs" element={<ProgramsPage />} />
+                  <Route path="programs/new" element={<ProgramEditorPage />} />
+                  <Route path="programs/:id" element={<ProgramEditorPage />} />
+                </Route>
               </Route>
             </Routes>
             <CartDrawer />
