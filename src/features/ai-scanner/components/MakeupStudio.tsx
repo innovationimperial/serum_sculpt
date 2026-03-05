@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { ArrowLeft, Download, RotateCcw, Wand2 } from 'lucide-react';
-import { GoogleGenAI } from '@google/genai';
 
 interface MakeupStudioProps {
     originalPhoto: File;
@@ -87,14 +86,14 @@ export default function MakeupStudio({ originalPhoto, onBack }: MakeupStudioProp
         setIsProcessing(true);
         setError(null);
         try {
-            const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
+            const apiKey = import.meta.env.VITE_OPENROUTER_API_KEY;
             if (!apiKey) {
-                throw new Error('VITE_GEMINI_API_KEY is not set. Please add it to your .env file and restart the dev server.');
+                throw new Error('VITE_OPENROUTER_API_KEY is not set. Please add it to your .env file and restart the dev server.');
             }
 
-            const imageBase64 = await new Promise<string>((resolve) => {
+            const imageDataUrl = await new Promise<string>((resolve) => {
                 const reader = new FileReader();
-                reader.onload = (e) => resolve((e.target?.result as string).split(',')[1]);
+                reader.onload = (e) => resolve(e.target?.result as string);
                 reader.readAsDataURL(originalPhoto);
             });
 
@@ -102,38 +101,77 @@ export default function MakeupStudio({ originalPhoto, onBack }: MakeupStudioProp
                 .map(([category, shade]) => `${intensity[category]}% intensity ${shade.toLowerCase()} ${category}`)
                 .join(', ');
 
-            const ai = new GoogleGenAI({ apiKey });
-
-            const response = await ai.models.generateContentStream({
-                model: 'gemini-2.5-flash-image',
-                config: { responseModalities: ['IMAGE', 'TEXT'] },
-                contents: [
-                    {
-                        role: 'user',
-                        parts: [
-                            { inlineData: { data: imageBase64, mimeType: originalPhoto.type } },
-                            {
-                                text: `Apply makeup to this face: ${makeupPrompt}. Make the makeup look natural and professionally applied. Keep the lighting and background exactly the same.`,
-                            },
-                        ],
-                    },
-                ],
+            const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${apiKey}`,
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    model: 'google/gemini-2.5-flash-image',
+                    modalities: ['image', 'text'],
+                    messages: [
+                        {
+                            role: 'user',
+                            content: [
+                                {
+                                    type: 'image_url',
+                                    image_url: { url: imageDataUrl },
+                                },
+                                {
+                                    type: 'text',
+                                    text: `Apply makeup to this face: ${makeupPrompt}. Make the makeup look natural and professionally applied. Keep the lighting and background exactly the same. Return ONLY the edited image.`,
+                                },
+                            ],
+                        },
+                    ],
+                }),
             });
 
+            if (!response.ok) {
+                const errorData = await response.json().catch(() => null);
+                throw new Error(errorData?.error?.message || `API request failed with status ${response.status}`);
+            }
+
+            const data = await response.json();
+            console.log('OpenRouter response keys:', JSON.stringify(Object.keys(data)));
+
+            const message = data.choices?.[0]?.message;
             let foundImage = false;
-            for await (const chunk of response) {
-                if (!chunk.candidates?.[0]?.content?.parts) continue;
-                for (const part of chunk.candidates[0].content.parts) {
-                    if (part.inlineData) {
-                        setProcessedImage(`data:${part.inlineData.mimeType || 'image/jpeg'};base64,${part.inlineData.data || ''}`);
+
+            // Primary format: images are in message.images array
+            if (Array.isArray(message?.images)) {
+                for (const img of message.images) {
+                    if (img.type === 'image_url' && img.image_url?.url) {
+                        setProcessedImage(img.image_url.url);
                         foundImage = true;
                         break;
                     }
                 }
-                if (foundImage) break;
+            }
+
+            // Fallback: check message.content as array of parts
+            if (!foundImage && Array.isArray(message?.content)) {
+                for (const part of message.content) {
+                    if (part.type === 'image_url' && part.image_url?.url) {
+                        setProcessedImage(part.image_url.url);
+                        foundImage = true;
+                        break;
+                    }
+                }
+            }
+
+            // Fallback: check string content for embedded base64 data URL
+            if (!foundImage && typeof message?.content === 'string') {
+                const base64Match = message.content.match(/data:image\/[^;]+;base64,[A-Za-z0-9+/=]+/);
+                if (base64Match) {
+                    setProcessedImage(base64Match[0]);
+                    foundImage = true;
+                }
             }
 
             if (!foundImage) {
+                console.error('No image found in response. Message keys:', JSON.stringify(Object.keys(message || {})));
                 setError('The AI model did not return an image. Please try again with a different photo or shade selection.');
             }
         } catch (err) {
@@ -182,7 +220,17 @@ export default function MakeupStudio({ originalPhoto, onBack }: MakeupStudioProp
 
                     <div className="flex items-center gap-4">
                         <button
-                            onClick={() => setSelectedShades({})}
+                            onClick={() => {
+                                setSelectedShades({});
+                                setIntensity({
+                                    lipstick: 70,
+                                    eyeshadow: 50,
+                                    blush: 40,
+                                });
+                                setProcessedImage(null);
+                                setError(null);
+                                setSelectedCategory('lipstick');
+                            }}
                             className="magnetic-button inline-flex items-center gap-2 border-2 border-moss/20 text-moss px-5 py-2.5 rounded-full text-xs font-sans font-bold uppercase tracking-widest hover:border-moss transition-colors cursor-pointer"
                         >
                             <RotateCcw className="w-3.5 h-3.5" />

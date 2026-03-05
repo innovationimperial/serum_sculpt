@@ -77,7 +77,7 @@ export default function ServicesPage() {
             {/* Hero Image Section */}
             <div className="w-full h-[35vh] md:h-[45vh] relative overflow-hidden srv-card mb-8">
                 <img
-                    src="/consultations.avif"
+                    src="/consultations.png"
                     alt="Consultations Services Hero Section"
                     className="absolute inset-0 w-full h-full object-cover object-[center_30%]"
                 />
