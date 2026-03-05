@@ -1,0 +1,15 @@
+ D .agents/rules/agent-guide.md
+ M package-lock.json
+ M package.json
+ M src/components/Hero.tsx
+ M src/components/PageHeader.tsx
+ M src/features/admin/pages/BlogEditorPage.tsx
+ M src/pages/About.tsx
+ M src/pages/Contact.tsx
+ M src/pages/Education.tsx
+ M src/pages/Programs.tsx
+ M src/pages/Services.tsx
+ M src/pages/Shop.tsx
+?? .git_status_temp.txt
+?? src/features/admin/components/TipTapEditor.tsx
+?? src/features/admin/components/editorStyles.css

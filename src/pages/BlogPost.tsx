@@ -3,6 +3,7 @@ import { useQuery } from 'convex/react';
 import { api } from '../../convex/_generated/api';
 import { ArrowLeft, Clock } from 'lucide-react';
 import type { Id } from '../../convex/_generated/dataModel';
+import '../features/admin/components/editorStyles.css';
 
 export default function BlogPost() {
     const { id } = useParams<{ id: string }>();
@@ -72,14 +73,9 @@ export default function BlogPost() {
                 </div>
             )}
 
-            {/* Article Content */}
+            {/* Article Content - Rendered with TipTap classes */}
             <div className="px-8 pb-32 max-w-3xl mx-auto">
-                {/* Simulated markdown parsing / prose styling */}
-                <article className="prose prose-stone lg:prose-lg max-w-none text-charcoal/80 prose-headings:font-serif prose-headings:font-normal prose-h2:text-4xl prose-h3:text-2xl prose-a:text-moss hover:prose-a:text-charcoal prose-img:rounded-3xl prose-blockquote:border-moss prose-blockquote:font-serif prose-blockquote:italic prose-blockquote:text-2xl prose-blockquote:text-charcoal/60 prose-strong:text-charcoal">
-                    {post.content.split('\n').map((paragraph, index) => (
-                        paragraph.trim() ? <p key={index}>{paragraph}</p> : <br key={index} />
-                    ))}
-                </article>
+                <div className="tiptap" dangerouslySetInnerHTML={{ __html: post.content }} />
 
                 {/* Tags */}
                 {post.tags && post.tags.length > 0 && (

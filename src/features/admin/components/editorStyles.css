@@ -1,0 +1,227 @@
+/* ── Shared ProseMirror / TipTap editor styles ── */
+
+/* The editable area */
+.tiptap {
+    outline: none;
+    font-family: var(--font-sans);
+    font-size: 0.9375rem;
+    line-height: 1.75;
+    color: var(--color-charcoal);
+    min-height: 20rem;
+    padding: 1rem 0;
+}
+
+.tiptap p.is-editor-empty:first-child::before {
+    content: attr(data-placeholder);
+    float: left;
+    color: rgba(44, 47, 45, 0.2);
+    /* charcoal/20 */
+    pointer-events: none;
+    height: 0;
+    font-style: italic;
+}
+
+/* ── Typography ── */
+.tiptap h1,
+.tiptap h2,
+.tiptap h3,
+.tiptap h4 {
+    font-family: var(--font-serif);
+    font-style: italic;
+    color: var(--color-charcoal);
+    margin-top: 1.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.tiptap h1 {
+    font-size: 2rem;
+}
+
+.tiptap h2 {
+    font-size: 1.5rem;
+}
+
+.tiptap h3 {
+    font-size: 1.25rem;
+}
+
+.tiptap h4 {
+    font-size: 1.1rem;
+}
+
+.tiptap p {
+    margin-bottom: 0.75rem;
+}
+
+.tiptap strong {
+    font-weight: 700;
+    color: var(--color-charcoal);
+}
+
+.tiptap em {
+    font-style: italic;
+}
+
+.tiptap a {
+    color: var(--color-moss);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    transition: color 0.15s;
+}
+
+.tiptap a:hover {
+    color: var(--color-charcoal);
+}
+
+/* ── Lists ── */
+.tiptap ul {
+    list-style: disc;
+    padding-left: 1.5rem;
+    margin-bottom: 0.75rem;
+}
+
+.tiptap ol {
+    list-style: decimal;
+    padding-left: 1.5rem;
+    margin-bottom: 0.75rem;
+}
+
+.tiptap li {
+    margin-bottom: 0.25rem;
+}
+
+.tiptap li p {
+    margin-bottom: 0.25rem;
+}
+
+/* ── Blockquote ── */
+.tiptap blockquote {
+    border-left: 3px solid var(--color-moss);
+    padding-left: 1rem;
+    margin: 1rem 0;
+    color: rgba(44, 47, 45, 0.7);
+    font-style: italic;
+    font-family: var(--font-serif);
+}
+
+/* ── Code ── */
+.tiptap code {
+    background: rgba(44, 47, 45, 0.06);
+    border-radius: 0.375rem;
+    padding: 0.15rem 0.4rem;
+    font-family: var(--font-mono);
+    font-size: 0.85em;
+    color: var(--color-charcoal);
+}
+
+.tiptap pre {
+    background: var(--color-charcoal);
+    color: var(--color-stone);
+    border-radius: 0.75rem;
+    padding: 1rem 1.25rem;
+    margin: 1rem 0;
+    overflow-x: auto;
+}
+
+.tiptap pre code {
+    background: none;
+    color: inherit;
+    padding: 0;
+    border-radius: 0;
+    font-size: 0.85rem;
+}
+
+/* ── Horizontal rule ── */
+.tiptap hr {
+    border: none;
+    border-top: 1px solid rgba(44, 47, 45, 0.1);
+    margin: 1.5rem 0;
+}
+
+/* ── Selection ── */
+.tiptap ::selection {
+    background: var(--color-sage);
+}
+
+/* ── Toolbar ── */
+.editor-toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem;
+    padding: 0.5rem;
+    border-bottom: 1px solid rgba(44, 47, 45, 0.08);
+    margin-bottom: 0.5rem;
+}
+
+.editor-toolbar-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2rem;
+    height: 2rem;
+    border-radius: 0.5rem;
+    border: none;
+    background: transparent;
+    color: rgba(44, 47, 45, 0.5);
+    cursor: pointer;
+    transition: all 0.15s;
+    font-size: 0.8rem;
+    font-weight: 600;
+    font-family: var(--font-sans);
+}
+
+.editor-toolbar-btn:hover {
+    background: rgba(44, 47, 45, 0.06);
+    color: var(--color-charcoal);
+}
+
+.editor-toolbar-btn.is-active {
+    background: var(--color-moss);
+    color: white;
+}
+
+.editor-toolbar-divider {
+    width: 1px;
+    height: 1.5rem;
+    background: rgba(44, 47, 45, 0.1);
+    align-self: center;
+    margin: 0 0.25rem;
+}
+
+/* ── Bubble menu (Novel / TipTap) ── */
+.editor-bubble {
+    display: flex;
+    gap: 0.125rem;
+    padding: 0.375rem;
+    background: white;
+    border: 1px solid rgba(44, 47, 45, 0.1);
+    border-radius: 0.75rem;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08), 0 0 0 1px rgba(0, 0, 0, 0.02);
+}
+
+.editor-bubble-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.75rem;
+    height: 1.75rem;
+    border-radius: 0.375rem;
+    border: none;
+    background: transparent;
+    color: rgba(44, 47, 45, 0.6);
+    cursor: pointer;
+    transition: all 0.15s;
+    font-size: 0.75rem;
+    font-weight: 700;
+    font-family: var(--font-sans);
+}
+
+.editor-bubble-btn:hover {
+    background: var(--color-sage);
+    color: var(--color-charcoal);
+}
+
+.editor-bubble-btn.is-active {
+    background: var(--color-moss);
+    color: white;
+}

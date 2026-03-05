@@ -29,10 +29,16 @@ dist-ssr
 
 # Agent
 .agent/
+.agents/
+.git_diff_temp.txt
+.git_diff_tiptap.txt
+.git_status_temp.txt
+
 
 # Prompts and Documentation
 prompt*.md
 web dev updated.md
+progress_report.md
 
 #ignore images
 about_hero.png

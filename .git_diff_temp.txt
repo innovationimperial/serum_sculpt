@@ -1,0 +1,12 @@
+.agents/rules/agent-guide.md
+package-lock.json
+package.json
+src/components/Hero.tsx
+src/components/PageHeader.tsx
+src/features/admin/pages/BlogEditorPage.tsx
+src/pages/About.tsx
+src/pages/Contact.tsx
+src/pages/Education.tsx
+src/pages/Programs.tsx
+src/pages/Services.tsx
+src/pages/Shop.tsx

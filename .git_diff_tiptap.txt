@@ -1,0 +1,66 @@
+diff --git a/package.json b/package.json
+index 6d0773f..b71b696 100644
+--- a/package.json
++++ b/package.json
+@@ -15,7 +15,10 @@
+   "dependencies": {
+     "@google/genai": "^1.42.0",
+     "@tailwindcss/vite": "^4.2.0",
+-    "convex": "^1.31.6",
++    "@tiptap/pm": "^3.20.0",
++    "@tiptap/react": "^3.20.0",
++    "@tiptap/starter-kit": "^3.20.0",
++    "convex": "^1.32.0",
+     "gsap": "^3.14.2",
+     "lucide-react": "^0.575.0",
+     "mime": "^4.1.0",
+@@ -39,4 +42,4 @@
+     "typescript-eslint": "^8.48.0",
+     "vite": "^7.3.1"
+   }
+-}
+\ No newline at end of file
++}
+diff --git a/src/features/admin/pages/BlogEditorPage.tsx b/src/features/admin/pages/BlogEditorPage.tsx
+index d623222..4069db2 100644
+--- a/src/features/admin/pages/BlogEditorPage.tsx
++++ b/src/features/admin/pages/BlogEditorPage.tsx
+@@ -1,4 +1,4 @@
+-import React, { useState, useEffect, useRef } from 'react';
++import React, { useState, useEffect, useRef, lazy, Suspense } from 'react';
+ import { Link, useParams, useNavigate } from 'react-router-dom';
+ import { ArrowLeft, Save, Eye, UploadCloud, Loader2 } from 'lucide-react';
+ import { useQuery, useMutation } from 'convex/react';
+@@ -6,6 +6,9 @@ import { api } from '../../../../convex/_generated/api';
+ import type { Id } from '../../../../convex/_generated/dataModel';
+ import { rewriteStorageUrl } from '../../../lib/rewriteStorageUrl';
+ 
++
++const TipTapEditor = lazy(() => import('../components/TipTapEditor'));
++
+ type BlogCategory = 'Menopause' | 'Skin Health' | 'Weight Management' | 'Hormonal Wellness' | 'Skincare Education';
+ const CATEGORIES: BlogCategory[] = ['Menopause', 'Skin Health', 'Weight Management', 'Hormonal Wellness', 'Skincare Education'];
+ 
+@@ -29,6 +32,7 @@ const BlogEditorPage: React.FC = () => {
+     const [status, setStatus] = useState<'published' | 'draft'>('draft');
+     const [isUploading, setIsUploading] = useState(false);
+ 
++
+     const fileInputRef = useRef<HTMLInputElement>(null);
+ 
+     useEffect(() => {
+@@ -198,8 +202,12 @@ const BlogEditorPage: React.FC = () => {
+ 
+             {/* Content */}
+             <div className="bg-white rounded-2xl border border-charcoal/5 p-6">
+-                <label className="block text-[10px] font-sans uppercase tracking-[0.2em] font-bold text-charcoal/40 mb-2">Content</label>
+-                <textarea value={content} onChange={e => setContent(e.target.value)} rows={16} placeholder="Write your article content..." className="w-full px-4 py-3 rounded-xl border border-charcoal/10 font-sans text-sm text-charcoal placeholder:text-charcoal/20 focus:outline-none focus:border-moss/40 transition-colors resize-none" />
++                <label className="block text-[10px] font-sans uppercase tracking-[0.2em] font-bold text-charcoal/40 mb-4">Content</label>
++                <div className="rounded-xl border border-charcoal/10 overflow-hidden px-4">
++                    <Suspense fallback={<div className="h-80 flex items-center justify-center font-serif italic text-moss animate-pulse">Loading editor...</div>}>
++                        <TipTapEditor value={content} onChange={setContent} />
++                    </Suspense>
++                </div>
+             </div>
+         </div>
+     );

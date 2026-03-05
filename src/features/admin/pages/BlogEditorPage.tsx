@@ -1,10 +1,13 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, lazy, Suspense } from 'react';
 import { Link, useParams, useNavigate } from 'react-router-dom';
-import { ArrowLeft, Save, Eye, UploadCloud, Loader2 } from 'lucide-react';
+import { ArrowLeft, Save, Eye, UploadCloud, Loader2, Clock, X } from 'lucide-react';
 import { useQuery, useMutation } from 'convex/react';
 import { api } from '../../../../convex/_generated/api';
 import type { Id } from '../../../../convex/_generated/dataModel';
 import { rewriteStorageUrl } from '../../../lib/rewriteStorageUrl';
+
+
+const TipTapEditor = lazy(() => import('../components/TipTapEditor'));
 
 type BlogCategory = 'Menopause' | 'Skin Health' | 'Weight Management' | 'Hormonal Wellness' | 'Skincare Education';
 const CATEGORIES: BlogCategory[] = ['Menopause', 'Skin Health', 'Weight Management', 'Hormonal Wellness', 'Skincare Education'];
@@ -28,6 +31,8 @@ const BlogEditorPage: React.FC = () => {
     const [tags, setTags] = useState('');
     const [status, setStatus] = useState<'published' | 'draft'>('draft');
     const [isUploading, setIsUploading] = useState(false);
+    const [isPreview, setIsPreview] = useState(false);
+
 
     const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -120,8 +125,11 @@ const BlogEditorPage: React.FC = () => {
                     <ArrowLeft size={16} /> Back to Posts
                 </Link>
                 <div className="flex gap-3">
+                    <button onClick={() => setIsPreview(true)} className="flex items-center gap-2 px-5 py-2.5 rounded-xl border border-charcoal/10 text-sm font-sans font-semibold text-charcoal/60 hover:border-charcoal/30 transition-colors cursor-pointer">
+                        <Eye size={14} /> Preview
+                    </button>
                     <button onClick={() => { setStatus('draft'); handleSave(); }} disabled={isUploading} className="flex items-center gap-2 px-5 py-2.5 rounded-xl border border-charcoal/10 text-sm font-sans font-semibold text-charcoal/60 hover:border-charcoal/30 transition-colors cursor-pointer disabled:opacity-50">
-                        <Eye size={14} /> Save Draft
+                        <Save size={14} /> Save Draft
                     </button>
                     <button onClick={() => { setStatus('published'); handleSave(); }} disabled={isUploading} className="flex items-center gap-2 bg-moss text-white px-5 py-2.5 rounded-xl text-sm font-sans font-semibold hover:bg-charcoal transition-colors cursor-pointer disabled:opacity-50">
                         <Save size={14} /> {isNew ? 'Publish' : 'Update'}
@@ -198,9 +206,83 @@ const BlogEditorPage: React.FC = () => {
 
             {/* Content */}
             <div className="bg-white rounded-2xl border border-charcoal/5 p-6">
-                <label className="block text-[10px] font-sans uppercase tracking-[0.2em] font-bold text-charcoal/40 mb-2">Content</label>
-                <textarea value={content} onChange={e => setContent(e.target.value)} rows={16} placeholder="Write your article content..." className="w-full px-4 py-3 rounded-xl border border-charcoal/10 font-sans text-sm text-charcoal placeholder:text-charcoal/20 focus:outline-none focus:border-moss/40 transition-colors resize-none" />
+                <label className="block text-[10px] font-sans uppercase tracking-[0.2em] font-bold text-charcoal/40 mb-4">Content</label>
+                <div className="rounded-xl border border-charcoal/10 overflow-hidden px-4">
+                    <Suspense fallback={<div className="h-80 flex items-center justify-center font-serif italic text-moss animate-pulse">Loading editor...</div>}>
+                        <TipTapEditor value={content} onChange={setContent} />
+                    </Suspense>
+                </div>
             </div>
+
+            {/* Full Screen Preview Modal */}
+            {isPreview && (
+                <div className="fixed inset-0 z-50 bg-white overflow-y-auto">
+                    <div className="sticky top-0 z-10 bg-white/80 backdrop-blur-md border-b border-charcoal/5 px-8 py-4 flex justify-between items-center">
+                        <div className="font-serif italic text-charcoal text-xl">Preview Mode</div>
+                        <button
+                            onClick={() => setIsPreview(false)}
+                            className="flex items-center gap-2 px-4 py-2 bg-charcoal text-white rounded-full text-sm font-sans font-semibold hover:bg-charcoal/80 transition-colors cursor-pointer"
+                        >
+                            <X size={16} /> Close Preview
+                        </button>
+                    </div>
+
+                    <div className="bg-white min-h-screen relative pb-32">
+                        {/* Header Content */}
+                        <div className="pt-24 pb-16 px-8 max-w-4xl mx-auto flex flex-col items-center text-center">
+                            <div className="flex items-center gap-4 mb-6">
+                                <span className="font-mono text-[10px] tracking-widest uppercase text-moss font-bold px-3 py-1.5 bg-moss/5 rounded-full">
+                                    {category || 'Category'}
+                                </span>
+                                <span className="font-mono text-[10px] tracking-widest uppercase text-charcoal/40 flex items-center gap-1.5">
+                                    <Clock size={12} /> {Math.max(1, Math.ceil(content.split(/\s+/).length / 200))} min read
+                                </span>
+                                <span className="font-mono text-[10px] tracking-widest uppercase text-charcoal/40">
+                                    {new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
+                                </span>
+                            </div>
+
+                            <h1 className="font-serif text-5xl md:text-6xl text-charcoal mb-8 leading-tight">
+                                {title || 'Post Title'}
+                            </h1>
+
+                            <p className="text-xl md:text-2xl text-charcoal/60 font-serif italic max-w-2xl leading-relaxed">
+                                {excerpt || 'Post excerpt will appear here.'}
+                            </p>
+                        </div>
+
+                        {/* Featured Image */}
+                        {featuredImage && (
+                            <div className="w-full max-w-6xl mx-auto px-8 mb-24">
+                                <div className="aspect-video bg-stone rounded-[3rem] overflow-hidden border border-stone/10 shadow-sm relative group">
+                                    <img
+                                        src={featuredImage}
+                                        alt={title}
+                                        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                                    />
+                                    <div className="absolute inset-0 ring-1 ring-inset ring-charcoal/5 rounded-[3rem] pointer-events-none" />
+                                </div>
+                            </div>
+                        )}
+
+                        {/* Article Content - Rendered with TipTap classes */}
+                        <div className="px-8 max-w-3xl mx-auto">
+                            <div className="tiptap" dangerouslySetInnerHTML={{ __html: content || '<p class="italic text-charcoal/40">Content will preview here.</p>' }} />
+
+                            {/* Tags */}
+                            {tags && (
+                                <div className="mt-16 pt-8 border-t border-charcoal/5 flex flex-wrap gap-2">
+                                    {tags.split(',').map(tag => tag.trim()).filter(Boolean).map(tag => (
+                                        <span key={tag} className="font-mono text-[9px] tracking-widest uppercase text-charcoal/40 bg-stone px-3 py-1.5 rounded-full border border-charcoal/5">
+                                            {tag}
+                                        </span>
+                                    ))}
+                                </div>
+                            )}
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };
