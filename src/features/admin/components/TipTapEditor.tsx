@@ -30,7 +30,7 @@ const TipTapEditor: React.FC<TipTapEditorProps> = ({ value, onChange }) => {
     // Sync external value changes (e.g. loading existing post)
     useEffect(() => {
         if (editor && value !== editor.getHTML()) {
-            editor.commands.setContent(value, false);
+            editor.commands.setContent(value, { emitUpdate: false });
         }
     }, [value, editor]);
 
@@ -212,7 +212,7 @@ const TipTapEditor: React.FC<TipTapEditorProps> = ({ value, onChange }) => {
             </div>
 
             {/* ── Bubble Menu ── */}
-            <BubbleMenu editor={editor} tippyOptions={{ duration: 150 }}>
+            <BubbleMenu editor={editor} {...({ tippyOptions: { duration: 150 } } as any)}>
                 <div className="editor-bubble">
                     <button
                         type="button"
