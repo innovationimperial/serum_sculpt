@@ -2,18 +2,20 @@ import React, { useState } from 'react';
 import { useCart } from '../context/CartContext';
 import { X, ShieldCheck, CreditCard } from 'lucide-react';
 import type { ShippingDetails } from '../types';
-import { useRequireAuth } from '../../../hooks/useRequireAuth';
-import { useMutation } from 'convex/react';
+import { useAction } from 'convex/react';
 import { api } from '../../../../convex/_generated/api';
 import type { Id } from '../../../../convex/_generated/dataModel';
 import { rewriteStorageUrl } from '../../../lib/rewriteStorageUrl';
+import { usePaystackPayment } from 'react-paystack';
+
+const PAYSTACK_PUBLIC_KEY = import.meta.env.VITE_PAYSTACK_PUBLIC_KEY as string;
 
 export const CheckoutModal: React.FC = () => {
     const { isCheckoutOpen, closeCheckout, items, cartTotal, clearCart } = useCart();
-    const { requireAuth } = useRequireAuth();
-    const createOrder = useMutation(api.orders.create);
-    const [isSimulatingPayment, setIsSimulatingPayment] = useState(false);
+    const verifyAndCreateOrder = useAction(api.orders.verifyAndCreateOrder);
+    const [isProcessing, setIsProcessing] = useState(false);
     const [isSuccess, setIsSuccess] = useState(false);
+    const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
     const [form, setForm] = useState<ShippingDetails>({
         fullName: '',
@@ -24,36 +26,67 @@ export const CheckoutModal: React.FC = () => {
         zipCode: '',
     });
 
+    // Paystack config — amount is in cents (ZAR subunit)
+    const paystackConfig = {
+        reference: `SS_${Date.now()}_${Math.random().toString(36).slice(2, 9)}`,
+        email: form.email || 'customer@example.com',
+        amount: Math.round(cartTotal * 100),
+        publicKey: PAYSTACK_PUBLIC_KEY,
+        currency: 'ZAR',
+    };
+
+    const initializePayment = usePaystackPayment(paystackConfig);
+
     if (!isCheckoutOpen) return null;
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setForm({ ...form, [e.target.name]: e.target.value });
     };
 
-    const handleMockPayment = (e: React.FormEvent) => {
+    const isFormValid = () => {
+        return (
+            form.fullName.trim() !== '' &&
+            form.email.trim() !== '' &&
+            form.address.trim() !== '' &&
+            form.city.trim() !== '' &&
+            form.province.trim() !== '' &&
+            form.zipCode.trim() !== ''
+        );
+    };
+
+    const handlePaystackPayment = (e: React.FormEvent) => {
         e.preventDefault();
-        requireAuth(async () => {
-            setIsSimulatingPayment(true);
-            try {
-                await createOrder({
-                    items: items.map(item => ({
-                        productId: item.product.id as Id<"products">,
-                        productName: item.product.name,
-                        price: item.product.price,
-                        quantity: item.quantity,
-                    })),
-                    shippingDetails: form,
-                    total: cartTotal,
-                });
-            } catch (err) {
-                console.error('Order creation failed:', err);
-            }
-            // Simulate a real PayFast redirect / modal delay
-            setTimeout(() => {
-                setIsSimulatingPayment(false);
-                setIsSuccess(true);
-                clearCart();
-            }, 2000);
+        if (!isFormValid() || items.length === 0) return;
+
+        setIsProcessing(true);
+        setErrorMessage(null);
+
+        initializePayment({
+            onSuccess: async (response: { reference: string }) => {
+                try {
+                    await verifyAndCreateOrder({
+                        reference: response.reference,
+                        items: items.map(item => ({
+                            productId: item.product.id as Id<"products">,
+                            productName: item.product.name,
+                            price: item.product.price,
+                            quantity: item.quantity,
+                        })),
+                        shippingDetails: form,
+                        total: cartTotal,
+                    });
+                    setIsProcessing(false);
+                    setIsSuccess(true);
+                    clearCart();
+                } catch (err) {
+                    console.error('Order creation failed:', err);
+                    setErrorMessage('Payment was received but order creation failed. Please contact support with your reference: ' + response.reference);
+                    setIsProcessing(false);
+                }
+            },
+            onClose: () => {
+                setIsProcessing(false);
+            },
         });
     };
 
@@ -84,7 +117,7 @@ export const CheckoutModal: React.FC = () => {
         <div className="fixed inset-0 z-[120] flex items-center justify-center p-4 sm:p-6 md:p-12 overflow-y-auto">
             <div className="fixed inset-0 bg-charcoal/60 dark:bg-black/80 backdrop-blur-md transition-opacity" onClick={closeCheckout} />
 
-            <div className="relative bg-[#f8f7f5] dark:bg-[#161616] w-full max-w-5xl rounded-3xl md:rounded-[2.5rem] shadow-2xl flex flex-col md:flex-row overflow-hidden my-auto">
+            <div className="relative bg-[#f8f7f5] dark:bg-[#161616] w-full max-w-5xl rounded-3xl md:rounded-[2.5rem] shadow-2xl flex flex-col md:flex-row my-auto">
                 <button
                     onClick={closeCheckout}
                     className="absolute top-6 right-6 z-20 p-2 bg-white/50 dark:bg-black/50 backdrop-blur-md rounded-full text-charcoal dark:text-stone hover:bg-white dark:hover:bg-black transition-colors"
@@ -138,7 +171,7 @@ export const CheckoutModal: React.FC = () => {
                         <p className="font-sans text-sm text-charcoal/60 dark:text-stone/60">Enter your details to proceed to secure payment.</p>
                     </div>
 
-                    <form onSubmit={handleMockPayment} className="space-y-4">
+                    <form onSubmit={handlePaystackPayment} className="space-y-4">
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <input required name="fullName" placeholder="Full Name" onChange={handleInputChange} className="w-full px-4 py-3 rounded-xl bg-white dark:bg-white/10 border border-charcoal/10 dark:border-white/20 font-sans text-sm text-charcoal dark:text-stone placeholder:text-charcoal/40 dark:placeholder:text-stone/50 focus:outline-none focus:border-moss focus:ring-1 focus:ring-moss/30" />
                             <input required type="email" name="email" placeholder="Email Address" onChange={handleInputChange} className="w-full px-4 py-3 rounded-xl bg-white dark:bg-white/10 border border-charcoal/10 dark:border-white/20 font-sans text-sm text-charcoal dark:text-stone placeholder:text-charcoal/40 dark:placeholder:text-stone/50 focus:outline-none focus:border-moss focus:ring-1 focus:ring-moss/30" />
@@ -153,21 +186,26 @@ export const CheckoutModal: React.FC = () => {
                         <div className="pt-8">
                             <button
                                 type="submit"
-                                disabled={isSimulatingPayment || items.length === 0}
+                                disabled={isProcessing || items.length === 0}
                                 className="magnetic-button w-full py-4 rounded-full bg-moss text-stone dark:bg-moss dark:text-stone font-bold tracking-widest uppercase text-sm hover:opacity-90 transition-opacity flex items-center justify-center gap-3 disabled:opacity-50"
                             >
-                                {isSimulatingPayment ? (
+                                {isProcessing ? (
                                     <span className="animate-pulse">Processing...</span>
                                 ) : (
                                     <>
                                         <CreditCard className="w-5 h-5" />
-                                        Pay ZAR {cartTotal.toFixed(2)} with PayFast (Mock)
+                                        Pay ZAR {cartTotal.toFixed(2)} with Paystack
                                     </>
                                 )}
                             </button>
                             <p className="text-center mt-4 flex items-center justify-center gap-1.5 font-sans text-xs text-charcoal/40 dark:text-stone/40">
-                                <ShieldCheck className="w-3.5 h-3.5" /> Secure checkout powered by PayFast.
+                                <ShieldCheck className="w-3.5 h-3.5" /> Secure checkout powered by Paystack.
                             </p>
+                            {errorMessage && (
+                                <p className="mt-3 text-center text-sm text-red-500 bg-red-50 dark:bg-red-900/20 px-4 py-3 rounded-xl font-sans">
+                                    {errorMessage}
+                                </p>
+                            )}
                         </div>
                     </form>
                 </div>

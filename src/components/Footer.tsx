@@ -23,14 +23,14 @@ export default function Footer() {
                     <div className="absolute -top-4 bg-clay px-4 py-1 rounded-full text-[10px] font-mono tracking-widest uppercase text-white">Signature Journey</div>
                     <h3 className="font-serif text-3xl mb-4 text-white">The Vitality Retreat</h3>
                     <p className="font-sans text-sm text-stone/80 mb-8 max-w-[200px]">Subcellular optimization, energy system repair, and advanced holistic diagnostics.</p>
-                    <Link to="/programs" className="magnetic-button bg-stone text-moss border-stone px-8 py-3 rounded-full font-sans uppercase tracking-widest text-[10px] font-bold mt-auto shadow-lg hover:bg-white transition-colors">Begin Your Journey</Link>
+                    <Link to="/contact" className="magnetic-button bg-stone text-moss border-stone px-8 py-3 rounded-full font-sans uppercase tracking-widest text-[10px] font-bold mt-auto shadow-lg hover:bg-white transition-colors">Begin Your Journey</Link>
                 </div>
 
                 {/* Tier 3 */}
                 <div className="border hover:border-moss/20 rounded-[var(--radius-std)] p-10 flex flex-col items-center text-center transition-colors">
                     <h3 className="font-serif text-2xl mb-4 text-moss">The Equilibrium</h3>
                     <p className="font-sans text-sm text-charcoal/60 mb-8 max-w-[200px]">Deep endocrine recalibration and natural cortisol modulation.</p>
-                    <Link to="/programs" className="magnetic-button border border-charcoal/20 px-6 py-2 rounded-full font-sans uppercase tracking-widest text-[10px] font-bold mt-auto hover:bg-moss hover:text-white transition-colors">Discover</Link>
+                    <Link to="/education" className="magnetic-button border border-charcoal/20 px-6 py-2 rounded-full font-sans uppercase tracking-widest text-[10px] font-bold mt-auto hover:bg-moss hover:text-white transition-colors">Discover</Link>
                 </div>
             </section>
 

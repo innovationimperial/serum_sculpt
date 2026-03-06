@@ -67,10 +67,11 @@ export default function About() {
                     <div className="reveal relative">
                         <div className="aspect-[3/4] bg-stone/30 rounded-[3rem] overflow-hidden relative shadow-2xl">
                             <div className="absolute inset-0 bg-moss/5" />
-                            {/* Placeholder for Founder Imagery */}
-                            <div className="w-full h-full flex items-center justify-center text-moss/20 font-serif italic text-2xl">
-                                Founder Imagery
-                            </div>
+                            <img
+                                src="/founders%20image%20.jpeg"
+                                alt="Founder Imagery"
+                                className="w-full h-full object-cover"
+                            />
                         </div>
                         <div className="absolute -bottom-8 -left-8 bg-white p-8 rounded-3xl shadow-xl max-w-xs border border-stone/20">
                             <p className="font-serif italic text-moss text-lg mb-2">"True wellness is the intersection of clinical science and intentional self-care."</p>

@@ -18,6 +18,7 @@ import type * as orders from "../orders.js";
 import type * as products from "../products.js";
 import type * as programs from "../programs.js";
 import type * as seed from "../seed.js";
+import type * as storageUrlUtils from "../storageUrlUtils.js";
 import type * as storeSettings from "../storeSettings.js";
 import type * as test from "../test.js";
 
@@ -38,6 +39,7 @@ declare const fullApi: ApiFromModules<{
   products: typeof products;
   programs: typeof programs;
   seed: typeof seed;
+  storageUrlUtils: typeof storageUrlUtils;
   storeSettings: typeof storeSettings;
   test: typeof test;
 }>;

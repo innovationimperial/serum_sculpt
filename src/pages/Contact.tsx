@@ -10,7 +10,7 @@ const CONTACT_CHANNELS = [
     {
         icon: Mail,
         label: 'Email Inquiries',
-        value: 'pmgwatidzo@gmail.com',
+        value: 'office@serumandsculpt.co.za',
         desc: 'For detailed clinical questions and administrative support.'
     },
     {
@@ -164,7 +164,7 @@ export default function Contact() {
                         <p className="text-stone/60 font-light mb-8 leading-relaxed">
                             For immediate clinical assessment scheduling, please use our simplified WhatsApp booking system.
                         </p>
-                        <button onClick={() => requireAuth(() => { /* Add whatsapp redirect logic */ })} className="bg-white text-moss px-10 py-5 rounded-full font-mono text-[10px] tracking-widest uppercase font-bold hover:bg-stone transition-colors relative z-10">
+                        <button onClick={() => requireAuth(() => { window.open('https://wa.me/263778313920?text=Hello%2C%20I%20would%20like%20to%20book%20a%20consultation.', '_blank', 'noopener,noreferrer'); })} className="bg-white text-moss px-10 py-5 rounded-full font-mono text-[10px] tracking-widest uppercase font-bold hover:bg-stone transition-colors relative z-10">
                             WhatsApp Booking
                         </button>
                     </div>
