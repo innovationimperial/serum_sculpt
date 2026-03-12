@@ -23,7 +23,7 @@ export default function ScannerHero({ onUploadClick, onCameraClick }: ScannerHer
                 {/* Heading */}
                 <div className="space-y-4">
                     <h1 className="font-serif italic text-5xl md:text-6xl lg:text-7xl text-charcoal leading-[1.1]">
-                        AI Skin <span className="text-moss">Analysis</span>
+                        Virtual Makeup <span className="text-moss">Try-On</span>
                     </h1>
                     <p className="text-lg md:text-xl text-charcoal/60 font-sans max-w-xl mx-auto leading-relaxed">
                         Upload your photo and virtually try on curated makeup shades — powered by AI for a personalised preview.

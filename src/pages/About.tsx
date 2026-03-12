@@ -75,7 +75,8 @@ export default function About() {
                         </div>
                         <div className="absolute -bottom-8 -left-8 bg-white p-8 rounded-3xl shadow-xl max-w-xs border border-stone/20">
                             <p className="font-serif italic text-moss text-lg mb-2">"True wellness is the intersection of clinical science and intentional self-care."</p>
-                            <p className="font-mono text-[10px] tracking-widest uppercase text-charcoal/40 font-bold">— Clinical Pharmacist & Founder</p>
+                            <p className="font-serif text-charcoal/90 mt-2 font-medium">— Clinical Pharmacist & Founder</p>
+                            <p className="font-serif text-charcoal/90 font-medium">Pamela Gwatidzo</p>
                         </div>
                     </div>
                 </div >

@@ -129,7 +129,7 @@ export const MOCK_PRODUCTS: AdminProduct[] = [
         price: 850,
         description: "Potent, science-backed hemp formulations selected to soothe inflammation and support your skin's natural recovery process.",
         images: ['https://images.unsplash.com/photo-1608248543803-ba4f8c70ae0b?q=80&w=1500&auto=format&fit=crop'],
-        store: 'Hemp wellness',
+        store: "L'Unako",
         clinicalGuidance: 'Excellent for reactive or compromised skin. Helps manage redness and irritation.',
         usage: 'Use as a spot treatment or mix a drop with your daily moisturizer.',
         ingredients: ['Hemp Seed Oil', 'CBD Extract', 'Vitamin E'],
@@ -161,7 +161,7 @@ export const MOCK_PRODUCTS: AdminProduct[] = [
         price: 1800,
         description: 'A highly concentrated vitamin C serum stabilized to provide maximum antioxidant protection and brightening over time.',
         images: ['https://images.unsplash.com/photo-1599305090598-fe179d501227?q=80&w=1500&auto=format&fit=crop'],
-        store: 'Serum & Sculpt Clinical Skincare',
+        store: 'Serum and Sculpt Herbal Wellness',
         clinicalGuidance: 'Essential for photo-damage defense and collagen support.',
         usage: 'Apply 4-5 drops in the morning before sunscreen.',
         ingredients: ['L-Ascorbic Acid', 'Ferulic Acid', 'Vitamin E'],
@@ -177,7 +177,7 @@ export const MOCK_PRODUCTS: AdminProduct[] = [
         price: 450,
         description: 'Clinical-grade rose quartz sculpting tools designed for lymphatic drainage and facial tension relief.',
         images: ['https://images.unsplash.com/photo-1643379855211-45b5a4ef44c4?q=80&w=1500&auto=format&fit=crop'],
-        store: 'Serum & Sculpt Clinical Skincare',
+        store: 'Serum and Sculpt Herbal Wellness',
         clinicalGuidance: 'Improves microcirculation and enhances product absorption.',
         usage: 'Use 2-3 times a week with a facial oil for slip.',
         ingredients: [],
@@ -193,7 +193,7 @@ export const MOCK_PRODUCTS: AdminProduct[] = [
         price: 650,
         description: 'Breathable, non-comedogenic coverage that protects while perfecting your complexion with a natural finish.',
         images: ['https://images.unsplash.com/photo-1616683693504-3ea7e9ad6fec?q=80&w=1500&auto=format&fit=crop'],
-        store: 'Amway',
+        store: 'House of Langa',
         clinicalGuidance: 'Safe for post-procedure or acne-prone skin.',
         usage: 'Buff into skin using a dense brush for buildable coverage.',
         ingredients: ['Zinc Oxide', 'Titanium Dioxide', 'Iron Oxides'],
@@ -212,8 +212,8 @@ export const MOCK_STORE_SETTINGS: StoreSettings = {
     announcementBanner: 'Free shipping on orders over R1,500',
     partnerBrands: [
         { id: 'pb1', name: 'House of Langa', logoUrl: '' },
-        { id: 'pb2', name: 'Amway Wellness', logoUrl: '' },
-        { id: 'pb3', name: 'Hemp SA', logoUrl: '' },
+        { id: 'pb2', name: "L'Unako", logoUrl: '' },
+        { id: 'pb3', name: 'Weight Wellness', logoUrl: '' },
     ],
 };
 
@@ -238,8 +238,8 @@ export const MOCK_CONSULTATIONS: Consultation[] = [
     },
     {
         id: 'c3', clientName: 'Nosipho Dlamini', clientEmail: 'nosipho.d@email.com', clientPhone: '061 987 6543',
-        date: '2026-02-26', time: '09:00', type: 'Skin Analysis', status: 'pending',
-        preConsultationNotes: 'New client referral. Interested in post-menopausal skincare routine.',
+        date: '2026-02-26', time: '09:00', type: 'Virtual Makeup Try-On', status: 'pending',
+        preConsultationNotes: 'New client referral. Interested in virtual makeup matching.',
         notes: [
             { id: 'n4', text: 'Referred by existing client Grace Nkosi. First-time visit.', timestamp: '2026-02-24 10:00', author: 'System' },
         ],

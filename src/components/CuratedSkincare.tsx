@@ -1,4 +1,4 @@
-﻿import { useEffect, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { Link } from 'react-router-dom';
@@ -23,7 +23,7 @@ const SKINCARE_PRODUCTS = [
         desc: 'Potent, science-backed hemp formulations selected to soothe inflammation and support your skin\'s natural recovery process.',
         bg: 'bg-[#d9e2d5]', // sage
         text: 'text-charcoal',
-        store: 'Hemp wellness',
+        store: "L'Unako",
         // Minimalist, earthy hemp/botanical dropper aesthetic (Verified working link)
         image: 'https://images.unsplash.com/photo-1608248543803-ba4f8c70ae0b?q=80&w=1500&auto=format&fit=crop'
     },

@@ -1,4 +1,4 @@
-export type StoreName = 'All' | 'House of Langa' | 'Amway' | 'Hemp wellness' | 'Weight Wellness Store' | 'Serum & Sculpt Clinical Skincare';
+export type StoreName = 'All' | 'House of Langa' | "L'Unako" | 'Weight Wellness Store' | 'Serum and Sculpt Herbal Wellness';
 export type Category = 'Skincare' | 'Makeup' | 'Wellness' | 'Hemp Range' | 'Tools';
 
 export interface Product {

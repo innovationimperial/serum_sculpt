@@ -9,11 +9,11 @@ import { useToast } from '../components/Toast';
 import { rewriteStorageUrl } from '../../../lib/rewriteStorageUrl';
 
 type ProductStatus = 'active' | 'hidden' | 'out_of_stock';
-type StoreName = 'House of Langa' | 'Amway' | 'Hemp wellness' | 'Weight Wellness Store' | 'Serum & Sculpt Clinical Skincare';
+type StoreName = 'House of Langa' | "L'Unako" | 'Weight Wellness Store' | 'Serum and Sculpt Herbal Wellness';
 
 const CATEGORIES = ['Skincare', 'Makeup', 'Wellness', 'Hemp Range', 'Tools'];
 const STATUSES: ProductStatus[] = ['active', 'hidden', 'out_of_stock'];
-const STORES: StoreName[] = ['House of Langa', 'Amway', 'Hemp wellness', 'Weight Wellness Store', 'Serum & Sculpt Clinical Skincare'];
+const STORES: StoreName[] = ['House of Langa', "L'Unako", 'Weight Wellness Store', 'Serum and Sculpt Herbal Wellness'];
 const MAX_IMAGES = 3;
 const ACCEPTED_TYPES = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
 
@@ -31,7 +31,7 @@ const ProductEditorPage: React.FC = () => {
     const getImageUrl = useMutation(api.products.getImageUrl);
 
     const [name, setName] = useState('');
-    const [store, setStore] = useState<StoreName>('Serum & Sculpt Clinical Skincare');
+    const [store, setStore] = useState<StoreName>('Serum and Sculpt Herbal Wellness');
     const [category, setCategory] = useState('Skincare');
     const [price, setPrice] = useState(0);
     const [description, setDescription] = useState('');

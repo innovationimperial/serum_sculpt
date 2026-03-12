@@ -16,13 +16,25 @@ const CONTACT_CHANNELS = [
     {
         icon: MessageCircle,
         label: 'WhatsApp Support',
-        value: '+27 66 397 3818',
-        desc: 'Direct communication for urgent wellness queries (ZAR Only).'
+        value: '+263 778 313 920',
+        desc: 'Direct communication for urgent wellness queries.'
     },
     {
         icon: MapPin,
-        label: 'Clinical Location',
+        label: 'Clinical Location (SA)',
         value: 'Ballito Hills Estate, Ballito',
+        desc: 'In-person assessments available by scheduled appointment.'
+    },
+    {
+        icon: MapPin,
+        label: 'Pamper Haven Wellness Spa',
+        value: '29 Bath Rd Avondale Harare',
+        desc: 'In-person assessments available by scheduled appointment.'
+    },
+    {
+        icon: MapPin,
+        label: 'Redefine Wellness Co',
+        value: '10 Silwood Close Harare',
         desc: 'In-person assessments available by scheduled appointment.'
     }
 ];
@@ -38,7 +50,7 @@ const FAQS = [
     },
     {
         q: "What brands are involved in the curated shop?",
-        a: "We partner with evidence-based brands like House of Langa and Amway, alongside our own clinical formulations. Every product undergoes strict clinical vetting before being curated."
+        a: "We partner with evidence-based brands like House of Langa and L'Unako, alongside our own clinical formulations. Every product undergoes strict clinical vetting before being curated."
     }
 ];
 

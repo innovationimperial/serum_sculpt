@@ -18,7 +18,7 @@ export interface BlogPost {
 }
 
 // ─── Product / Store Types ───────────────────────────────────
-export type StoreName = 'House of Langa' | 'Amway' | 'Hemp wellness' | 'Weight Wellness Store' | 'Serum & Sculpt Clinical Skincare';
+export type StoreName = 'House of Langa' | "L'Unako" | 'Weight Wellness Store' | 'Serum and Sculpt Herbal Wellness';
 export type ProductCategory = 'Skincare' | 'Makeup' | 'Wellness' | 'Hemp Range' | 'Tools';
 export type ProductStatus = 'active' | 'hidden' | 'out_of_stock';
 
@@ -55,7 +55,7 @@ export interface PartnerBrand {
 
 // ─── Consultation Types ──────────────────────────────────────
 export type ConsultationStatus = 'confirmed' | 'pending' | 'completed' | 'cancelled';
-export type ConsultationType = 'Initial Consultation' | 'Follow-up' | 'Skin Analysis' | 'Program Review';
+export type ConsultationType = 'Initial Consultation' | 'Follow-up' | 'Virtual Makeup Try-On' | 'Program Review';
 
 export interface ConsultationNote {
     id: string;

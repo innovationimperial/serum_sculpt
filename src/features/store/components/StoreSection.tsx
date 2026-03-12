@@ -10,7 +10,7 @@ import { api } from '../../../../convex/_generated/api';
 
 gsap.registerPlugin(ScrollTrigger);
 
-const STORES: StoreName[] = ['All', 'House of Langa', 'Amway', 'Hemp wellness', 'Weight Wellness Store', 'Serum & Sculpt Clinical Skincare'];
+const STORES: StoreName[] = ['All', 'House of Langa', "L'Unako", 'Weight Wellness Store', 'Serum and Sculpt Herbal Wellness'];
 
 export const StoreSection: React.FC = () => {
     const location = useLocation();

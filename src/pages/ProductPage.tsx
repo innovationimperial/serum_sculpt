@@ -57,7 +57,7 @@ const ProductPage: React.FC = () => {
         addItem({
             id: product._id,
             name: product.name,
-            store: product.store as 'All' | 'House of Langa' | 'Amway' | 'Hemp wellness' | 'Weight Wellness Store' | 'Serum & Sculpt Clinical Skincare',
+            store: product.store as 'All' | 'House of Langa' | "L'Unako" | 'Weight Wellness Store' | 'Serum and Sculpt Herbal Wellness',
             category: product.category as 'Skincare' | 'Makeup' | 'Wellness' | 'Hemp Range' | 'Tools',
             price: product.price,
             desc: product.description,
