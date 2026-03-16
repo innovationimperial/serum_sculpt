@@ -4,15 +4,20 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 gsap.registerPlugin(ScrollTrigger);
 
+const PHILOSOPHY_POINTS = [
+    'Stubborn weight gain',
+    'Menopausal body changes',
+    'Fatigue and metabolic slowdown',
+    'Skin aging and loss of firmness',
+    'Hormonal shifts affecting confidence and wellbeing'
+];
+
 export default function Philosophy() {
     const containerRef = useRef<HTMLElement>(null);
-    const text1Ref = useRef<HTMLParagraphElement>(null);
-    const text2Ref = useRef<HTMLParagraphElement>(null);
     const bgRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
         const ctx = gsap.context(() => {
-            // Parallax organic background
             gsap.to(bgRef.current, {
                 yPercent: 30,
                 ease: 'none',
@@ -24,36 +29,21 @@ export default function Philosophy() {
                 }
             });
 
-            // Split text reveal simulation (using opacity stagger for lines/chars)
-            gsap.fromTo(text1Ref.current,
-                { opacity: 0, y: 50 },
-                {
-                    opacity: 0.5,
-                    y: 0,
-                    duration: 1.5,
-                    ease: 'power3.out',
-                    scrollTrigger: {
-                        trigger: text1Ref.current,
-                        start: 'top 80%',
-                    }
-                }
-            );
-
-            gsap.fromTo(text2Ref.current,
-                { opacity: 0, y: 50 },
+            gsap.fromTo('.philosophy-reveal',
+                { opacity: 0, y: 36 },
                 {
                     opacity: 1,
                     y: 0,
-                    duration: 1.5,
-                    delay: 0.4,
+                    duration: 1,
+                    stagger: 0.12,
                     ease: 'power3.out',
                     scrollTrigger: {
-                        trigger: text1Ref.current,
-                        start: 'top 80%',
-                    }
+                        trigger: containerRef.current,
+                        start: 'top 75%',
+                    },
+                    clearProps: 'all'
                 }
             );
-
         }, containerRef);
         return () => ctx.revert();
     }, []);
@@ -62,9 +52,8 @@ export default function Philosophy() {
         <section
             id="philosophy"
             ref={containerRef}
-            className="relative py-48 px-8 md:px-16 bg-moss text-white overflow-hidden flex flex-col items-center min-h-[80vh]"
+            className="relative py-32 px-8 md:px-16 bg-moss text-white overflow-hidden"
         >
-            {/* Background Parallax Texture */}
             <div
                 ref={bgRef}
                 className="absolute top-[-20%] left-0 w-full h-[140%] z-0 opacity-40 pointer-events-none"
@@ -76,22 +65,35 @@ export default function Philosophy() {
                 }}
             />
 
-            <div className="relative z-10 max-w-5xl w-full text-center flex flex-col gap-12 pt-16">
-                <p className="text-sm font-mono tracking-widest text-[#d9e2d5] uppercase font-bold">Our Philosophy</p>
+            <div className="relative z-10 max-w-7xl mx-auto">
+                <div className="grid lg:grid-cols-[1fr_0.9fr] gap-14 lg:gap-20 items-start">
+                    <div>
+                        <p className="philosophy-reveal text-sm font-mono tracking-[0.28em] text-[#d9e2d5] uppercase font-bold mb-5">
+                            Our Philosophy
+                        </p>
+                        <h2 className="philosophy-reveal font-serif italic text-4xl md:text-6xl leading-tight mb-6">
+                            Beauty is not just about appearance. It is about health, balance, and confidence.
+                        </h2>
+                        <p className="philosophy-reveal max-w-2xl font-sans text-white/85 leading-relaxed font-light text-lg mb-6">
+                            Founded by a pharmacist with a deep understanding of metabolism, hormones, and wellness, our clinic takes a science-first approach to aesthetic and body treatments.
+                        </p>
+                        <p className="philosophy-reveal max-w-2xl font-sans text-white/70 leading-relaxed font-light text-lg">
+                            Our treatments combine advanced non-invasive technologies, targeted wellness protocols, and expert guidance to deliver safe and sustainable results.
+                        </p>
+                    </div>
 
-                <div className="font-serif italic text-4xl md:text-7xl leading-tight">
-                    <p ref={text1Ref} className="text-white/70 mb-8 transition-opacity">
-                        Clarity over trends.
-                    </p>
-                    <p ref={text2Ref} className="text-[#d9e2d5] text-4xl md:text-6xl pt-4">
-                        Clinical expertise meets holistic wellness.
-                    </p>
-                </div>
-
-                <div className="mt-16 text-center w-full flex justify-center">
-                    <p className="max-w-xl font-sans text-white/90 leading-relaxed font-light tracking-wide text-sm md:text-base">
-                        We believe in evidence-based wellness, where clinical responsibility meets holistic care. Our pharmacist-led platform empowers women with sustainable, science-backed solutions for lasting vitality.
-                    </p>
+                    <div className="philosophy-reveal rounded-[2.5rem] border border-white/10 bg-white/5 backdrop-blur-sm p-8 md:p-10">
+                        <p className="font-mono text-[11px] tracking-[0.28em] uppercase text-[#d9e2d5] mb-6 font-bold">
+                            We Specialize In Helping Women Experiencing
+                        </p>
+                        <div className="grid sm:grid-cols-2 gap-4">
+                            {PHILOSOPHY_POINTS.map((point) => (
+                                <div key={point} className="rounded-[1.5rem] border border-white/10 bg-black/10 px-5 py-5">
+                                    <p className="text-white/90 leading-relaxed">{point}</p>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>
