@@ -5,8 +5,8 @@ export default function Footer() {
         <footer className="w-full bg-white relative -mt-10 overflow-hidden z-20">
 
             {/* Target Programs Grid */}
-            <section id="programs" className="max-w-7xl mx-auto px-4 md:px-16 py-32 grid grid-cols-1 md:grid-cols-3 gap-8 relative z-10">
-                <div className="flex flex-col gap-6 md:col-span-3 text-center mb-12">
+            <section id="programs" className="max-w-7xl mx-auto px-4 md:px-16 py-32 grid grid-cols-1 md:grid-cols-4 gap-8 relative z-10">
+                <div className="flex flex-col gap-6 md:col-span-4 text-center mb-12">
                     <h2 className="text-4xl md:text-5xl font-serif text-charcoal italic">Signature Wellness Programs</h2>
                     <p className="font-sans text-charcoal/60 max-w-lg mx-auto">Targeted wellness journeys engineered for deep, restorative alignment.</p>
                 </div>
@@ -31,6 +31,13 @@ export default function Footer() {
                     <h3 className="font-serif text-2xl mb-4 text-moss">The Equilibrium</h3>
                     <p className="font-sans text-sm text-charcoal/60 mb-8 max-w-[200px]">Deep endocrine recalibration and natural cortisol modulation.</p>
                     <Link to="/education" className="magnetic-button border border-charcoal/20 px-6 py-2 rounded-full font-sans uppercase tracking-widest text-[10px] font-bold mt-auto hover:bg-moss hover:text-white transition-colors">Discover</Link>
+                </div>
+
+                {/* Tier 4 */}
+                <div className="border hover:border-moss/20 rounded-[var(--radius-std)] p-10 flex flex-col items-center text-center transition-colors">
+                    <h3 className="font-serif text-2xl mb-4 text-moss">The Body Transformation</h3>
+                    <p className="font-sans text-sm text-charcoal/60 mb-8 max-w-[200px]">Medical-grade fat loss, body sculpting, and lymphatic detox.</p>
+                    <Link to="/body-transformation" className="magnetic-button border border-charcoal/20 px-6 py-2 rounded-full font-sans uppercase tracking-widest text-[10px] font-bold mt-auto hover:bg-moss hover:text-white transition-colors">Discover</Link>
                 </div>
             </section>
 

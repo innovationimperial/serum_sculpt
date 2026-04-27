@@ -16,7 +16,7 @@ const CONTACT_CHANNELS = [
     {
         icon: MessageCircle,
         label: 'WhatsApp Support',
-        value: '+263 778 313 920',
+        value: '+263 772 203 844\n+27 66 397 3818',
         desc: 'Direct communication for urgent wellness queries.'
     },
     {
@@ -109,7 +109,7 @@ export default function Contact() {
                                 </div>
                                 <div>
                                     <h4 className="font-mono text-[10px] tracking-widest uppercase text-clay font-bold mb-1">{ch.label}</h4>
-                                    <p className="font-serif text-2xl text-charcoal mb-2 italic">{ch.value}</p>
+                                    <p className="font-serif text-2xl text-charcoal mb-2 italic whitespace-pre-line">{ch.value}</p>
                                     <p className="text-charcoal/60 text-xs leading-relaxed max-w-sm">{ch.desc}</p>
                                 </div>
                             </div>
@@ -176,7 +176,7 @@ export default function Contact() {
                         <p className="text-stone/60 font-light mb-8 leading-relaxed">
                             For immediate clinical assessment scheduling, please use our simplified WhatsApp booking system.
                         </p>
-                        <button onClick={() => requireAuth(() => { window.open('https://wa.me/263778313920?text=Hello%2C%20I%20would%20like%20to%20book%20a%20consultation.', '_blank', 'noopener,noreferrer'); })} className="bg-white text-moss px-10 py-5 rounded-full font-mono text-[10px] tracking-widest uppercase font-bold hover:bg-stone transition-colors relative z-10">
+                        <button onClick={() => requireAuth(() => { window.open('https://wa.me/263772203844?text=Hello%2C%20I%20would%20like%20to%20book%20a%20consultation.', '_blank', 'noopener,noreferrer'); })} className="bg-white text-moss px-10 py-5 rounded-full font-mono text-[10px] tracking-widest uppercase font-bold hover:bg-stone transition-colors relative z-10">
                             WhatsApp Booking
                         </button>
                     </div>

@@ -38,6 +38,17 @@ const SIGNATURE_PROGRAMS = [
         link: '/programs',
         label: 'Explore Program',
         image: 'https://images.unsplash.com/photo-1617897903246-719242758050?q=80&w=1500&auto=format&fit=crop'
+    },
+    {
+        id: 4,
+        name: 'The Body Transformation',
+        category: 'MEDICAL WEIGHT LOSS & SCULPTING',
+        desc: 'Medical-grade fat loss, body sculpting, lymphatic detox, and skin rejuvenation for measurable results.',
+        bg: 'bg-charcoal',
+        text: 'text-stone',
+        link: '/body-transformation',
+        label: 'Discover Program',
+        image: '/body-transformation-hero.png'
     }
 ];
 
