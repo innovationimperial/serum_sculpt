@@ -60,6 +60,7 @@ export default function Footer() {
                         <ul className="flex flex-col gap-4 text-xs tracking-widest uppercase font-bold text-white/70">
                             <li><Link to="/contact" className="hover:text-white transition-colors">Book Consultation</Link></li>
                             <li><Link to="/programs" className="hover:text-white transition-colors">Clinical Programs</Link></li>
+                            <li><Link to="/treatment-schedule" className="hover:text-white transition-colors">Treatment Schedule</Link></li>
                             <li><Link to="/shop" className="hover:text-white transition-colors">Featured Stores</Link></li>
                             <li><Link to="/education" className="hover:text-white transition-colors">Education Portal</Link></li>
                         </ul>

@@ -9,7 +9,7 @@ import type { Id } from '../../../../convex/_generated/dataModel';
 import {
     ShoppingCart, Clock, Package, X, Mail, MapPin,
     CreditCard, DollarSign, CheckCircle, XCircle, Truck, RotateCcw,
-    Hash, ExternalLink
+    Hash, ExternalLink, ShieldCheck
 } from 'lucide-react';
 
 type OrderStatus = 'pending' | 'confirmed' | 'shipped' | 'delivered' | 'cancelled' | 'refunded';
@@ -42,7 +42,6 @@ type PaystackDetails = {
     fees?: number;
     paidAt?: string;
     createdAt?: string;
-    transactionDate?: string;
     gatewayResponse?: string;
     cardType?: string;
     cardLast4?: string;
@@ -52,9 +51,7 @@ type PaystackDetails = {
     cardBrand?: string;
     expMonth?: string;
     expYear?: string;
-    signature?: string;
     reusable?: boolean;
-    accountName?: string;
     authorization?: string;
     customerId?: number;
     customerCode?: string;
@@ -63,19 +60,38 @@ type PaystackDetails = {
     customerEmail?: string;
     customerPhone?: string;
     customerRiskAction?: string;
-    customerInternationalPhone?: string;
     ipAddress?: string;
-    logStartTime?: number;
-    logTimeSpent?: number;
-    logAttempts?: number;
-    logErrors?: number;
-    logSuccess?: boolean;
-    logMobile?: boolean;
     history?: Array<{
         type: string;
         message: string;
         time: number;
     }>;
+};
+
+type PayPalDetails = {
+    orderId?: string;
+    captureId?: string;
+    intent?: string;
+    status?: string;
+    payerId?: string;
+    payerEmail?: string;
+    payerGivenName?: string;
+    payerSurname?: string;
+    payerCountryCode?: string;
+    captureStatus?: string;
+    captureAmount?: number;
+    captureCurrency?: string;
+    grossAmount?: number;
+    paypalFee?: number;
+    netAmount?: number;
+    sellerProtectionStatus?: string;
+    sellerProtectionDisputeCategories?: string[];
+    invoiceId?: string;
+    customId?: string;
+    merchantId?: string;
+    merchantEmail?: string;
+    createTime?: string;
+    updateTime?: string;
 };
 
 type OrderRecord = {
@@ -94,7 +110,11 @@ type OrderRecord = {
     shippingCost?: number;
     tax?: number;
     currency?: string;
+    paymentAmount?: number;
+    paymentCurrency?: string;
+    exchangeRateUsed?: number;
     paymentReference?: string;
+    payPalDetails?: PayPalDetails;
     paystackDetails?: PaystackDetails;
 };
 
@@ -125,6 +145,39 @@ const STATUS_ACTIONS: { status: OrderStatus; label: string; icon: React.ReactNod
     { status: 'refunded', label: 'Refund', icon: <RotateCcw size={14} />, color: 'text-purple-500 hover:bg-purple-50' },
 ];
 
+const PAYMENT_STATUS_COLORS: Record<string, string> = {
+    paid: 'bg-emerald-50 text-emerald-600',
+    failed: 'bg-red-50 text-red-500',
+    refunded: 'bg-purple-50 text-purple-500',
+    partially_refunded: 'bg-amber-50 text-amber-600',
+};
+
+const formatMoney = (amount: number, currency: string) => {
+    try {
+        return new Intl.NumberFormat('en', {
+            style: 'currency',
+            currency,
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2,
+        }).format(amount);
+    } catch {
+        return `${currency} ${amount.toFixed(2)}`;
+    }
+};
+
+const formatDateTime = (value?: string | number) => {
+    if (!value) return null;
+    const date = new Date(value);
+    if (Number.isNaN(date.getTime())) return null;
+    return `${date.toLocaleDateString('en-ZA', { year: 'numeric', month: 'long', day: 'numeric' })} ${date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
+};
+
+const PaymentStatusBadge: React.FC<{ status?: string }> = ({ status }) => (
+    <span className={`inline-flex px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider ${PAYMENT_STATUS_COLORS[status ?? ''] ?? 'bg-charcoal/5 text-charcoal/40'}`}>
+        {status ?? 'unknown'}
+    </span>
+);
+
 export const OrderIntelligence: React.FC = () => {
     const ordersResult = useQuery(api.orders.listWithUsers, {});
     const updateStatus = useMutation(api.orders.updateStatus);
@@ -142,16 +195,16 @@ export const OrderIntelligence: React.FC = () => {
     }
 
     const orders = ordersResult as OrderRecord[];
-    const selected = selectedId ? orders.find((o: OrderRecord) => o._id === selectedId) : null;
-    const filtered = statusFilter === 'all' ? orders : orders.filter((o: OrderRecord) => o.status === statusFilter);
+    const selected = selectedId ? orders.find((order) => order._id === selectedId) : null;
+    const filtered = statusFilter === 'all' ? orders : orders.filter((order) => order.status === statusFilter);
 
-    const pendingCount = orders.filter((o: OrderRecord) => o.status === 'pending').length;
-    const shippedCount = orders.filter((o: OrderRecord) => o.status === 'shipped').length;
-    const deliveredCount = orders.filter((o: OrderRecord) => o.status === 'delivered').length;
+    const pendingCount = orders.filter((order) => order.status === 'pending').length;
+    const shippedCount = orders.filter((order) => order.status === 'shipped').length;
+    const deliveredCount = orders.filter((order) => order.status === 'delivered').length;
 
     const handleStatusChange = async () => {
         if (!confirmStatus || !selected) return;
-        await updateStatus({ id: selected._id as Id<'orders'>, status: confirmStatus });
+        await updateStatus({ id: selected._id, status: confirmStatus });
         setConfirmStatus(null);
         toast('success', `Order marked as ${confirmStatus}`);
     };
@@ -190,11 +243,13 @@ export const OrderIntelligence: React.FC = () => {
         },
         {
             key: 'total',
-            label: 'Total',
+            label: 'Store Total',
             sortable: true,
-            width: '110px',
+            width: '130px',
             render: (_value, row) => (
-                <span className="font-sans font-semibold text-sm text-charcoal">R{row.total.toLocaleString()}</span>
+                <span className="font-sans font-semibold text-sm text-charcoal">
+                    {formatMoney(row.total, row.currency ?? 'ZAR')}
+                </span>
             ),
         },
         {
@@ -210,12 +265,12 @@ export const OrderIntelligence: React.FC = () => {
         },
         {
             key: 'paymentReference',
-            label: 'Paystack Ref',
-            width: '150px',
+            label: 'Payment Ref',
+            width: '160px',
             render: (_value, row) => {
-                const ref = row.paymentReference;
-                return ref ? (
-                    <span className="font-mono text-[10px] text-charcoal/50" title={ref}>{ref.slice(0, 18)}...</span>
+                const reference = row.paymentReference ?? row.payPalDetails?.captureId ?? row.paystackDetails?.transactionId?.toString();
+                return reference ? (
+                    <span className="font-mono text-[10px] text-charcoal/50" title={reference}>{reference.slice(0, 18)}...</span>
                 ) : (
                     <span className="text-charcoal/20 text-[10px]">-</span>
                 );
@@ -232,6 +287,9 @@ export const OrderIntelligence: React.FC = () => {
     ];
 
     const filterTabs = ['all', 'pending', 'confirmed', 'shipped', 'delivered', 'cancelled', 'refunded'];
+    const storeCurrency = selected?.currency ?? 'ZAR';
+    const hasPayPalData = !!selected?.payPalDetails;
+    const hasPaystackData = !!selected?.paystackDetails;
 
     return (
         <div className="space-y-6">
@@ -247,8 +305,7 @@ export const OrderIntelligence: React.FC = () => {
                     <button
                         key={tab}
                         onClick={() => setStatusFilter(tab)}
-                        className={`px-4 py-2 rounded-xl text-xs font-sans font-semibold transition-colors cursor-pointer capitalize ${statusFilter === tab ? 'bg-moss text-white' : 'bg-charcoal/5 text-charcoal/40 hover:text-charcoal'
-                            }`}
+                        className={`px-4 py-2 rounded-xl text-xs font-sans font-semibold transition-colors cursor-pointer capitalize ${statusFilter === tab ? 'bg-moss text-white' : 'bg-charcoal/5 text-charcoal/40 hover:text-charcoal'}`}
                     >
                         {tab}
                     </button>
@@ -257,7 +314,7 @@ export const OrderIntelligence: React.FC = () => {
 
             <DataTable
                 columns={columns}
-                data={filtered.map((o: OrderRecord) => ({ ...o, id: o._id }))}
+                data={filtered.map((order) => ({ ...order, id: order._id }))}
                 onRowClick={(row: OrderTableRow) => setSelectedId(row._id)}
                 emptyMessage="No orders found."
             />
@@ -295,213 +352,211 @@ export const OrderIntelligence: React.FC = () => {
                                 <div className="flex items-center gap-3 text-sm font-sans">
                                     <CreditCard size={14} className="text-charcoal/30" />
                                     <span className="text-charcoal/70">Payment: {selected.paymentMethod ?? 'Card'}</span>
-                                    <span className={`inline-flex px-2 py-0.5 rounded-full text-[9px] font-bold uppercase ${selected.paymentStatus === 'paid' ? 'bg-emerald-50 text-emerald-600' :
-                                        selected.paymentStatus === 'failed' ? 'bg-red-50 text-red-500' :
-                                            'bg-charcoal/5 text-charcoal/40'
-                                        }`}>{selected.paymentStatus ?? 'paid'}</span>
+                                    <PaymentStatusBadge status={selected.paymentStatus} />
                                 </div>
                             </div>
 
-                            {(selected.paymentReference || selected.paystackDetails) && (() => {
-                                const ps = selected.paystackDetails;
-                                const ref = selected.paymentReference;
+                            {(selected.paymentReference || hasPayPalData || hasPaystackData) && (
+                                <div className="bg-stone rounded-xl p-5 space-y-3">
+                                    <h4 className="text-[10px] font-sans uppercase tracking-[0.2em] font-bold text-charcoal/40 mb-2 flex items-center gap-2">
+                                        <CreditCard size={12} /> Payment Details ({hasPayPalData ? 'PayPal' : 'Paystack'})
+                                    </h4>
 
-                                return (
-                                    <div className="bg-stone rounded-xl p-5 space-y-3">
-                                        <h4 className="text-[10px] font-sans uppercase tracking-[0.2em] font-bold text-charcoal/40 mb-2 flex items-center gap-2">
-                                            <CreditCard size={12} /> Payment Details (Paystack)
-                                        </h4>
-                                        {ref && (
-                                            <div className="flex items-center gap-3 text-sm font-sans">
-                                                <Hash size={14} className="text-charcoal/30" />
-                                                <span className="text-charcoal/50 text-[10px] uppercase tracking-wider w-20 shrink-0">Reference</span>
-                                                <span className="font-mono text-xs text-charcoal/80 bg-white px-2 py-1 rounded-lg border border-charcoal/5 select-all break-all">{ref}</span>
-                                            </div>
-                                        )}
-                                        {ps?.transactionId != null && (
-                                            <div className="flex items-center gap-3 text-sm font-sans">
-                                                <Hash size={14} className="text-charcoal/30" />
-                                                <span className="text-charcoal/50 text-[10px] uppercase tracking-wider w-20 shrink-0">Transaction</span>
-                                                <span className="font-mono text-xs text-charcoal/80">{ps.transactionId}</span>
-                                                {ps.domain && <span className="inline-flex px-2 py-0.5 rounded-full text-[10px] font-bold uppercase bg-charcoal/5 text-charcoal/60 tracking-wider">{ps.domain}</span>}
-                                            </div>
-                                        )}
+                                    {selected.paymentReference && (
                                         <div className="flex items-center gap-3 text-sm font-sans">
-                                            <CheckCircle size={14} className="text-emerald-500" />
-                                            <span className="text-charcoal/50 text-[10px] uppercase tracking-wider w-20 shrink-0">Status</span>
-                                            <span className={`inline-flex px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider ${selected.paymentStatus === 'paid' ? 'bg-emerald-50 text-emerald-600' :
-                                                selected.paymentStatus === 'failed' ? 'bg-red-50 text-red-500' :
-                                                    selected.paymentStatus === 'refunded' ? 'bg-purple-50 text-purple-500' :
-                                                        'bg-charcoal/5 text-charcoal/40'
-                                                }`}>{selected.paymentStatus ?? 'paid'}</span>
-                                            {ps?.gatewayResponse && <span className="text-charcoal/50 text-xs">- {ps.gatewayResponse}</span>}
+                                            <Hash size={14} className="text-charcoal/30" />
+                                            <span className="text-charcoal/50 text-[10px] uppercase tracking-wider w-20 shrink-0">Reference</span>
+                                            <span className="font-mono text-xs text-charcoal/80 bg-white px-2 py-1 rounded-lg border border-charcoal/5 select-all break-all">{selected.paymentReference}</span>
                                         </div>
-                                        <div className="flex items-center gap-3 text-sm font-sans">
-                                            <DollarSign size={14} className="text-charcoal/30" />
-                                            <span className="text-charcoal/50 text-[10px] uppercase tracking-wider w-20 shrink-0">Amount</span>
-                                            <span className="font-semibold text-charcoal">R{(ps?.amount ?? selected.total).toLocaleString(undefined, { minimumFractionDigits: 2 })}</span>
-                                            <span className="text-[10px] text-charcoal/30 uppercase">{selected.currency ?? 'ZAR'}</span>
-                                        </div>
-                                        {ps?.requestedAmount != null && (
-                                            <div className="flex items-center gap-3 text-sm font-sans">
-                                                <DollarSign size={14} className="text-charcoal/30" />
-                                                <span className="text-charcoal/50 text-[10px] uppercase tracking-wider w-20 shrink-0">Requested</span>
-                                                <span className="text-charcoal/70">R{ps.requestedAmount.toFixed(2)}</span>
-                                            </div>
-                                        )}
-                                        {ps?.fees != null && (
-                                            <div className="flex items-center gap-3 text-sm font-sans">
-                                                <DollarSign size={14} className="text-charcoal/30" />
-                                                <span className="text-charcoal/50 text-[10px] uppercase tracking-wider w-20 shrink-0">Fees</span>
-                                                <span className="text-charcoal/70">R{ps.fees.toFixed(2)}</span>
-                                            </div>
-                                        )}
-                                        {ps?.channel && (
-                                            <div className="flex items-center gap-3 text-sm font-sans">
-                                                <CreditCard size={14} className="text-charcoal/30" />
-                                                <span className="text-charcoal/50 text-[10px] uppercase tracking-wider w-20 shrink-0">Channel</span>
-                                                <span className="inline-flex px-2 py-0.5 rounded-full text-[10px] font-bold uppercase bg-charcoal/5 text-charcoal/60 tracking-wider">{ps.channel}</span>
-                                            </div>
-                                        )}
-                                        {ps?.cardType && (
-                                            <div className="flex items-center gap-3 text-sm font-sans">
-                                                <CreditCard size={14} className="text-charcoal/30" />
-                                                <span className="text-charcoal/50 text-[10px] uppercase tracking-wider w-20 shrink-0">Card</span>
-                                                <span className="text-charcoal/70 capitalize">{ps.cardType}</span>
-                                                {ps.cardBrand && <span className="text-[10px] uppercase tracking-wider text-charcoal/40">{ps.cardBrand}</span>}
-                                                {ps.cardBin && ps.cardLast4 && <span className="font-mono text-xs text-charcoal/50">{ps.cardBin} **** {ps.cardLast4}</span>}
-                                            </div>
-                                        )}
-                                        {(ps?.expMonth || ps?.expYear) && (
-                                            <div className="flex items-center gap-3 text-sm font-sans">
-                                                <CreditCard size={14} className="text-charcoal/30" />
-                                                <span className="text-charcoal/50 text-[10px] uppercase tracking-wider w-20 shrink-0">Expiry</span>
-                                                <span className="text-charcoal/70">{ps.expMonth ?? '--'}/{ps.expYear ?? '--'}</span>
-                                                {ps.reusable != null && <span className="text-[10px] uppercase tracking-wider text-charcoal/40">{ps.reusable ? 'Reusable' : 'Single use'}</span>}
-                                            </div>
-                                        )}
-                                        {ps?.cardBank && (
-                                            <div className="flex items-center gap-3 text-sm font-sans">
-                                                <MapPin size={14} className="text-charcoal/30" />
-                                                <span className="text-charcoal/50 text-[10px] uppercase tracking-wider w-20 shrink-0">Bank</span>
-                                                <span className="text-charcoal/70">{ps.cardBank} {ps.cardCountryCode ? `(${ps.cardCountryCode})` : ''}</span>
-                                            </div>
-                                        )}
-                                        {ps?.authorization && (
-                                            <div className="flex items-center gap-3 text-sm font-sans">
-                                                <Hash size={14} className="text-charcoal/30" />
-                                                <span className="text-charcoal/50 text-[10px] uppercase tracking-wider w-20 shrink-0">Auth Code</span>
-                                                <span className="font-mono text-xs text-charcoal/60">{ps.authorization}</span>
-                                            </div>
-                                        )}
-                                        {ps?.signature && (
-                                            <div className="flex items-center gap-3 text-sm font-sans">
-                                                <Hash size={14} className="text-charcoal/30" />
-                                                <span className="text-charcoal/50 text-[10px] uppercase tracking-wider w-20 shrink-0">Signature</span>
-                                                <span className="font-mono text-xs text-charcoal/60 break-all">{ps.signature}</span>
-                                            </div>
-                                        )}
-                                        {ps?.customerEmail && (
-                                            <div className="flex items-center gap-3 text-sm font-sans">
-                                                <Mail size={14} className="text-charcoal/30" />
-                                                <span className="text-charcoal/50 text-[10px] uppercase tracking-wider w-20 shrink-0">Payer Email</span>
-                                                <span className="text-charcoal/70">{ps.customerEmail}</span>
-                                            </div>
-                                        )}
-                                        {(ps?.customerFirstName || ps?.customerLastName) && (
-                                            <div className="flex items-center gap-3 text-sm font-sans">
-                                                <Mail size={14} className="text-charcoal/30" />
-                                                <span className="text-charcoal/50 text-[10px] uppercase tracking-wider w-20 shrink-0">Customer</span>
-                                                <span className="text-charcoal/70">{[ps.customerFirstName, ps.customerLastName].filter(Boolean).join(' ')}</span>
-                                            </div>
-                                        )}
-                                        {ps?.customerPhone && (
-                                            <div className="flex items-center gap-3 text-sm font-sans">
-                                                <Mail size={14} className="text-charcoal/30" />
-                                                <span className="text-charcoal/50 text-[10px] uppercase tracking-wider w-20 shrink-0">Phone</span>
-                                                <span className="text-charcoal/70">{ps.customerPhone}</span>
-                                            </div>
-                                        )}
-                                        {(ps?.customerCode || ps?.customerId != null) && (
-                                            <div className="flex items-center gap-3 text-sm font-sans">
-                                                <Hash size={14} className="text-charcoal/30" />
-                                                <span className="text-charcoal/50 text-[10px] uppercase tracking-wider w-20 shrink-0">Customer ID</span>
-                                                <span className="text-charcoal/70">{ps.customerCode ?? ps.customerId}</span>
-                                                {ps.customerRiskAction && <span className="text-[10px] uppercase tracking-wider text-charcoal/40">{ps.customerRiskAction}</span>}
-                                            </div>
-                                        )}
-                                        {ps?.ipAddress && (
-                                            <div className="flex items-center gap-3 text-sm font-sans">
-                                                <Hash size={14} className="text-charcoal/30" />
-                                                <span className="text-charcoal/50 text-[10px] uppercase tracking-wider w-20 shrink-0">IP Address</span>
-                                                <span className="font-mono text-xs text-charcoal/60">{ps.ipAddress}</span>
-                                            </div>
-                                        )}
-                                        {ps?.paidAt && (
-                                            <div className="flex items-center gap-3 text-sm font-sans">
-                                                <Clock size={14} className="text-charcoal/30" />
-                                                <span className="text-charcoal/50 text-[10px] uppercase tracking-wider w-20 shrink-0">Paid At</span>
-                                                <span className="text-charcoal/70">{new Date(ps.paidAt).toLocaleDateString('en-ZA', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })} {new Date(ps.paidAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
-                                            </div>
-                                        )}
-                                        {ps?.createdAt && (
-                                            <div className="flex items-center gap-3 text-sm font-sans">
-                                                <Clock size={14} className="text-charcoal/30" />
-                                                <span className="text-charcoal/50 text-[10px] uppercase tracking-wider w-20 shrink-0">Created</span>
-                                                <span className="text-charcoal/70">{new Date(ps.createdAt).toLocaleDateString('en-ZA', { year: 'numeric', month: 'long', day: 'numeric' })} {new Date(ps.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
-                                            </div>
-                                        )}
-                                        {(ps?.logTimeSpent != null || ps?.logAttempts != null || ps?.logErrors != null || ps?.logMobile != null) && (
-                                            <div className="grid grid-cols-2 gap-3 pt-2">
-                                                {ps.logTimeSpent != null && (
-                                                    <div className="rounded-xl bg-white px-4 py-3 border border-charcoal/5">
-                                                        <p className="text-[10px] font-sans uppercase tracking-wider font-bold text-charcoal/40">Time Spent</p>
-                                                        <p className="text-lg font-serif italic text-charcoal">{ps.logTimeSpent} sec</p>
-                                                    </div>
-                                                )}
-                                                {ps.logAttempts != null && (
-                                                    <div className="rounded-xl bg-white px-4 py-3 border border-charcoal/5">
-                                                        <p className="text-[10px] font-sans uppercase tracking-wider font-bold text-charcoal/40">Attempts</p>
-                                                        <p className="text-lg font-serif italic text-charcoal">{ps.logAttempts}</p>
-                                                    </div>
-                                                )}
-                                                {ps.logErrors != null && (
-                                                    <div className="rounded-xl bg-white px-4 py-3 border border-charcoal/5">
-                                                        <p className="text-[10px] font-sans uppercase tracking-wider font-bold text-charcoal/40">Errors</p>
-                                                        <p className="text-lg font-serif italic text-charcoal">{ps.logErrors}</p>
-                                                    </div>
-                                                )}
-                                                {ps.logMobile != null && (
-                                                    <div className="rounded-xl bg-white px-4 py-3 border border-charcoal/5">
-                                                        <p className="text-[10px] font-sans uppercase tracking-wider font-bold text-charcoal/40">Device</p>
-                                                        <p className="text-lg font-serif italic text-charcoal">{ps.logMobile ? 'Mobile' : 'Desktop'}</p>
-                                                    </div>
-                                                )}
-                                            </div>
-                                        )}
-                                        {ps?.history && ps.history.length > 0 && (
-                                            <div className="pt-2">
-                                                <h5 className="text-[10px] font-sans uppercase tracking-[0.2em] font-bold text-charcoal/40 mb-3">Transaction Timeline</h5>
-                                                <div className="space-y-2">
-                                                    {ps.history.map((entry, index) => (
-                                                        <div key={`${entry.type}-${entry.time}-${index}`} className="flex items-start gap-3 rounded-xl bg-white px-4 py-3 border border-charcoal/5">
-                                                            <span className={`mt-1 h-2 w-2 rounded-full ${entry.type === 'success' ? 'bg-emerald-500' : 'bg-blue-500'}`} />
-                                                            <div className="flex-1">
-                                                                <p className="text-sm text-charcoal/80">{entry.message}</p>
-                                                                <p className="text-[10px] uppercase tracking-wider text-charcoal/40">{entry.type} • {entry.time}s</p>
-                                                            </div>
-                                                        </div>
-                                                    ))}
+                                    )}
+
+                                    {hasPayPalData && selected.payPalDetails && (
+                                        <>
+                                            {selected.payPalDetails.orderId && (
+                                                <div className="flex items-center gap-3 text-sm font-sans">
+                                                    <Hash size={14} className="text-charcoal/30" />
+                                                    <span className="text-charcoal/50 text-[10px] uppercase tracking-wider w-20 shrink-0">Order ID</span>
+                                                    <span className="font-mono text-xs text-charcoal/70 break-all">{selected.payPalDetails.orderId}</span>
                                                 </div>
+                                            )}
+                                            <div className="flex items-center gap-3 text-sm font-sans">
+                                                <CheckCircle size={14} className="text-emerald-500" />
+                                                <span className="text-charcoal/50 text-[10px] uppercase tracking-wider w-20 shrink-0">Status</span>
+                                                <PaymentStatusBadge status={selected.payPalDetails.captureStatus ?? selected.paymentStatus} />
+                                                {selected.payPalDetails.status && <span className="text-charcoal/50 text-xs">Order {selected.payPalDetails.status.toLowerCase()}</span>}
                                             </div>
-                                        )}
-                                        <a href="https://dashboard.paystack.com/#/transactions" target="_blank" rel="noopener noreferrer"
-                                            className="inline-flex items-center gap-2 mt-2 px-4 py-2 rounded-lg bg-moss/10 text-moss text-xs font-sans font-semibold hover:bg-moss/20 transition-colors">
-                                            <ExternalLink size={12} /> View on Paystack Dashboard
-                                        </a>
-                                    </div>
-                                );
-                            })()}
+                                            {selected.payPalDetails.captureAmount != null && selected.payPalDetails.captureCurrency && (
+                                                <div className="flex items-center gap-3 text-sm font-sans">
+                                                    <DollarSign size={14} className="text-charcoal/30" />
+                                                    <span className="text-charcoal/50 text-[10px] uppercase tracking-wider w-20 shrink-0">Captured</span>
+                                                    <span className="font-semibold text-charcoal">{formatMoney(selected.payPalDetails.captureAmount, selected.payPalDetails.captureCurrency)}</span>
+                                                </div>
+                                            )}
+                                            {selected.paymentAmount != null && selected.paymentCurrency && (
+                                                <div className="flex items-center gap-3 text-sm font-sans">
+                                                    <DollarSign size={14} className="text-charcoal/30" />
+                                                    <span className="text-charcoal/50 text-[10px] uppercase tracking-wider w-20 shrink-0">Recorded</span>
+                                                    <span className="text-charcoal/70">{formatMoney(selected.paymentAmount, selected.paymentCurrency)}</span>
+                                                </div>
+                                            )}
+                                            {(selected.payPalDetails.grossAmount != null || selected.payPalDetails.paypalFee != null || selected.payPalDetails.netAmount != null) && (
+                                                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2">
+                                                    {selected.payPalDetails.grossAmount != null && selected.payPalDetails.captureCurrency && (
+                                                        <div className="rounded-xl bg-white px-4 py-3 border border-charcoal/5">
+                                                            <p className="text-[10px] font-sans uppercase tracking-wider font-bold text-charcoal/40">Gross</p>
+                                                            <p className="text-lg font-serif italic text-charcoal">{formatMoney(selected.payPalDetails.grossAmount, selected.payPalDetails.captureCurrency)}</p>
+                                                        </div>
+                                                    )}
+                                                    {selected.payPalDetails.paypalFee != null && selected.payPalDetails.captureCurrency && (
+                                                        <div className="rounded-xl bg-white px-4 py-3 border border-charcoal/5">
+                                                            <p className="text-[10px] font-sans uppercase tracking-wider font-bold text-charcoal/40">PayPal Fee</p>
+                                                            <p className="text-lg font-serif italic text-charcoal">{formatMoney(selected.payPalDetails.paypalFee, selected.payPalDetails.captureCurrency)}</p>
+                                                        </div>
+                                                    )}
+                                                    {selected.payPalDetails.netAmount != null && selected.payPalDetails.captureCurrency && (
+                                                        <div className="rounded-xl bg-white px-4 py-3 border border-charcoal/5">
+                                                            <p className="text-[10px] font-sans uppercase tracking-wider font-bold text-charcoal/40">Net</p>
+                                                            <p className="text-lg font-serif italic text-charcoal">{formatMoney(selected.payPalDetails.netAmount, selected.payPalDetails.captureCurrency)}</p>
+                                                        </div>
+                                                    )}
+                                                </div>
+                                            )}
+                                            {(selected.payPalDetails.payerEmail || selected.payPalDetails.payerGivenName || selected.payPalDetails.payerSurname) && (
+                                                <div className="flex items-center gap-3 text-sm font-sans">
+                                                    <Mail size={14} className="text-charcoal/30" />
+                                                    <span className="text-charcoal/50 text-[10px] uppercase tracking-wider w-20 shrink-0">Payer</span>
+                                                    <span className="text-charcoal/70">
+                                                        {[selected.payPalDetails.payerGivenName, selected.payPalDetails.payerSurname].filter(Boolean).join(' ') || selected.payPalDetails.payerEmail}
+                                                    </span>
+                                                    {selected.payPalDetails.payerEmail && <span className="text-[10px] text-charcoal/40">{selected.payPalDetails.payerEmail}</span>}
+                                                </div>
+                                            )}
+                                            {(selected.payPalDetails.sellerProtectionStatus || (selected.payPalDetails.sellerProtectionDisputeCategories?.length ?? 0) > 0) && (
+                                                <div className="flex items-center gap-3 text-sm font-sans">
+                                                    <ShieldCheck size={14} className="text-charcoal/30" />
+                                                    <span className="text-charcoal/50 text-[10px] uppercase tracking-wider w-20 shrink-0">Protection</span>
+                                                    <span className="text-charcoal/70">{selected.payPalDetails.sellerProtectionStatus ?? 'Unknown'}</span>
+                                                    {(selected.payPalDetails.sellerProtectionDisputeCategories?.length ?? 0) > 0 && (
+                                                        <span className="text-[10px] uppercase tracking-wider text-charcoal/40">{selected.payPalDetails.sellerProtectionDisputeCategories?.join(', ')}</span>
+                                                    )}
+                                                </div>
+                                            )}
+                                            {selected.exchangeRateUsed && selected.paymentCurrency && (
+                                                <div className="flex items-center gap-3 text-sm font-sans">
+                                                    <DollarSign size={14} className="text-charcoal/30" />
+                                                    <span className="text-charcoal/50 text-[10px] uppercase tracking-wider w-20 shrink-0">FX Rate</span>
+                                                    <span className="text-charcoal/70">1 {storeCurrency} = {selected.exchangeRateUsed.toFixed(4)} {selected.paymentCurrency}</span>
+                                                </div>
+                                            )}
+                                            {selected.payPalDetails.createTime && (
+                                                <div className="flex items-center gap-3 text-sm font-sans">
+                                                    <Clock size={14} className="text-charcoal/30" />
+                                                    <span className="text-charcoal/50 text-[10px] uppercase tracking-wider w-20 shrink-0">Captured</span>
+                                                    <span className="text-charcoal/70">{formatDateTime(selected.payPalDetails.createTime)}</span>
+                                                </div>
+                                            )}
+                                            <a
+                                                href="https://www.paypal.com/businessmanage/account/money"
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className="inline-flex items-center gap-2 mt-2 px-4 py-2 rounded-lg bg-moss/10 text-moss text-xs font-sans font-semibold hover:bg-moss/20 transition-colors"
+                                            >
+                                                <ExternalLink size={12} /> View in PayPal Dashboard
+                                            </a>
+                                        </>
+                                    )}
+
+                                    {hasPaystackData && selected.paystackDetails && (
+                                        <>
+                                            {selected.paystackDetails.transactionId != null && (
+                                                <div className="flex items-center gap-3 text-sm font-sans">
+                                                    <Hash size={14} className="text-charcoal/30" />
+                                                    <span className="text-charcoal/50 text-[10px] uppercase tracking-wider w-20 shrink-0">Transaction</span>
+                                                    <span className="font-mono text-xs text-charcoal/80">{selected.paystackDetails.transactionId}</span>
+                                                    {selected.paystackDetails.domain && <span className="inline-flex px-2 py-0.5 rounded-full text-[10px] font-bold uppercase bg-charcoal/5 text-charcoal/60 tracking-wider">{selected.paystackDetails.domain}</span>}
+                                                </div>
+                                            )}
+                                            <div className="flex items-center gap-3 text-sm font-sans">
+                                                <CheckCircle size={14} className="text-emerald-500" />
+                                                <span className="text-charcoal/50 text-[10px] uppercase tracking-wider w-20 shrink-0">Status</span>
+                                                <PaymentStatusBadge status={selected.paymentStatus} />
+                                                {selected.paystackDetails.gatewayResponse && <span className="text-charcoal/50 text-xs">- {selected.paystackDetails.gatewayResponse}</span>}
+                                            </div>
+                                            <div className="flex items-center gap-3 text-sm font-sans">
+                                                <DollarSign size={14} className="text-charcoal/30" />
+                                                <span className="text-charcoal/50 text-[10px] uppercase tracking-wider w-20 shrink-0">Amount</span>
+                                                <span className="font-semibold text-charcoal">{formatMoney(selected.paystackDetails.amount ?? selected.total, storeCurrency)}</span>
+                                            </div>
+                                            {selected.paystackDetails.requestedAmount != null && (
+                                                <div className="flex items-center gap-3 text-sm font-sans">
+                                                    <DollarSign size={14} className="text-charcoal/30" />
+                                                    <span className="text-charcoal/50 text-[10px] uppercase tracking-wider w-20 shrink-0">Requested</span>
+                                                    <span className="text-charcoal/70">{formatMoney(selected.paystackDetails.requestedAmount, storeCurrency)}</span>
+                                                </div>
+                                            )}
+                                            {selected.paystackDetails.fees != null && (
+                                                <div className="flex items-center gap-3 text-sm font-sans">
+                                                    <DollarSign size={14} className="text-charcoal/30" />
+                                                    <span className="text-charcoal/50 text-[10px] uppercase tracking-wider w-20 shrink-0">Fees</span>
+                                                    <span className="text-charcoal/70">{formatMoney(selected.paystackDetails.fees, storeCurrency)}</span>
+                                                </div>
+                                            )}
+                                            {selected.paystackDetails.channel && (
+                                                <div className="flex items-center gap-3 text-sm font-sans">
+                                                    <CreditCard size={14} className="text-charcoal/30" />
+                                                    <span className="text-charcoal/50 text-[10px] uppercase tracking-wider w-20 shrink-0">Channel</span>
+                                                    <span className="inline-flex px-2 py-0.5 rounded-full text-[10px] font-bold uppercase bg-charcoal/5 text-charcoal/60 tracking-wider">{selected.paystackDetails.channel}</span>
+                                                </div>
+                                            )}
+                                            {selected.paystackDetails.customerEmail && (
+                                                <div className="flex items-center gap-3 text-sm font-sans">
+                                                    <Mail size={14} className="text-charcoal/30" />
+                                                    <span className="text-charcoal/50 text-[10px] uppercase tracking-wider w-20 shrink-0">Payer Email</span>
+                                                    <span className="text-charcoal/70">{selected.paystackDetails.customerEmail}</span>
+                                                </div>
+                                            )}
+                                            {(selected.paystackDetails.customerFirstName || selected.paystackDetails.customerLastName) && (
+                                                <div className="flex items-center gap-3 text-sm font-sans">
+                                                    <Mail size={14} className="text-charcoal/30" />
+                                                    <span className="text-charcoal/50 text-[10px] uppercase tracking-wider w-20 shrink-0">Customer</span>
+                                                    <span className="text-charcoal/70">{[selected.paystackDetails.customerFirstName, selected.paystackDetails.customerLastName].filter(Boolean).join(' ')}</span>
+                                                </div>
+                                            )}
+                                            {selected.paystackDetails.paidAt && (
+                                                <div className="flex items-center gap-3 text-sm font-sans">
+                                                    <Clock size={14} className="text-charcoal/30" />
+                                                    <span className="text-charcoal/50 text-[10px] uppercase tracking-wider w-20 shrink-0">Paid At</span>
+                                                    <span className="text-charcoal/70">{formatDateTime(selected.paystackDetails.paidAt)}</span>
+                                                </div>
+                                            )}
+                                            {(selected.paystackDetails.history?.length ?? 0) > 0 && (
+                                                <div className="pt-2">
+                                                    <h5 className="text-[10px] font-sans uppercase tracking-[0.2em] font-bold text-charcoal/40 mb-3">Transaction Timeline</h5>
+                                                    <div className="space-y-2">
+                                                        {selected.paystackDetails.history?.map((entry, index) => (
+                                                            <div key={`${entry.type}-${entry.time}-${index}`} className="flex items-start gap-3 rounded-xl bg-white px-4 py-3 border border-charcoal/5">
+                                                                <span className={`mt-1 h-2 w-2 rounded-full ${entry.type === 'success' ? 'bg-emerald-500' : 'bg-blue-500'}`} />
+                                                                <div className="flex-1">
+                                                                    <p className="text-sm text-charcoal/80">{entry.message}</p>
+                                                                    <p className="text-[10px] uppercase tracking-wider text-charcoal/40">{entry.type} - {entry.time}s</p>
+                                                                </div>
+                                                            </div>
+                                                        ))}
+                                                    </div>
+                                                </div>
+                                            )}
+                                            <a
+                                                href="https://dashboard.paystack.com/#/transactions"
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className="inline-flex items-center gap-2 mt-2 px-4 py-2 rounded-lg bg-moss/10 text-moss text-xs font-sans font-semibold hover:bg-moss/20 transition-colors"
+                                            >
+                                                <ExternalLink size={12} /> View on Paystack Dashboard
+                                            </a>
+                                        </>
+                                    )}
+                                </div>
+                            )}
 
                             <div>
                                 <h4 className="text-[10px] font-sans uppercase tracking-[0.2em] font-bold text-charcoal/40 mb-3 flex items-center gap-2">
@@ -519,13 +574,13 @@ export const OrderIntelligence: React.FC = () => {
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            {selected.items.map((item: OrderItem, i: number) => (
-                                                <tr key={i} className="border-b border-charcoal/[0.03] last:border-0">
+                                            {selected.items.map((item, index) => (
+                                                <tr key={index} className="border-b border-charcoal/[0.03] last:border-0">
                                                     <td className="px-4 py-3 text-sm font-sans text-charcoal/80">{item.productName}</td>
                                                     <td className="px-3 py-3 text-sm font-sans text-charcoal/60 text-center">{item.quantity}</td>
-                                                    <td className="px-3 py-3 text-sm font-sans text-charcoal/60 text-right">R{item.price.toFixed(2)}</td>
-                                                    <td className="px-3 py-3 text-sm font-sans text-charcoal/60 text-right">R{(item.discount ?? 0).toFixed(2)}</td>
-                                                    <td className="px-4 py-3 text-sm font-sans font-semibold text-charcoal text-right">R{((item.price * item.quantity) - (item.discount ?? 0)).toFixed(2)}</td>
+                                                    <td className="px-3 py-3 text-sm font-sans text-charcoal/60 text-right">{formatMoney(item.price, storeCurrency)}</td>
+                                                    <td className="px-3 py-3 text-sm font-sans text-charcoal/60 text-right">{formatMoney(item.discount ?? 0, storeCurrency)}</td>
+                                                    <td className="px-4 py-3 text-sm font-sans font-semibold text-charcoal text-right">{formatMoney((item.price * item.quantity) - (item.discount ?? 0), storeCurrency)}</td>
                                                 </tr>
                                             ))}
                                         </tbody>
@@ -540,30 +595,36 @@ export const OrderIntelligence: React.FC = () => {
                                 <div className="bg-stone rounded-xl p-5 space-y-2">
                                     <div className="flex justify-between text-sm font-sans text-charcoal/60">
                                         <span>Subtotal</span>
-                                        <span>R{selected.items.reduce((sum: number, item: OrderItem) => sum + item.price * item.quantity, 0).toFixed(2)}</span>
+                                        <span>{formatMoney(selected.items.reduce((sum, item) => sum + item.price * item.quantity, 0), storeCurrency)}</span>
                                     </div>
                                     {(selected.discountAmount ?? 0) > 0 && (
                                         <div className="flex justify-between text-sm font-sans text-red-500">
                                             <span>Discount {selected.discountCode ? `(${selected.discountCode})` : ''}</span>
-                                            <span>-R{(selected.discountAmount ?? 0).toFixed(2)}</span>
+                                            <span>-{formatMoney(selected.discountAmount ?? 0, storeCurrency)}</span>
                                         </div>
                                     )}
                                     <div className="flex justify-between text-sm font-sans text-charcoal/60">
                                         <span>Shipping</span>
-                                        <span>R{(selected.shippingCost ?? 0).toFixed(2)}</span>
+                                        <span>{formatMoney(selected.shippingCost ?? 0, storeCurrency)}</span>
                                     </div>
                                     <div className="flex justify-between text-sm font-sans text-charcoal/60">
                                         <span>Tax (VAT)</span>
-                                        <span>R{(selected.tax ?? 0).toFixed(2)}</span>
+                                        <span>{formatMoney(selected.tax ?? 0, storeCurrency)}</span>
                                     </div>
                                     <div className="border-t border-charcoal/10 pt-2 flex justify-between">
-                                        <span className="font-serif italic text-lg text-charcoal">Total</span>
-                                        <span className="font-serif italic text-lg text-charcoal">R{selected.total.toFixed(2)}</span>
+                                        <span className="font-serif italic text-lg text-charcoal">Store Total</span>
+                                        <span className="font-serif italic text-lg text-charcoal">{formatMoney(selected.total, storeCurrency)}</span>
                                     </div>
                                     <div className="flex justify-between text-[10px] font-sans text-charcoal/30 uppercase tracking-wider">
-                                        <span>Currency</span>
-                                        <span>{selected.currency ?? 'ZAR'}</span>
+                                        <span>Store Currency</span>
+                                        <span>{storeCurrency}</span>
                                     </div>
+                                    {selected.paymentAmount != null && selected.paymentCurrency && (
+                                        <div className="border-t border-charcoal/10 pt-2 flex justify-between text-sm font-sans text-charcoal/70">
+                                            <span>Paid Amount</span>
+                                            <span>{formatMoney(selected.paymentAmount, selected.paymentCurrency)}</span>
+                                        </div>
+                                    )}
                                 </div>
                             </div>
 

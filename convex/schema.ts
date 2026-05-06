@@ -172,7 +172,35 @@ export default defineSchema({
         shippingCost: v.optional(v.number()),
         tax: v.optional(v.number()),
         currency: v.optional(v.string()),
+        paymentAmount: v.optional(v.number()),
+        paymentCurrency: v.optional(v.string()),
+        exchangeRateUsed: v.optional(v.number()),
         paymentReference: v.optional(v.string()),
+        payPalDetails: v.optional(v.object({
+            orderId: v.optional(v.string()),
+            captureId: v.optional(v.string()),
+            intent: v.optional(v.string()),
+            status: v.optional(v.string()),
+            payerId: v.optional(v.string()),
+            payerEmail: v.optional(v.string()),
+            payerGivenName: v.optional(v.string()),
+            payerSurname: v.optional(v.string()),
+            payerCountryCode: v.optional(v.string()),
+            captureStatus: v.optional(v.string()),
+            captureAmount: v.optional(v.number()),
+            captureCurrency: v.optional(v.string()),
+            grossAmount: v.optional(v.number()),
+            paypalFee: v.optional(v.number()),
+            netAmount: v.optional(v.number()),
+            sellerProtectionStatus: v.optional(v.string()),
+            sellerProtectionDisputeCategories: v.optional(v.array(v.string())),
+            invoiceId: v.optional(v.string()),
+            customId: v.optional(v.string()),
+            merchantId: v.optional(v.string()),
+            merchantEmail: v.optional(v.string()),
+            createTime: v.optional(v.string()),
+            updateTime: v.optional(v.string()),
+        })),
         paystackDetails: v.optional(v.object({
             transactionId: v.optional(v.number()),
             domain: v.optional(v.string()),
@@ -219,7 +247,8 @@ export default defineSchema({
             }))),
         })),
     }).index("by_status", ["status"])
-        .index("by_userId", ["userId"]),
+        .index("by_userId", ["userId"])
+        .index("by_paymentReference", ["paymentReference"]),
 
     // ─── Contact Inquiries ────────────────────────────────────────
     contactInquiries: defineTable({

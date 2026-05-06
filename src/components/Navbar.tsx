@@ -86,6 +86,7 @@ export default function Navbar() {
                         <Link to="/services" className="nav-link hover:opacity-60 transition-opacity">Services</Link>
                         <Link to="/programs" className="nav-link hover:opacity-60 transition-opacity">Programs</Link>
                         <Link to="/body-transformation" className="nav-link hover:opacity-60 transition-opacity">Body Transformation</Link>
+                        <Link to="/treatment-schedule" className="nav-link hover:opacity-60 transition-opacity">Treatment Schedule</Link>
                         <Link to="/shop" className="nav-link hover:opacity-60 transition-opacity">Featured Stores</Link>
                         <Link to="/education" className="nav-link hover:opacity-60 transition-opacity">Education</Link>
                         <Link to="/skin-analysis" className="nav-link hover:opacity-60 transition-opacity">Virtual Makeup Try-On</Link>
@@ -175,6 +176,7 @@ export default function Navbar() {
                     <Link to="/services" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-charcoal transition-colors">Services</Link>
                     <Link to="/programs" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-charcoal transition-colors">Programs</Link>
                     <Link to="/body-transformation" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-charcoal transition-colors">Body Transformation</Link>
+                    <Link to="/treatment-schedule" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-charcoal transition-colors">Treatment Schedule</Link>
                     <Link to="/shop" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-charcoal transition-colors">Featured Stores</Link>
                     <Link to="/education" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-charcoal transition-colors">Education</Link>
                     <Link to="/skin-analysis" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-charcoal transition-colors">Virtual Makeup Try-On</Link>
