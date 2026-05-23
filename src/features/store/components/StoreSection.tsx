@@ -71,8 +71,8 @@ export const StoreSection: React.FC = () => {
         <section id="skincare" className="w-full bg-[#E5E3DB] dark:bg-[#111111] py-24 px-8 border-t border-charcoal/10 dark:border-stone/10">
             <div className="max-w-7xl mx-auto flex flex-col items-center">
                 <div className="text-center mb-16 max-w-2xl">
-                    <h2 className="text-sm font-mono tracking-widest text-[#8a9a7a] uppercase mb-4 font-bold">Featured Stores</h2>
-                    <h3 className="font-serif italic text-4xl md:text-5xl text-charcoal dark:text-stone mb-6">Browse the collection of featured stores</h3>
+                    <h2 className="text-sm font-mono tracking-widest text-[#8a9a7a] uppercase mb-4 font-bold">Healing Hub</h2>
+                    <h3 className="font-serif italic text-4xl md:text-5xl text-charcoal dark:text-stone mb-6">Browse the collection of products on the healing hub</h3>
                     <p className="font-sans text-charcoal/70 dark:text-stone/70 text-base leading-relaxed">
                         Filter below to discover targeted solutions from our clinical partners.
                     </p>

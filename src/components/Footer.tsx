@@ -23,7 +23,7 @@ export default function Footer() {
                     <div className="absolute -top-4 bg-clay px-4 py-1 rounded-full text-[10px] font-mono tracking-widest uppercase text-white">Signature Journey</div>
                     <h3 className="font-serif text-3xl mb-4 text-white">The Vitality Retreat</h3>
                     <p className="font-sans text-sm text-stone/80 mb-8 max-w-[200px]">Subcellular optimization, energy system repair, and advanced holistic diagnostics.</p>
-                    <Link to="/contact" className="magnetic-button bg-stone text-moss border-stone px-8 py-3 rounded-full font-sans uppercase tracking-widest text-[10px] font-bold mt-auto shadow-lg hover:bg-white transition-colors">Begin Your Journey</Link>
+                    <Link to="/vitality-retreat" className="magnetic-button bg-stone text-moss border-stone px-8 py-3 rounded-full font-sans uppercase tracking-widest text-[10px] font-bold mt-auto shadow-lg hover:bg-white transition-colors">Begin Your Journey</Link>
                 </div>
 
                 {/* Tier 3 */}
@@ -61,7 +61,7 @@ export default function Footer() {
                             <li><Link to="/contact" className="hover:text-white transition-colors">Book Consultation</Link></li>
                             <li><Link to="/programs" className="hover:text-white transition-colors">Clinical Programs</Link></li>
                             <li><Link to="/treatment-schedule" className="hover:text-white transition-colors">Treatment Schedule</Link></li>
-                            <li><Link to="/shop" className="hover:text-white transition-colors">Featured Stores</Link></li>
+                            <li><Link to="/shop" className="hover:text-white transition-colors">Healing Hub</Link></li>
                             <li><Link to="/education" className="hover:text-white transition-colors">Education Portal</Link></li>
                         </ul>
                     </div>

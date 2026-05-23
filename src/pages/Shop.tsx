@@ -37,7 +37,7 @@ export default function Shop() {
 
             <PageHeader
                 id="SHP-001"
-                title="Featured Stores."
+                title="Healing Hub."
                 subtitle="The Featured Selection"
                 description="Browse our curated index of premium clinical and wellness brands."
                 withTopPadding={false}

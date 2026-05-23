@@ -87,7 +87,7 @@ export default function Navbar() {
                         <Link to="/programs" className="nav-link hover:opacity-60 transition-opacity">Programs</Link>
                         <Link to="/body-transformation" className="nav-link hover:opacity-60 transition-opacity">Body Transformation</Link>
                         <Link to="/treatment-schedule" className="nav-link hover:opacity-60 transition-opacity">Treatment Schedule</Link>
-                        <Link to="/shop" className="nav-link hover:opacity-60 transition-opacity">Featured Stores</Link>
+                        <Link to="/shop" className="nav-link hover:opacity-60 transition-opacity">Healing Hub</Link>
                         <Link to="/education" className="nav-link hover:opacity-60 transition-opacity">Education</Link>
                         <Link to="/skin-analysis" className="nav-link hover:opacity-60 transition-opacity">Virtual Makeup Try-On</Link>
                         <Link to="/contact" className="nav-link hover:opacity-60 transition-opacity">Contact</Link>
@@ -177,7 +177,7 @@ export default function Navbar() {
                     <Link to="/programs" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-charcoal transition-colors">Programs</Link>
                     <Link to="/body-transformation" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-charcoal transition-colors">Body Transformation</Link>
                     <Link to="/treatment-schedule" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-charcoal transition-colors">Treatment Schedule</Link>
-                    <Link to="/shop" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-charcoal transition-colors">Featured Stores</Link>
+                    <Link to="/shop" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-charcoal transition-colors">Healing Hub</Link>
                     <Link to="/education" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-charcoal transition-colors">Education</Link>
                     <Link to="/skin-analysis" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-charcoal transition-colors">Virtual Makeup Try-On</Link>
                     <Link to="/contact" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-charcoal transition-colors">Contact</Link>

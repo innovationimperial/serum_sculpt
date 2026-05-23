@@ -139,7 +139,8 @@ const ADD_ONS = [
     { name: 'Sauna Blanket only', price: '$15' },
     { name: 'Lymphatic Drainage only', price: '$20' },
     { name: 'Lipolysis (small area)', price: '$25' },
-    { name: 'Skin tightening add-on', price: '$20' }
+    { name: 'Skin tightening add-on', price: '$20' },
+    { name: 'Sauna (30mins)', price: '$30' }
 ];
 
 const CLIENT_JOURNEY = [
@@ -147,7 +148,7 @@ const CLIENT_JOURNEY = [
     'Choose package',
     'Before photos',
     'Weekly tracking',
-    'Upsell GLP if needed'
+    'GLP add on'
 ];
 
 export default function BodyTransformation() {
@@ -272,7 +273,7 @@ export default function BodyTransformation() {
                 <div className="max-w-7xl mx-auto grid md:grid-cols-2 gap-16">
                     {/* Add-ons */}
                     <div>
-                        <h2 className="font-serif text-3xl md:text-4xl text-moss mb-8 italic">High-Profit Add-Ons</h2>
+                        <h2 className="font-serif text-3xl md:text-4xl text-moss mb-8 italic">Treatment Add-Ons</h2>
                         <div className="space-y-4">
                             {ADD_ONS.map((addon, i) => (
                                 <div key={i} className="flex items-center justify-between bg-white p-5 rounded-2xl border border-stone/10 hover:border-clay/30 transition-colors">
@@ -304,9 +305,9 @@ export default function BodyTransformation() {
                 <div className="bg-moss rounded-[3rem] p-10 md:p-16 text-center text-white shadow-2xl overflow-hidden relative">
                     <div className="absolute inset-0 bg-[url('/noise.png')] opacity-20 mix-blend-overlay" />
                     
-                    <h2 className="font-serif text-3xl md:text-5xl mb-8 relative z-10 italic">Your Clinic Edge</h2>
+                    <h2 className="font-serif text-3xl md:text-5xl mb-8 relative z-10 italic">Serum and Sculpt Edge</h2>
                     <p className="text-stone/80 text-sm md:text-base font-mono tracking-widest uppercase mb-12 relative z-10">
-                        You are NOT just a beauty clinic.
+                        We are not just a beauty clinic.
                     </p>
                     
                     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 relative z-10 mb-12">

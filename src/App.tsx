@@ -15,6 +15,7 @@ const Education = lazy(() => import('./pages/Education'));
 const BodyTransformation = lazy(() => import('./pages/BodyTransformation'));
 const Contact = lazy(() => import('./pages/Contact'));
 const TreatmentSchedule = lazy(() => import('./pages/TreatmentSchedule'));
+const VitalityRetreat = lazy(() => import('./pages/VitalityRetreat'));
 const SkinAnalysis = lazy(() => import('./pages/SkinAnalysis'));
 const Login = lazy(() => import('./pages/Login'));
 const Signup = lazy(() => import('./pages/Signup'));
@@ -64,6 +65,7 @@ function App() {
                 <Route path="/education" element={<Education />} />
                 <Route path="/body-transformation" element={<BodyTransformation />} />
                 <Route path="/treatment-schedule" element={<TreatmentSchedule />} />
+                <Route path="/vitality-retreat" element={<VitalityRetreat />} />
                 <Route path="/education/:id" element={<BlogPost />} />
                 <Route path="/contact" element={<Contact />} />
                 <Route path="/skin-analysis" element={<SkinAnalysis />} />
