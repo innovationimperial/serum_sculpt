@@ -1,6 +1,6 @@
 import { useRef, useEffect } from 'react';
 import { gsap } from 'gsap';
-import { ArrowRight, Heart, Sparkles, Sun, Users } from 'lucide-react';
+import { Heart, Sparkles, Sun, Users } from 'lucide-react';
 import PageHeader from '../components/PageHeader';
 
 const EXPERIENCES = [
